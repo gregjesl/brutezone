@@ -50,3 +50,10 @@ modules.order
 Module.symvers
 Mkfile.old
 dkms.conf
+
+# IDE
+.vs/*
+generator/.vs/*
+generator/bin
+generator/obj
+generator/packages
