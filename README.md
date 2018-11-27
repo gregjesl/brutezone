@@ -53,7 +53,9 @@ make test
 ```
 
 ## Motivation
-We needed a simple-to-use, compact library for an alarm clock on an embedded system. Brutezone was the result. 
+We needed a simple-to-use, compact library for an alarm clock on an embedded system. Brutezone was the result. It's called Brutezone because the UTC offsets are calculated for each timezone using brute force (and [NodaTime](https://nodatime.org/))
 
 ## Credits
 The functions used to translate between `time_t` and `struct tm` were borrowed from [musl](http://www.musl-libc.org/)
+
+The UTC offset lookup table was derived using the [NodaTime](https://nodatime.org/) library. 
