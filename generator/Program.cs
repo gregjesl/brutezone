@@ -21,9 +21,9 @@ namespace brutezone
         static void Main(string[] args)
         {
             var semaphore = new SemaphoreSlim(1, 1);
-            DateTime StartTime = DateTime.UtcNow;
-            // DateTime StartTime = DateTime.SpecifyKind(new DateTime(2018, 1, 1, 0, 0, 0), DateTimeKind.Utc);
-            DateTime StopTime = DateTime.SpecifyKind(new DateTime(2030, 1, 1, 0, 0, 0), DateTimeKind.Utc);
+            // DateTime StartTime = DateTime.UtcNow;
+            DateTime StartTime = DateTime.SpecifyKind(new DateTime(1970, 1, 1, 0, 0, 0), DateTimeKind.Utc);
+            DateTime StopTime = DateTime.SpecifyKind(new DateTime(2038, 1, 19, 0, 0, 0), DateTimeKind.Utc);
             DateTime Epoch = DateTime.SpecifyKind(new DateTime(1970, 1, 1, 0, 0, 0), DateTimeKind.Utc);
 
             var results = new Dictionary<string, List<Entry>>();
