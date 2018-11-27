@@ -14,25 +14,25 @@ If you are running this library on an embedded device, ensure you have [clock sy
 ## Usage
 
 ### Getting the time
-- `time_t timezone_local_time(const char *timezone, const time_t gmt)` - Translates the UTC time `gmt` into the time in the timezone named `timezone`
-- `time_t timezone_current_local_time(const char *timezone)` - Returns the current local time in the timezone named `timezone`
-- `time_t timezone_gmt_time(const char *timezone, const time_t local_time)` - Converts `local_time` from the timezone named `timezone` to UTC time
+- `time_t timezone_local_time` - Translates the UTC time `gmt` into the time in the timezone named `timezone`
+- `time_t timezone_current_local_time` - Returns the current local time in the timezone named `timezone`
+- `time_t timezone_gmt_time` - Converts `local_time` from the timezone named `timezone` to UTC time
 
 ### Converting between `time_t` and `struct tm`
-- `int secs_to_tm(long long t, struct tm *tm)` - Converts a tick counter (such as `time_t`) to a time structure
-- `long long tm_to_secs(const struct tm *tm)` - Converts a time structure to a tick counter
+- `int secs_to_tm` - Converts a tick counter (such as `time_t`) to a time structure
+- `long long tm_to_secs` - Converts a time structure to a tick counter
 
 ### Adding and subtracting days
-- `void add_day(struct tm *tm)` - Adds a day
-- `void subtract_day(struct tm *tm)` - Subtracts a day
+- `void add_day` - Adds a day
+- `void subtract_day` - Subtracts a day
 
 ### Computing time occurances
-- `time_t timezone_secs_until(const char *timezone, const unsigned char hour, const unsigned char minute, const unsigned char second)` - Returns the number of seconds until the next occurance of `hour:minute:second` in the timezone named `timezone`
-- `time_t timezone_secs_since(const char *timezone, const unsigned char hour, const unsigned char minute, const unsigned char second)` - Returns the number of seconds since the last occurance of `hour:minute:second` in the timezone named `timezone`
+- `time_t timezone_secs_until` - Returns the number of seconds until the next occurance of `hour:minute:second` in the timezone named `timezone`
+- `time_t timezone_secs_since` - Returns the number of seconds since the last occurance of `hour:minute:second` in the timezone named `timezone`
 
 ### Computing day of week & time occurances
-- `time_t timezone_secs_until_dow(const char *timezone, const unsigned char hour, const unsigned char minute, const unsigned char second, const unsigned char wday)` - Returns the number of seconds until the next occurance of `hour:minute:second` on `wday` (day of the week) in the timezone named `timezone`
-- `time_t timezone_secs_since_dow(const char *timezone, const unsigned char hour, const unsigned char minute, const unsigned char second, const unsigned char wday)` - Returns the number of seconds since the last occurance of `hour:minute:second` on `wday` (day of the week) in the timezone named `timezone`
+- `time_t timezone_secs_until_dow` - Returns the number of seconds until the next occurance of `hour:minute:second` on `wday` (day of the week) in the timezone named `timezone`
+- `time_t timezone_secs_since_dow` - Returns the number of seconds since the last occurance of `hour:minute:second` on `wday` (day of the week) in the timezone named `timezone`
 
 ### Examples
 See [the test folder](/test) for examples of all of the functions. 
