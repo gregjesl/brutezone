@@ -9,10 +9,24 @@ using System.Threading;
 
 namespace brutezone
 {
+    /// <summary>
+    /// The data structure for one UTC offset
+    /// </summary>
     class Entry
     {
+        /// <summary>
+        /// The time the UTC offset starts in the timezone
+        /// </summary>
         public DateTimeOffset StartTime;
+
+        /// <summary>
+        /// The time the UTC offset ends in the timezone
+        /// </summary>
         public DateTimeOffset EndTime;
+
+        /// <summary>
+        /// The UTC offset (in minutes)
+        /// </summary>
         public int Offset;
     }
 
@@ -20,30 +34,60 @@ namespace brutezone
     {
         static void Main(string[] args)
         {
+            // Create a semaphore for controlling access to the results
             var semaphore = new SemaphoreSlim(1, 1);
-            // DateTime StartTime = DateTime.UtcNow;
+
+            // The UTC start time of the lookup table
             DateTime StartTime = DateTime.SpecifyKind(new DateTime(1970, 1, 1, 0, 0, 0), DateTimeKind.Utc);
+
+            // The UTC stop time of the lookup table
             DateTime StopTime = DateTime.SpecifyKind(new DateTime(2038, 1, 19, 0, 0, 0), DateTimeKind.Utc);
+
+            // The epoch for the table
+            // 1 January 1970 is the Unix epoch
             DateTime Epoch = DateTime.SpecifyKind(new DateTime(1970, 1, 1, 0, 0, 0), DateTimeKind.Utc);
 
+            // A dictionary used to store the results
+            // The key is the name of the timezone
+            // The value is a list of UTC offsets
             var results = new Dictionary<string, List<Entry>>();
 
+            // Loop through all timezones
+            // Run in prallel to make things faster
             Parallel.ForEach(TzdbDateTimeZoneSource.Default.ZoneLocations, (timezoneLocation) => {
+
+                // Initialize the list of entries
                 var entries = new List<Entry>();
+
+                // Load the timezone
                 var timezone = DateTimeZoneProviders.Tzdb[timezoneLocation.ZoneId];
+
+                // Initialize the current time
                 DateTime currentTime = StartTime;
+
+                // Create the first entry
                 Entry entry = new Entry()
                 {
                     StartTime = currentTime,
                     Offset = timezone.GetUtcOffset(Instant.FromDateTimeUtc(currentTime)).Seconds
                 };
+
+                // Loop until the stop time
                 do
                 {
+                    // Move the current time forward a minute
                     currentTime = currentTime.AddTicks(TimeSpan.TicksPerMinute);
+
+                    // Check for a change in the UTC offset
                     if (timezone.GetUtcOffset(Instant.FromDateTimeUtc(currentTime)).Seconds != entry.Offset)
                     {
+                        // Record the stop time of the UTC offset
                         entry.EndTime = currentTime;
+
+                        // Record the UTC offset entry
                         entries.Add(entry);
+
+                        // Create the new entry
                         entry = new Entry()
                         {
                             StartTime = currentTime,
@@ -52,18 +96,32 @@ namespace brutezone
                     }
                 }
                 while (currentTime < StopTime);
+
+                // Close the last remaining entry
                 entry.EndTime = currentTime;
+
+                // Store the last remaining entry
                 entries.Add(entry);
 
+                // Wait for access to the results structure
                 semaphore.Wait();
-                Console.WriteLine($"{timezoneLocation.ZoneId}: {results.Count} entries");
+
+                // Record the result for the timezone
                 results.Add(timezone.Id, entries);
+
+                // Report the results
+                Console.WriteLine($"{timezoneLocation.ZoneId}: {entries.Count} entries");
+
+                // Release the lock
                 semaphore.Release();
             });
 
+            // Build the path to the header file
             string path = "../"; // from (debug/release) to bin
             path += "../"; // from bin to generator
             path += "../inc/"; // from generator to inc
+
+            // Open the file
             using (System.IO.StreamWriter file =
                     new System.IO.StreamWriter(path + "timezone_database.h"))
             {
@@ -81,6 +139,7 @@ namespace brutezone
                 file.WriteLine($"static const time_t timezone_offset_max_time = {(StopTime - Epoch).Ticks / TimeSpan.TicksPerSecond};");
                 file.WriteLine("");
 
+                // The pointers dictionary associates a timezone string with a memory location for the array of UTC offset entries
                 var pointers = new Dictionary<string, string>();
 
                 // Group all of the single timezones
@@ -88,6 +147,7 @@ namespace brutezone
                     .GroupBy(g => g.Value.First().Offset)
                     .ToList();
 
+                // Record all of the single UTC offsets
                 file.WriteLine($"static const timezone_offset timezone_database_no_change[{singleTimezones.Count}] = ");
                 file.WriteLine("{");
                 int i = 0;
@@ -105,8 +165,10 @@ namespace brutezone
                 file.WriteLine("};");
                 file.WriteLine("");
 
+                // Record all of the timezones with more than one UTC offset
                 foreach (var result in results.Where(t => t.Value.Count > 1).OrderBy(t => t.Key))
                 {
+                    // Example format: 
                     /*
                     const timezone_offset timezone_database_america_los_angeles[] =
                     {
@@ -128,7 +190,7 @@ namespace brutezone
                     pointers.Add(result.Key, $"timezone_database_{result.Key.Replace('/', '_').Replace('-','_').ToLower()}");
                 }
 
-
+                // Write out the list of timezones and the associated memory locations
                 file.WriteLine("static timezone timezone_array[TIMEZONE_DATABASE_COUNT] = ");
                 file.WriteLine("{");
                 var tzlist = new List<string>();
