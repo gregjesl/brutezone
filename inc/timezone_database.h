@@ -2,6 +2,7 @@
 #define TIMEZONE_DATABASE_H
 
 #include <time.h>
+#include <string.h>
 
 #define TIMEZONE_DATABASE_COUNT 424
 
@@ -23474,7 +23475,7 @@ static const tzdb_timezone timezone_array[TIMEZONE_DATABASE_COUNT] =
 	{"Pacific/Wallis", &timezone_database_no_change[26]}
 };
 
-inline const tzdb_timezone* find_timezone(const char *timezone_name)
+static inline const tzdb_timezone* find_timezone(const char *timezone_name)
 {
     unsigned int index;
 

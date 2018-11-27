@@ -129,6 +129,7 @@ namespace brutezone
                 file.WriteLine("#define TIMEZONE_DATABASE_H");
                 file.WriteLine("");
                 file.WriteLine("#include <time.h>");
+                file.WriteLine("#include <string.h>");
                 file.WriteLine("");
                 file.WriteLine($"#define TIMEZONE_DATABASE_COUNT {results.Count}");
                 file.WriteLine("");
@@ -204,7 +205,7 @@ namespace brutezone
 
                 // Write the helper function
                 file.WriteLine(
-@"inline const tzdb_timezone* find_timezone(const char *timezone_name)
+@"static inline const tzdb_timezone* find_timezone(const char *timezone_name)
 {
     unsigned int index;
 
