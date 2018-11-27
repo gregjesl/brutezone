@@ -1,0 +1,39 @@
+image:
+- Visual Studio 2017
+- Ubuntu
+
+platform:
+  - x86
+  - x64
+  
+configuration:
+- Debug
+- Release
+
+matrix:
+  exclude:
+    - image: Visual Studio 2017
+      configuration: Release
+
+for:
+  - 
+    matrix:
+      only:
+        - configuration: Debug
+    environment:
+      config: Debug
+
+  - 
+    matrix:
+      only:
+        - configuration: Release
+    environment:
+      config: Release
+
+build_script:
+  - cmake -H. -B_builds -DCMAKE_BUILD_TYPE=%config%
+  - cmake --build _builds --config %config%
+
+test_script:
+  - ps: cd _builds
+  - ctest -VV -C %config%
