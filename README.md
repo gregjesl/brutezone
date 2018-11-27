@@ -1,3 +1,4 @@
+https://ci.appveyor.com/api/projects/status/gbhod5iaf6swa9fv?svg=true
 # Brutezone
 Brutezone is a C library for computing the time in [IANA timezones](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones). It uses a lookup table to get the UTC offset of the timezone. The code for the lookup table generator (written in C#) is [included in the project](/generator); you can shrink the lookup table if desired. 
 
