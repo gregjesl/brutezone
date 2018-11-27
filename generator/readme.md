@@ -8,4 +8,4 @@ To reduce the file size of the database, change `StartTime` and `StopTime` in `P
 Another option for reducing file size is filtering out un-needed timezones. For example, you may not need the Antartica timezones...
 
 ## Credits
-As noted on the [main page](../), this generator uses [NodaTime](https://nodatime.org/). 
+As noted on the main page, this generator uses [NodaTime](https://nodatime.org/). 
