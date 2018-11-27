@@ -7,7 +7,7 @@
 time_t timezone_local_time(const char *timezone_name, const time_t gmt)
 {
     unsigned char index;
-    const timezone *tz;
+    const tzdb_timezone *tz;
 
     // Validate that the GMT time is within the table window
     if(gmt < timezone_offset_min_time || gmt >= timezone_offset_max_time) return 0;
@@ -37,7 +37,7 @@ time_t timezone_gmt_time(const char *timezone_name, const time_t local_time)
 {
     time_t result;
     unsigned int index;
-    const timezone *tz;
+    const tzdb_timezone *tz;
 
     // Find the timezone
     tz = find_timezone(timezone_name);

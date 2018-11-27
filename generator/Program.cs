@@ -133,7 +133,7 @@ namespace brutezone
                 file.WriteLine($"#define TIMEZONE_DATABASE_COUNT {results.Count}");
                 file.WriteLine("");
                 file.WriteLine("typedef struct { const time_t start; const time_t end; const short offset; } timezone_offset;");
-                file.WriteLine("typedef struct { const char *name; const timezone_offset *entries; } timezone;");
+                file.WriteLine("typedef struct { const char *name; const timezone_offset *entries; } tzdb_timezone;");
                 file.WriteLine("");
                 file.WriteLine($"static const time_t timezone_offset_min_time = {(StartTime - Epoch).Ticks / TimeSpan.TicksPerSecond};");
                 file.WriteLine($"static const time_t timezone_offset_max_time = {(StopTime - Epoch).Ticks / TimeSpan.TicksPerSecond};");
@@ -191,7 +191,7 @@ namespace brutezone
                 }
 
                 // Write out the list of timezones and the associated memory locations
-                file.WriteLine("static timezone timezone_array[TIMEZONE_DATABASE_COUNT] = ");
+                file.WriteLine("static const tzdb_timezone timezone_array[TIMEZONE_DATABASE_COUNT] = ");
                 file.WriteLine("{");
                 var tzlist = new List<string>();
                 foreach (var result in pointers.OrderBy(t => t.Key))
@@ -204,7 +204,7 @@ namespace brutezone
 
                 // Write the helper function
                 file.WriteLine(
-@"inline const timezone* find_timezone(const char *timezone_name)
+@"inline const tzdb_timezone* find_timezone(const char *timezone_name)
 {
     unsigned int index;
 

@@ -6,7 +6,7 @@
 #define TIMEZONE_DATABASE_COUNT 424
 
 typedef struct { const time_t start; const time_t end; const short offset; } timezone_offset;
-typedef struct { const char *name; const timezone_offset *entries; } timezone;
+typedef struct { const char *name; const timezone_offset *entries; } tzdb_timezone;
 
 static const time_t timezone_offset_min_time = 0;
 static const time_t timezone_offset_max_time = 2147472000;
@@ -23046,7 +23046,7 @@ static const timezone_offset timezone_database_pacific_tongatapu[] =
 	{1484398800,2147472000,780}
 };
 
-static timezone timezone_array[TIMEZONE_DATABASE_COUNT] = 
+static const tzdb_timezone timezone_array[TIMEZONE_DATABASE_COUNT] = 
 {
 	{"Africa/Abidjan", &timezone_database_no_change[10]},
 	{"Africa/Accra", &timezone_database_no_change[10]},
@@ -23474,7 +23474,7 @@ static timezone timezone_array[TIMEZONE_DATABASE_COUNT] =
 	{"Pacific/Wallis", &timezone_database_no_change[26]}
 };
 
-inline const timezone* find_timezone(const char *timezone_name)
+inline const tzdb_timezone* find_timezone(const char *timezone_name)
 {
     unsigned int index;
 
