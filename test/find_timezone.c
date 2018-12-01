@@ -5,7 +5,7 @@
 int main(void)
 {
 	const char timezonename[] = "America/Los_Angeles";
-	tzdb_timezone *tz;
+	const tzdb_timezone *tz;
 
 	// Find the timezone
 	tz = find_timezone(timezonename);
