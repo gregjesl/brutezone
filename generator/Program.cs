@@ -204,8 +204,11 @@ namespace brutezone
                 file.WriteLine("");
 
                 // Write the helper function
+                file.WriteLine("#ifdef __cplusplus");
+                file.WriteLine("extern \"C\" {");
                 file.WriteLine(
-@"static inline const tzdb_timezone* find_timezone(const char *timezone_name)
+@"#endif
+static inline const tzdb_timezone* find_timezone(const char *timezone_name)
 {
     unsigned int index;
 
@@ -218,7 +221,10 @@ namespace brutezone
 
     // If the timezone was not found, return null
     return NULL;
-}"
+}
+#ifdef __cplusplus
+}
+#endif"
                 );
 
                 file.WriteLine("");

@@ -23475,6 +23475,9 @@ static const tzdb_timezone timezone_array[TIMEZONE_DATABASE_COUNT] =
 	{"Pacific/Wallis", &timezone_database_no_change[26]}
 };
 
+#ifdef __cplusplus
+extern "C" {
+#endif
 static inline const tzdb_timezone* find_timezone(const char *timezone_name)
 {
     unsigned int index;
@@ -23489,5 +23492,8 @@ static inline const tzdb_timezone* find_timezone(const char *timezone_name)
     // If the timezone was not found, return null
     return NULL;
 }
+#ifdef __cplusplus
+}
+#endif
 
 #endif
