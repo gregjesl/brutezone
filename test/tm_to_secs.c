@@ -1,5 +1,5 @@
 #include "timezone.h"
-#include <cassert>
+#include <assert.h>
 
 int main(void)
 {

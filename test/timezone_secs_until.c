@@ -1,6 +1,6 @@
 #include "timezone.h"
-#include <cassert>
-#include <math.h>
+#include <assert.h>
+#include <stdlib.h>
 
 int main(void)
 {
