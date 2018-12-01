@@ -23,7 +23,7 @@ int main(void)
 	dow = tm.tm_wday;
 
 	// Get the result
-	result = timezone_secs_until_dow(timezonename, hour, minute, second, dow + 3 % 7);
+	result = timezone_secs_until_dow(timezonename, hour, minute, second, (dow + 3) % 7);
 
 	// Result should be within 5 seconds
 	assert(abs(result - 86400 * 3) < 5);
