@@ -285,7 +285,7 @@ time_t timezone_secs_until_dow(const char *timezone, const unsigned char hour, c
 
     // Return the day
     if(wday > tm.tm_wday) return timer2 + (86400 * (wday - tm.tm_wday)) - timer;
-    return timer2 + (86400 * ((tm.tm_wday + 7) - wday)) - timer;
+    return timer2 + (86400 * ((wday + 7) - tm.tm_wday)) - timer;
 }
 
 time_t timezone_secs_since_dow(const char *timezone, const unsigned char hour, const unsigned char minute, const unsigned char second, const unsigned char wday)

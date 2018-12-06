@@ -9,6 +9,7 @@ int main(void)
 	int result;
 	struct tm tm;
 	unsigned char hour, minute, second, dow;
+	int i;
 
 	// Get the time in LA
 	latime = timezone_current_local_time(timezonename);
@@ -20,13 +21,18 @@ int main(void)
 	hour = tm.tm_hour;
 	minute = tm.tm_min;
 	second = tm.tm_sec;
-	dow = tm.tm_wday;
 
-	// Get the result
-	result = timezone_secs_until_dow(timezonename, hour, minute, second, (dow + 3) % 7);
+	for (i = 1; i < 7; i++)
+	{
+		// Get the test day of week
+		dow = tm.tm_wday + i % 7;
+		
+		// Get the result
+		result = timezone_secs_until_dow(timezonename, hour, minute, second, dow);
 
-	// Result should be within 5 seconds
-	assert(abs(result - 86400 * 3) < 5);
+		// Result should be within 5 seconds
+		assert(abs(result - 86400 * i) < 5);
+	}
 
 	return 0;
 }
