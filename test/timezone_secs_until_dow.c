@@ -12,7 +12,7 @@ int main(void)
 	int i;
 
 	// Get the time in LA
-	latime = timezone_current_local_time(timezonename);
+	latime = timezone_current_local_time(timezonename) + 60;
 
 	// Convert to a tm struct
 	secs_to_tm(latime, &tm);
@@ -31,7 +31,7 @@ int main(void)
 		result = timezone_secs_until_dow(timezonename, hour, minute, second, dow);
 
 		// Result should be within 5 seconds
-		assert(abs(result - 86400 * i) < 5);
+		assert(abs(result - (86400 * i) - 60) < 5);
 	}
 
 	return 0;
