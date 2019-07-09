@@ -57,3 +57,5 @@ generator/.vs/*
 generator/bin
 generator/obj
 generator/packages
+
+build
