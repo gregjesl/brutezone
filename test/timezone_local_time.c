@@ -1,5 +1,5 @@
 #include "timezone.h"
-#include <assert.h>
+#include "test.h"
 
 int main(void)
 {
@@ -16,11 +16,11 @@ int main(void)
 	latime = timezone_local_time(timezonename, gmtime);
 
 	// Record the difference
-	assert(latime < gmtime);
+	TEST_TRUE(latime < gmtime);
 	diff = gmtime - latime;
 
 	// LA is between 7 or 8 hours difference depending on DST
-	assert(diff == 7 * 60 * 60 || diff == 8 * 60 * 60);
+	TEST_TRUE(diff == 7 * 60 * 60 || diff == 8 * 60 * 60);
 
 	return 0;
 }

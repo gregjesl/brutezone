@@ -1,6 +1,6 @@
 #include "timezone.h"
 #include <string.h>
-#include <assert.h>
+#include "test.h"
 
 int main(void)
 {
@@ -11,11 +11,11 @@ int main(void)
 	tz = find_timezone(timezonename);
 
 	// Ensure the timezone was found
-	assert(tz != NULL);
+	TEST_NOT_NULL(tz);
 
 	// Compare the timezone names
-	assert(strcmp(tz->name, timezonename) == 0);
+	TEST_STRING_EQUAL(tz->name, timezonename);
 
 	// Attempt to find a non-valid timezone
-	assert(find_timezone("Not/Valid") == NULL);
+	TEST_NULL(find_timezone("Not/Valid"));
 }

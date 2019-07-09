@@ -1,5 +1,5 @@
 #include "timezone.h"
-#include <assert.h>
+#include "test.h"
 #include <stdlib.h>
 
 int main(void)
@@ -31,7 +31,7 @@ int main(void)
 		result = timezone_secs_until_dow(timezonename, hour, minute, second, dow);
 
 		// Result should be within 5 seconds
-		assert(abs(result - (86400 * i) - 60) < 5);
+		TEST_TRUE(abs(result - (86400 * i) - 60) < 5);
 	}
 
 	return 0;

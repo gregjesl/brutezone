@@ -1,5 +1,5 @@
 #include "timezone.h"
-#include <assert.h>
+#include "test.h"
 
 int main(void)
 {
@@ -16,13 +16,13 @@ int main(void)
 	subtract_day(&tm);
 
 	// Verify the result
-	assert(tm.tm_year == 70);
-	assert(tm.tm_mon == 0);
-	assert(tm.tm_mday == 28);
-	assert(tm.tm_hour == 10);
-	assert(tm.tm_min == 3);
-	assert(tm.tm_sec == 17);
-	assert(tm.tm_wday == 3);
+	TEST_EQUAL(tm.tm_year, 70);
+	TEST_EQUAL(tm.tm_mon, 0);
+	TEST_EQUAL(tm.tm_mday, 28);
+	TEST_EQUAL(tm.tm_hour, 10);
+	TEST_EQUAL(tm.tm_min, 3);
+	TEST_EQUAL(tm.tm_sec, 17);
+	TEST_EQUAL(tm.tm_wday, 3);
 
 	return 0;
 }

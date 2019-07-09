@@ -1,6 +1,6 @@
 #include "timezone.h"
 #include <string.h>
-#include <assert.h>
+#include "test.h"
 
 int main(void)
 {
@@ -14,8 +14,8 @@ int main(void)
     // Get the timestamp
     secs_to_tm(gmtime, &tm);
     iso_time(timestamp, tm);
-    assert(strcmp(timestamp, "1970-01-29T10:03:17") == 0);
+    TEST_STRING_EQUAL(timestamp, "1970-01-29T10:03:17");
 
     // Return back
-    assert(from_iso_time(timestamp) == gmtime);
+    TEST_EQUAL(from_iso_time(timestamp), gmtime);
 }

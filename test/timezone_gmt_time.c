@@ -1,5 +1,5 @@
 #include "timezone.h"
-#include <assert.h>
+#include "test.h"
 
 int main(void)
 {
@@ -19,7 +19,7 @@ int main(void)
 	revert = timezone_gmt_time(timezonename, latime);
 
 	// Verify the result
-	assert(gmtime == revert);
+	TEST_EQUAL(gmtime, revert);
 
 	return 0;
 }

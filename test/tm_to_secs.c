@@ -1,5 +1,5 @@
 #include "timezone.h"
-#include <assert.h>
+#include "test.h"
 
 int main(void)
 {
@@ -16,7 +16,7 @@ int main(void)
 	tm.tm_wday = 4;
 
 	// Verify the result
-	assert(tm_to_secs(&tm) == (28 * 86400) + (10 * 3600) + (3 * 60) + 17);
+	TEST_EQUAL(tm_to_secs(&tm), (28 * 86400) + (10 * 3600) + (3 * 60) + 17);
 
 	return 0;
 }
