@@ -1,0 +1,9 @@
+# The large number of brackets in timezone_database.h tricks 
+# the linquistic interpreter into thinking the repository is
+# an Objective-C repository. A manual override is needed in
+# order to properly classify the repository
+# 
+# See more: https://github.com/github/linguist#overrides
+
+*.h linguist-language=C
+*.c linguist-language=C
