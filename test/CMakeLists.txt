@@ -2,8 +2,6 @@ cmake_minimum_required (VERSION 2.6)
 
 include_directories(../inc)
 
-enable_testing()
-
 set(CMAKE_CONFIGURATION_TYPES "Debug")
 
 file(GLOB tests

@@ -11,4 +11,6 @@ add_library(${PROJECT_NAME}
     src/timezone_impl.c
 )
 
+# Support testing
+enable_testing()
 add_subdirectory(test)
