@@ -59,3 +59,4 @@ generator/obj
 generator/packages
 
 build
+.vscode
