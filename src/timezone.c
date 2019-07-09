@@ -19,14 +19,14 @@ time_t timezone_local_time(const char *timezone_name, const time_t gmt)
     if(tz == NULL) return 0;
 
     // Check for the first entry
-    if(tz->entries[0].start <= gmt) return gmt + (60 * tz->entries[0].offset);
+    if(tz->entries[0].end > gmt) return gmt + (60 * tz->entries[0].offset);
 
     // Find the offset
     index = 0;
     while(tz->entries[index].end < timezone_offset_max_time)
     {
         index++;
-        if(tz->entries[index].start <= gmt) return gmt + (60 * tz->entries[index].offset);
+        if(tz->entries[index].end > gmt) return gmt + (60 * tz->entries[index].offset);
     }
 
     // Out of bounds
@@ -47,7 +47,7 @@ time_t timezone_gmt_time(const char *timezone_name, const time_t local_time)
     
     // Check for the first entry
     result = local_time - (60 * tz->entries[0].offset);
-    if(result >= tz->entries[0].start)
+    if(result < tz->entries[0].end)
     {
         // Validate the result
         if(result < timezone_offset_max_time || result >= timezone_offset_min_time) return result;
