@@ -14,7 +14,6 @@ int main(void)
     // Get the timestamp
     secs_to_tm(gmtime, &tm);
     iso_time(timestamp, tm);
-    printf("Timestamp: %s\n", timestamp);
     assert(strcmp(timestamp, "1970-01-29T10:03:17") == 0);
 
     // Return back
