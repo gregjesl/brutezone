@@ -31,6 +31,10 @@ If you are running this library on an embedded device, **ensure you have [clock 
 - `time_t timezone_secs_until_dow` - Returns the number of seconds until the next occurance of `hour:minute:second` on `wday` (day of the week) in the timezone named `timezone`
 - `time_t timezone_secs_since_dow` - Returns the number of seconds since the last occurance of `hour:minute:second` on `wday` (day of the week) in the timezone named `timezone`
 
+### Handling Timestamps
+- `iso_time` - Populates the `str` input with the [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) timestamp of the `datetime` argument. Example output: `1970-01-29T10:03:17` for 29 January 1970 at 10:03:17 AM. 
+- `from_iso_time` - Returns the time structure from the given timestamp. 
+
 ### Examples
 See [the test folder](/test) for examples of all of the functions. 
 

@@ -314,3 +314,48 @@ time_t timezone_secs_since_dow(const char *timezone, const unsigned char hour, c
 	}
     return timer + (86400 * ((tm.tm_wday + 7) - wday)) - timer2;
 }
+
+void iso_time(char* str, const struct tm datetime)
+{
+    sprintf(str, 
+        "%i-%02i-%02iT%02i:%02i:%02i", 
+        datetime.tm_year + 1900, 
+        datetime.tm_mon + 1, 
+        datetime.tm_mday, 
+        datetime.tm_hour, 
+        datetime.tm_min, 
+        datetime.tm_sec
+    );
+}
+
+time_t from_iso_time(const char* str)
+{
+    struct tm result;
+    char *reader;
+    char copy[20];
+
+    memcpy(copy, str, 20);
+    reader = copy;
+
+    int year;
+    sscanf(reader, "%i", &year);
+    result.tm_year = (year - 1900);
+    reader += 5;
+
+    sscanf(reader, "%i", &result.tm_mon);
+    result.tm_mon -= 1;
+    reader += 3;
+
+    sscanf(reader, "%i", &result.tm_mday);
+    reader += 3;
+
+    sscanf(reader, "%i", &result.tm_hour);
+    reader += 3;
+
+    sscanf(reader, "%i", &result.tm_min);
+    reader += 3;
+
+    sscanf(reader, "%i", &result.tm_sec);
+
+    return tm_to_secs(&result);
+}
