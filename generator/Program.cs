@@ -195,7 +195,7 @@ namespace brutezone
                 file.WriteLine("static const tzdb_timezone timezone_array[TIMEZONE_DATABASE_COUNT] = ");
                 file.WriteLine("{");
                 var tzlist = new List<string>();
-                foreach (var result in pointers.OrderBy(t => t.Key))
+                foreach (var result in pointers.OrderBy(t => t.Key, StringComparer.Ordinal))
                 {
                     tzlist.Add($"\t{{\"{result.Key}\", {result.Value}}}");
                 }
@@ -210,14 +210,25 @@ namespace brutezone
 @"#endif
 static inline const tzdb_timezone* find_timezone(const char *timezone_name)
 {
-    unsigned int index;
+    const tzdb_timezone *begin = timezone_array;
+    const tzdb_timezone *end = timezone_array + TIMEZONE_DATABASE_COUNT;
 
-    // Iterate through all timezones
-    for(index = 0; index < TIMEZONE_DATABASE_COUNT; index++)
-    {
-        // Return the timezone if found
-        if(strcmp(timezone_array[index].name, timezone_name) == 0) return &timezone_array[index];
-    }
+    // Since the list of timezones above is always generated in sorted order,
+    // we use a binary search to find the timezone
+    do {
+        const tzdb_timezone *needle = begin + (end - begin) / 2;
+        const int cmp = strcmp(timezone_name, needle->name);
+        if (cmp > 0) {
+            begin = needle + 1;
+        }
+        else if (cmp < 0) {
+            end = needle;
+        }
+        else {
+            // Return the timezone if found
+            return needle;
+        }
+    } while (begin < end);
 
     // If the timezone was not found, return null
     return NULL;
