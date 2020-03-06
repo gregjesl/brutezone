@@ -11,4 +11,5 @@ add_library(${PROJECT_NAME}
 
 # Support testing
 enable_testing()
+add_subdirectory(benchmark)
 add_subdirectory(test)
