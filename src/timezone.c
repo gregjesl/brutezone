@@ -60,7 +60,7 @@ time_t timezone_gmt_time(const char *timezone_name, const time_t local_time)
     {
         index++;
         result = local_time - (60 * tz->entries[index].offset);
-        if(result >= tz->entries[index].start)
+        if(result < tz->entries[index].end)
         {
             // Validate the result
             if(result < timezone_offset_max_time || result >= timezone_offset_min_time) return result;
