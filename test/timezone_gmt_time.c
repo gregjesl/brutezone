@@ -1,16 +1,10 @@
 #include "timezone.h"
 #include "test.h"
+#include "timezone_database.h"
 
-int main(void)
+static void test_gmtime(time_t gmtime, const char *timezonename)
 {
-	const char timezonename[] = "America/Los_Angeles";
-	time_t gmtime, latime, revert;
-
-	// Get the gmt time
-	time(&gmtime);
-
-	// Move the time a bit
-	gmtime += 86400 * 30;
+	time_t latime, revert;
 
 	// Get the time in LA
 	latime = timezone_local_time(timezonename, gmtime);
@@ -18,8 +12,20 @@ int main(void)
 	// Revert back to gmt
 	revert = timezone_gmt_time(timezonename, latime);
 
+	//printf("gmt: %ld", gmtime);
 	// Verify the result
+	if (gmtime != revert) {
+		printf("gmtime: %ld, latime: %ld, revert: %ld\n", gmtime, latime, revert);
+	}
 	TEST_EQUAL(gmtime, revert);
 
-	return 0;
+}
+
+int main(void)
+{
+    const char timezonename[] = "America/Los_Angeles";
+
+    test_gmtime(25696800, timezonename);
+
+    return 0;
 }
