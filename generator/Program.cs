@@ -162,7 +162,7 @@ namespace brutezone
                     }
                     i++;
                 }
-                file.WriteLine(string.Join(",\r\n", singleStrings.ToArray()));
+                file.WriteLine(string.Join(",\n", singleStrings.ToArray()));
                 file.WriteLine("};");
                 file.WriteLine("");
 
@@ -184,7 +184,7 @@ namespace brutezone
                     {
                         strList.Add($"\t{{{(entry.StartTime - Epoch).Ticks / TimeSpan.TicksPerSecond},{(entry.EndTime - Epoch).Ticks / TimeSpan.TicksPerSecond},{entry.Offset / 60}}}");
                     }
-                    file.WriteLine(string.Join(",\r\n", strList.ToArray()));
+                    file.WriteLine(string.Join(",\n", strList.ToArray()));
                     file.WriteLine("};");
                     file.WriteLine("");
 
@@ -199,7 +199,7 @@ namespace brutezone
                 {
                     tzlist.Add($"\t{{\"{result.Key}\", {result.Value}}}");
                 }
-                file.WriteLine(string.Join(",\r\n", tzlist.ToArray()));
+                file.WriteLine(string.Join(",\n", tzlist.ToArray()));
                 file.WriteLine("};");
                 file.WriteLine("");
 
