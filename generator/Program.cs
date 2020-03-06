@@ -30,6 +30,12 @@ namespace brutezone
         public int Offset;
     }
 
+    class PointerEntry
+    {
+        public string Name;
+        public int NumEntries;
+    }
+
     class Program
     {
         static void Main(string[] args)
@@ -128,20 +134,20 @@ namespace brutezone
                 file.WriteLine("#ifndef TIMEZONE_DATABASE_H");
                 file.WriteLine("#define TIMEZONE_DATABASE_H");
                 file.WriteLine("");
-                file.WriteLine("#include <time.h>");
                 file.WriteLine("#include <string.h>");
+                file.WriteLine("#include <time.h>");
                 file.WriteLine("");
                 file.WriteLine($"#define TIMEZONE_DATABASE_COUNT {results.Count}");
                 file.WriteLine("");
-                file.WriteLine("typedef struct { const time_t start; const time_t end; const short offset; } timezone_offset;");
-                file.WriteLine("typedef struct { const char *name; const timezone_offset *entries; } tzdb_timezone;");
+                file.WriteLine("typedef struct { const time_t start; const short offset; } timezone_offset;");
+                file.WriteLine("typedef struct { const char *name; const timezone_offset *entries; size_t n_entries; } tzdb_timezone;");
                 file.WriteLine("");
                 file.WriteLine($"static const time_t timezone_offset_min_time = {(StartTime - Epoch).Ticks / TimeSpan.TicksPerSecond};");
                 file.WriteLine($"static const time_t timezone_offset_max_time = {(StopTime - Epoch).Ticks / TimeSpan.TicksPerSecond};");
                 file.WriteLine("");
 
                 // The pointers dictionary associates a timezone string with a memory location for the array of UTC offset entries
-                var pointers = new Dictionary<string, string>();
+                var pointers = new Dictionary<string, PointerEntry>();
 
                 // Group all of the single timezones
                 var singleTimezones = results.Where(t => t.Value.Count == 1)
@@ -155,10 +161,10 @@ namespace brutezone
                 var singleStrings = new List<string>();
                 foreach(var singleZone in singleTimezones.OrderBy(g => g.First().Value.First().Offset))
                 {
-                    singleStrings.Add($"\t{{{(singleZone.First().Value.First().StartTime - Epoch).Ticks / TimeSpan.TicksPerSecond},{(singleZone.First().Value.First().EndTime - Epoch).Ticks / TimeSpan.TicksPerSecond},{singleZone.First().Value.First().Offset / 60}}}");
+                    singleStrings.Add($"\t{{{(singleZone.First().Value.First().StartTime - Epoch).Ticks / TimeSpan.TicksPerSecond},{singleZone.First().Value.First().Offset / 60}}}");
                     foreach(var zone in singleZone)
                     {
-                        pointers.Add(zone.Key, $"&timezone_database_no_change[{i}]");
+                        pointers.Add(zone.Key, new PointerEntry(){Name = $"&timezone_database_no_change[{i}]", NumEntries = 1});
                     }
                     i++;
                 }
@@ -182,13 +188,15 @@ namespace brutezone
                     var strList = new List<string>();
                     foreach(var entry in result.Value.OrderBy(e => e.StartTime))
                     {
-                        strList.Add($"\t{{{(entry.StartTime - Epoch).Ticks / TimeSpan.TicksPerSecond},{(entry.EndTime - Epoch).Ticks / TimeSpan.TicksPerSecond},{entry.Offset / 60}}}");
+                        strList.Add($"\t{{{(entry.StartTime - Epoch).Ticks / TimeSpan.TicksPerSecond},{entry.Offset / 60}}}");
                     }
                     file.WriteLine(string.Join(",\n", strList.ToArray()));
                     file.WriteLine("};");
                     file.WriteLine("");
 
-                    pointers.Add(result.Key, $"timezone_database_{result.Key.Replace('/', '_').Replace('-','_').ToLower()}");
+                    pointers.Add(result.Key, new PointerEntry(){
+                        Name = $"timezone_database_{result.Key.Replace('/', '_').Replace('-','_').ToLower()}",
+                        NumEntries = result.Value.Count});
                 }
 
                 // Write out the list of timezones and the associated memory locations
@@ -197,7 +205,7 @@ namespace brutezone
                 var tzlist = new List<string>();
                 foreach (var result in pointers.OrderBy(t => t.Key, StringComparer.Ordinal))
                 {
-                    tzlist.Add($"\t{{\"{result.Key}\", {result.Value}}}");
+                    tzlist.Add($"\t{{\"{result.Key}\", {result.Value.Name}, {result.Value.NumEntries}}}");
                 }
                 file.WriteLine(string.Join(",\n", tzlist.ToArray()));
                 file.WriteLine("};");

@@ -1,4 +1,5 @@
 #include "timezone.h"
+#include "timezone_database.h"
 #include "timezone_impl.h"
 #include <stdio.h>
 #include <string.h>
@@ -6,70 +7,62 @@
 
 time_t timezone_local_time(const char *timezone_name, const time_t gmt)
 {
-    unsigned char index;
-    const tzdb_timezone *tz;
+	// Find the timezone
+	const tzdb_timezone *tz = tz = find_timezone(timezone_name);
 
-    // Validate that the GMT time is within the table window
-    if(gmt < timezone_offset_min_time || gmt >= timezone_offset_max_time) return 0;
+	// If the timezone was not found, return 0
+	if (tz == NULL) return 0;
 
-    // Find the timezone
-    tz = find_timezone(timezone_name);
+   // Find the offset
+	const timezone_offset *begin = tz->entries;
+	const timezone_offset *end = tz->entries + tz->n_entries;
 
-    // If the timezone was not found, return 0
-    if(tz == NULL) return 0;
+	do {
+		const timezone_offset *needle = begin + (end - begin) / 2;
+		if (gmt < needle->start) {
+			end = needle;
+		} else {
+			const timezone_offset *next = needle + 1;
+			if ((next == end && gmt < timezone_offset_max_time) || gmt < next->start) {
+				return gmt + needle->offset * 60;
+			} else {
+				begin = next;
+			}
+		}
+	} while (begin < end);
 
-    // Check for the first entry
-    if(tz->entries[0].end > gmt) return gmt + (60 * tz->entries[0].offset);
-
-    // Find the offset
-    index = 0;
-    while(tz->entries[index].end < timezone_offset_max_time)
-    {
-        index++;
-        if(tz->entries[index].end > gmt) return gmt + (60 * tz->entries[index].offset);
-    }
-
-    // Out of bounds
-    return 0;
+	// Out of bounds
+	return 0;
 }
 
 time_t timezone_gmt_time(const char *timezone_name, const time_t local_time)
 {
-    time_t result;
-    unsigned int index;
-    const tzdb_timezone *tz;
+	// Find the timezone
+	const tzdb_timezone *tz = find_timezone(timezone_name);
 
-    // Find the timezone
-    tz = find_timezone(timezone_name);
+	// If the timezone was not found, return 0
+	if (tz == NULL) return 0;
 
-    // If the timezone was not found, return 0
-    if(tz == NULL) return 0;
-    
-    // Check for the first entry
-    result = local_time - (60 * tz->entries[0].offset);
-    if(result < tz->entries[0].end)
-    {
-        // Validate the result
-        if(result < timezone_offset_max_time || result >= timezone_offset_min_time) return result;
-        else return 0;
-    }
+	const timezone_offset *begin = tz->entries;
+	const timezone_offset *end = tz->entries + tz->n_entries;
 
-    // Find the offset
-    index = 0;
-    while(tz->entries[index].end < timezone_offset_max_time)
-    {
-        index++;
-        result = local_time - (60 * tz->entries[index].offset);
-        if(result < tz->entries[index].end)
-        {
-            // Validate the result
-            if(result < timezone_offset_max_time || result >= timezone_offset_min_time) return result;
-            else return 0;
-        }
-    }
+	do {
+		const timezone_offset *needle = begin + (end - begin) / 2;
+		const time_t result = local_time - needle->offset * 60;
+		if(result < needle->start) {
+			end = needle;
+		} else {
+			const timezone_offset *next = needle + 1;
+			if ((next == end && result < timezone_offset_max_time) || result < next->start) {
+				return result;
+			} else {
+				begin = next;
+			}
+		}
+	} while (begin < end);
 
-    // Out of bounds
-    return 0;
+	// Out of bounds
+	return 0;
 }
 
 time_t timezone_current_local_time(const char *timezone)
