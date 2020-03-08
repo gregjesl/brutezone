@@ -84,9 +84,9 @@ time_t timezone_current_local_time(const char *timezone)
 }
 
 /*!
-* From http://git.musl-libc.org/cgit/musl/tree/src/time/__secs_to_tm.c?h=v0.9.15
-* MIT License
-*/
+ * \note From http://git.musl-libc.org/cgit/musl/tree/src/time/__secs_to_tm.c?h=v0.9.15
+ *       MIT License
+ */
 int secs_to_tm(long long t, struct tm *tm)
 {
 	long long days, secs;
@@ -160,9 +160,9 @@ int secs_to_tm(long long t, struct tm *tm)
 }
 
 /*!
-* From http://git.musl-libc.org/cgit/musl/tree/src/time/__tm_to_secs.c?h=v0.9.15
-* MIT License
-*/
+ * \note From http://git.musl-libc.org/cgit/musl/tree/src/time/__tm_to_secs.c?h=v0.9.15
+ *       MIT License
+ */
 long long tm_to_secs(const struct tm *tm)
 {
 	int is_leap;
