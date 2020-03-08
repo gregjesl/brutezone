@@ -4,22 +4,27 @@
 int main(void)
 {
 	const char timezonename[] = "America/Los_Angeles";
-	time_t gmtime, latime, revert;
+	time_t basetime, gmtime, latime, revert, day_offset;
 
 	// Get the gmt time
-	time(&gmtime);
+	time(&basetime);
 
-	// Move the time a bit
-	gmtime += 86400 * 30;
+	// Repeat the test for an entire year
+	for(day_offset = 0; day_offset < 365 * 86400; day_offset += 86400)
+	{
 
-	// Get the time in LA
-	latime = timezone_local_time(timezonename, gmtime);
+		// Move the time a bit
+		gmtime = basetime + day_offset;
 
-	// Revert back to gmt
-	revert = timezone_gmt_time(timezonename, latime);
+		// Get the time in LA
+		latime = timezone_local_time(timezonename, gmtime);
 
-	// Verify the result
-	TEST_EQUAL(gmtime, revert);
+		// Revert back to gmt
+		revert = timezone_gmt_time(timezonename, latime);
+
+		// Verify the result
+		TEST_EQUAL(gmtime, revert);
+	}
 
 	return 0;
 }
