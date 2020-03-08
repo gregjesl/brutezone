@@ -2,10 +2,9 @@
 #include "test.h"
 #include "timezone_database.h"
 
-static void test_gmtime(time_t gmtime, const char *timezonename)
+static void test_gmtime(const char *timezonename)
 {
-	const char timezonename[] = "America/Los_Angeles";
-	time_t basetime, gmtime, latime, revert, day_offset;
+	time_t basetime, gmtime, localtime, revert, day_offset;
 
 	// Get the gmt time
 	time(&basetime);
@@ -18,12 +17,19 @@ static void test_gmtime(time_t gmtime, const char *timezonename)
 		gmtime = basetime + day_offset;
 
 		// Get the time in LA
-		latime = timezone_local_time(timezonename, gmtime);
+		localtime = timezone_local_time(timezonename, gmtime);
+
+		// Verify the time was converted
+		TEST_TRUE(localtime > 0);
 
 		// Revert back to gmt
-		revert = timezone_gmt_time(timezonename, latime);
+		revert = timezone_gmt_time(timezonename, localtime);
 
 		// Verify the result
+		// TEST_EQUAL(gmtime, revert);
+		if(gmtime != revert) {
+			printf("Timezone %s failed\n", timezonename);
+		}
 		TEST_EQUAL(gmtime, revert);
 	}
 
@@ -31,9 +37,13 @@ static void test_gmtime(time_t gmtime, const char *timezonename)
 
 int main(void)
 {
-    const char timezonename[] = "America/Los_Angeles";
+	int i;
 
-    test_gmtime(25696800, timezonename);
+	// Loop through all timezones
+	for(i = 0; i < TIMEZONE_DATABASE_COUNT; i++) 
+	{
+		test_gmtime(timezone_array[i].name);
+	}
 
     return 0;
 }
