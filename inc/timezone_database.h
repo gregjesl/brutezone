@@ -4,26 +4,27 @@
 #include <string.h>
 #include <time.h>
 
-#define TIMEZONE_DATABASE_COUNT 424
-
 typedef struct { const time_t start; const short offset; } timezone_offset;
 typedef struct { const char *name; const timezone_offset *entries; size_t n_entries; } tzdb_timezone;
 
 static const time_t timezone_offset_min_time = 0;
 static const time_t timezone_offset_max_time = 2147472000;
 
-static const timezone_offset timezone_database_no_change[27] = 
+static const timezone_offset timezone_database_no_change[32] =
 {
+	{0,-720},
 	{0,-660},
 	{0,-600},
 	{0,-570},
 	{0,-540},
+	{0,-480},
 	{0,-420},
 	{0,-360},
 	{0,-300},
 	{0,-240},
 	{0,-180},
 	{0,-120},
+	{0,-60},
 	{0,0},
 	{0,60},
 	{0,120},
@@ -40,10 +41,12 @@ static const timezone_offset timezone_database_no_change[27] =
 	{0,570},
 	{0,600},
 	{0,660},
-	{0,720}
+	{0,720},
+	{0,780},
+	{0,840}
 };
 
-static const timezone_offset timezone_database_africa_algiers[] = 
+static const timezone_offset timezone_database_africa_algiers[] =
 {
 	{0,0},
 	{41468400,60},
@@ -57,13 +60,13 @@ static const timezone_offset timezone_database_africa_algiers[] =
 	{357523200,60}
 };
 
-static const timezone_offset timezone_database_africa_bissau[] = 
+static const timezone_offset timezone_database_africa_bissau[] =
 {
 	{0,-60},
 	{157770000,0}
 };
 
-static const timezone_offset timezone_database_africa_cairo[] = 
+static const timezone_offset timezone_database_africa_cairo[] =
 {
 	{0,120},
 	{10364400,180},
@@ -156,7 +159,7 @@ static const timezone_offset timezone_database_africa_cairo[] =
 	{1411678800,120}
 };
 
-static const timezone_offset timezone_database_africa_casablanca[] = 
+static const timezone_offset timezone_database_africa_casablanca[] =
 {
 	{0,0},
 	{141264000,60},
@@ -206,7 +209,7 @@ static const timezone_offset timezone_database_africa_casablanca[] =
 	{1529200800,60}
 };
 
-static const timezone_offset timezone_database_africa_ceuta[] = 
+static const timezone_offset timezone_database_africa_ceuta[] =
 {
 	{0,0},
 	{141264000,60},
@@ -324,7 +327,7 @@ static const timezone_offset timezone_database_africa_ceuta[] =
 	{2140045200,60}
 };
 
-static const timezone_offset timezone_database_africa_el_aaiun[] = 
+static const timezone_offset timezone_database_africa_el_aaiun[] =
 {
 	{0,-60},
 	{198291600,0},
@@ -371,7 +374,7 @@ static const timezone_offset timezone_database_africa_el_aaiun[] =
 	{1529200800,60}
 };
 
-static const timezone_offset timezone_database_africa_juba[] = 
+static const timezone_offset timezone_database_africa_juba[] =
 {
 	{0,120},
 	{10360800,180},
@@ -409,7 +412,7 @@ static const timezone_offset timezone_database_africa_juba[] =
 	{947930400,180}
 };
 
-static const timezone_offset timezone_database_africa_khartoum[] = 
+static const timezone_offset timezone_database_africa_khartoum[] =
 {
 	{0,120},
 	{10360800,180},
@@ -448,26 +451,26 @@ static const timezone_offset timezone_database_africa_khartoum[] =
 	{1509483600,120}
 };
 
-static const timezone_offset timezone_database_africa_monrovia[] = 
+static const timezone_offset timezone_database_africa_monrovia[] =
 {
 	{0,-44},
 	{63593100,0}
 };
 
-static const timezone_offset timezone_database_africa_ndjamena[] = 
+static const timezone_offset timezone_database_africa_ndjamena[] =
 {
 	{0,60},
 	{308703600,120},
 	{321314400,60}
 };
 
-static const timezone_offset timezone_database_africa_sao_tome[] = 
+static const timezone_offset timezone_database_africa_sao_tome[] =
 {
 	{0,0},
 	{1514768400,60}
 };
 
-static const timezone_offset timezone_database_africa_tripoli[] = 
+static const timezone_offset timezone_database_africa_tripoli[] =
 {
 	{0,120},
 	{378684000,60},
@@ -494,7 +497,7 @@ static const timezone_offset timezone_database_africa_tripoli[] =
 	{1364515200,120}
 };
 
-static const timezone_offset timezone_database_africa_tunis[] = 
+static const timezone_offset timezone_database_africa_tunis[] =
 {
 	{0,60},
 	{231202800,120},
@@ -517,7 +520,7 @@ static const timezone_offset timezone_database_africa_tunis[] =
 	{1224982800,60}
 };
 
-static const timezone_offset timezone_database_africa_windhoek[] = 
+static const timezone_offset timezone_database_africa_windhoek[] =
 {
 	{0,120},
 	{764200800,60},
@@ -570,7 +573,7 @@ static const timezone_offset timezone_database_africa_windhoek[] =
 	{1504400400,120}
 };
 
-static const timezone_offset timezone_database_america_adak[] = 
+static const timezone_offset timezone_database_america_adak[] =
 {
 	{0,-660},
 	{9982800,-600},
@@ -710,7 +713,7 @@ static const timezone_offset timezone_database_america_adak[] =
 	{2140686000,-600}
 };
 
-static const timezone_offset timezone_database_america_anchorage[] = 
+static const timezone_offset timezone_database_america_anchorage[] =
 {
 	{0,-600},
 	{9979200,-540},
@@ -850,7 +853,7 @@ static const timezone_offset timezone_database_america_anchorage[] =
 	{2140682400,-540}
 };
 
-static const timezone_offset timezone_database_america_araguaina[] = 
+static const timezone_offset timezone_database_america_araguaina[] =
 {
 	{0,-180},
 	{499748400,-120},
@@ -883,7 +886,7 @@ static const timezone_offset timezone_database_america_araguaina[] =
 	{1361066400,-180}
 };
 
-static const timezone_offset timezone_database_america_argentina_buenos_aires[] = 
+static const timezone_offset timezone_database_america_argentina_buenos_aires[] =
 {
 	{0,-180},
 	{128142000,-120},
@@ -904,7 +907,7 @@ static const timezone_offset timezone_database_america_argentina_buenos_aires[] 
 	{1237082400,-180}
 };
 
-static const timezone_offset timezone_database_america_argentina_catamarca[] = 
+static const timezone_offset timezone_database_america_argentina_catamarca[] =
 {
 	{0,-180},
 	{128142000,-120},
@@ -925,7 +928,7 @@ static const timezone_offset timezone_database_america_argentina_catamarca[] =
 	{1205632800,-180}
 };
 
-static const timezone_offset timezone_database_america_argentina_cordoba[] = 
+static const timezone_offset timezone_database_america_argentina_cordoba[] =
 {
 	{0,-180},
 	{128142000,-120},
@@ -946,7 +949,7 @@ static const timezone_offset timezone_database_america_argentina_cordoba[] =
 	{1237082400,-180}
 };
 
-static const timezone_offset timezone_database_america_argentina_jujuy[] = 
+static const timezone_offset timezone_database_america_argentina_jujuy[] =
 {
 	{0,-180},
 	{128142000,-120},
@@ -965,7 +968,7 @@ static const timezone_offset timezone_database_america_argentina_jujuy[] =
 	{1205632800,-180}
 };
 
-static const timezone_offset timezone_database_america_argentina_la_rioja[] = 
+static const timezone_offset timezone_database_america_argentina_la_rioja[] =
 {
 	{0,-180},
 	{128142000,-120},
@@ -987,7 +990,7 @@ static const timezone_offset timezone_database_america_argentina_la_rioja[] =
 	{1205632800,-180}
 };
 
-static const timezone_offset timezone_database_america_argentina_mendoza[] = 
+static const timezone_offset timezone_database_america_argentina_mendoza[] =
 {
 	{0,-180},
 	{128142000,-120},
@@ -1008,7 +1011,7 @@ static const timezone_offset timezone_database_america_argentina_mendoza[] =
 	{1205632800,-180}
 };
 
-static const timezone_offset timezone_database_america_argentina_rio_gallegos[] = 
+static const timezone_offset timezone_database_america_argentina_rio_gallegos[] =
 {
 	{0,-180},
 	{128142000,-120},
@@ -1029,7 +1032,7 @@ static const timezone_offset timezone_database_america_argentina_rio_gallegos[] 
 	{1205632800,-180}
 };
 
-static const timezone_offset timezone_database_america_argentina_salta[] = 
+static const timezone_offset timezone_database_america_argentina_salta[] =
 {
 	{0,-180},
 	{128142000,-120},
@@ -1048,7 +1051,7 @@ static const timezone_offset timezone_database_america_argentina_salta[] =
 	{1205632800,-180}
 };
 
-static const timezone_offset timezone_database_america_argentina_san_juan[] = 
+static const timezone_offset timezone_database_america_argentina_san_juan[] =
 {
 	{0,-180},
 	{128142000,-120},
@@ -1070,7 +1073,7 @@ static const timezone_offset timezone_database_america_argentina_san_juan[] =
 	{1205632800,-180}
 };
 
-static const timezone_offset timezone_database_america_argentina_san_luis[] = 
+static const timezone_offset timezone_database_america_argentina_san_luis[] =
 {
 	{0,-180},
 	{128142000,-120},
@@ -1092,7 +1095,7 @@ static const timezone_offset timezone_database_america_argentina_san_luis[] =
 	{1255233600,-180}
 };
 
-static const timezone_offset timezone_database_america_argentina_tucuman[] = 
+static const timezone_offset timezone_database_america_argentina_tucuman[] =
 {
 	{0,-180},
 	{128142000,-120},
@@ -1115,7 +1118,7 @@ static const timezone_offset timezone_database_america_argentina_tucuman[] =
 	{1237082400,-180}
 };
 
-static const timezone_offset timezone_database_america_argentina_ushuaia[] = 
+static const timezone_offset timezone_database_america_argentina_ushuaia[] =
 {
 	{0,-180},
 	{128142000,-120},
@@ -1136,7 +1139,7 @@ static const timezone_offset timezone_database_america_argentina_ushuaia[] =
 	{1205632800,-180}
 };
 
-static const timezone_offset timezone_database_america_asuncion[] = 
+static const timezone_offset timezone_database_america_asuncion[] =
 {
 	{0,-240},
 	{86760000,-180},
@@ -1268,7 +1271,7 @@ static const timezone_offset timezone_database_america_asuncion[] =
 	{2138241600,-180}
 };
 
-static const timezone_offset timezone_database_america_bahia[] = 
+static const timezone_offset timezone_database_america_bahia[] =
 {
 	{0,-180},
 	{499748400,-120},
@@ -1311,7 +1314,7 @@ static const timezone_offset timezone_database_america_bahia[] =
 	{1330221600,-180}
 };
 
-static const timezone_offset timezone_database_america_bahia_banderas[] = 
+static const timezone_offset timezone_database_america_bahia_banderas[] =
 {
 	{0,-480},
 	{28800,-420},
@@ -1401,7 +1404,7 @@ static const timezone_offset timezone_database_america_bahia_banderas[] =
 	{2140066800,-360}
 };
 
-static const timezone_offset timezone_database_america_barbados[] = 
+static const timezone_offset timezone_database_america_barbados[] =
 {
 	{0,-240},
 	{234943200,-180},
@@ -1414,7 +1417,7 @@ static const timezone_offset timezone_database_america_barbados[] =
 	{338706000,-240}
 };
 
-static const timezone_offset timezone_database_america_belem[] = 
+static const timezone_offset timezone_database_america_belem[] =
 {
 	{0,-180},
 	{499748400,-120},
@@ -1425,7 +1428,7 @@ static const timezone_offset timezone_database_america_belem[] =
 	{571197600,-180}
 };
 
-static const timezone_offset timezone_database_america_belize[] = 
+static const timezone_offset timezone_database_america_belize[] =
 {
 	{0,-360},
 	{123919200,-300},
@@ -1434,7 +1437,7 @@ static const timezone_offset timezone_database_america_belize[] =
 	{413874000,-360}
 };
 
-static const timezone_offset timezone_database_america_boa_vista[] = 
+static const timezone_offset timezone_database_america_boa_vista[] =
 {
 	{0,-240},
 	{499752000,-180},
@@ -1449,14 +1452,14 @@ static const timezone_offset timezone_database_america_boa_vista[] =
 	{971578800,-240}
 };
 
-static const timezone_offset timezone_database_america_bogota[] = 
+static const timezone_offset timezone_database_america_bogota[] =
 {
 	{0,-300},
 	{704869200,-240},
 	{733896000,-300}
 };
 
-static const timezone_offset timezone_database_america_boise[] = 
+static const timezone_offset timezone_database_america_boise[] =
 {
 	{0,-420},
 	{9968400,-360},
@@ -1597,7 +1600,7 @@ static const timezone_offset timezone_database_america_boise[] =
 	{2140675200,-420}
 };
 
-static const timezone_offset timezone_database_america_cambridge_bay[] = 
+static const timezone_offset timezone_database_america_cambridge_bay[] =
 {
 	{0,-420},
 	{325674000,-360},
@@ -1716,7 +1719,7 @@ static const timezone_offset timezone_database_america_cambridge_bay[] =
 	{2140675200,-420}
 };
 
-static const timezone_offset timezone_database_america_campo_grande[] = 
+static const timezone_offset timezone_database_america_campo_grande[] =
 {
 	{0,-240},
 	{499752000,-180},
@@ -1826,7 +1829,7 @@ static const timezone_offset timezone_database_america_campo_grande[] =
 	{2140660800,-180}
 };
 
-static const timezone_offset timezone_database_america_cancun[] = 
+static const timezone_offset timezone_database_america_cancun[] =
 {
 	{0,-360},
 	{377935200,-300},
@@ -1872,14 +1875,14 @@ static const timezone_offset timezone_database_america_cancun[] =
 	{1422777600,-300}
 };
 
-static const timezone_offset timezone_database_america_caracas[] = 
+static const timezone_offset timezone_database_america_caracas[] =
 {
 	{0,-240},
 	{1197183600,-270},
 	{1462086000,-240}
 };
 
-static const timezone_offset timezone_database_america_chicago[] = 
+static const timezone_offset timezone_database_america_chicago[] =
 {
 	{0,-360},
 	{9964800,-300},
@@ -2020,7 +2023,7 @@ static const timezone_offset timezone_database_america_chicago[] =
 	{2140671600,-360}
 };
 
-static const timezone_offset timezone_database_america_chihuahua[] = 
+static const timezone_offset timezone_database_america_chihuahua[] =
 {
 	{0,-360},
 	{828864000,-300},
@@ -2108,7 +2111,7 @@ static const timezone_offset timezone_database_america_chihuahua[] =
 	{2140070400,-420}
 };
 
-static const timezone_offset timezone_database_america_costa_rica[] = 
+static const timezone_offset timezone_database_america_costa_rica[] =
 {
 	{0,-360},
 	{288770400,-300},
@@ -2121,7 +2124,7 @@ static const timezone_offset timezone_database_america_costa_rica[] =
 	{700635600,-360}
 };
 
-static const timezone_offset timezone_database_america_cuiaba[] = 
+static const timezone_offset timezone_database_america_cuiaba[] =
 {
 	{0,-240},
 	{499752000,-180},
@@ -2229,7 +2232,7 @@ static const timezone_offset timezone_database_america_cuiaba[] =
 	{2140660800,-180}
 };
 
-static const timezone_offset timezone_database_america_danmarkshavn[] = 
+static const timezone_offset timezone_database_america_danmarkshavn[] =
 {
 	{0,-180},
 	{323845200,-120},
@@ -2267,7 +2270,7 @@ static const timezone_offset timezone_database_america_danmarkshavn[] =
 	{820465200,0}
 };
 
-static const timezone_offset timezone_database_america_dawson[] = 
+static const timezone_offset timezone_database_america_dawson[] =
 {
 	{0,-540},
 	{120646800,-480},
@@ -2389,7 +2392,7 @@ static const timezone_offset timezone_database_america_dawson[] =
 	{2140678800,-480}
 };
 
-static const timezone_offset timezone_database_america_dawson_creek[] = 
+static const timezone_offset timezone_database_america_dawson_creek[] =
 {
 	{0,-480},
 	{9972000,-420},
@@ -2399,7 +2402,7 @@ static const timezone_offset timezone_database_america_dawson_creek[] =
 	{73476000,-420}
 };
 
-static const timezone_offset timezone_database_america_denver[] = 
+static const timezone_offset timezone_database_america_denver[] =
 {
 	{0,-420},
 	{9968400,-360},
@@ -2540,7 +2543,7 @@ static const timezone_offset timezone_database_america_denver[] =
 	{2140675200,-420}
 };
 
-static const timezone_offset timezone_database_america_detroit[] = 
+static const timezone_offset timezone_database_america_detroit[] =
 {
 	{0,-300},
 	{104914800,-240},
@@ -2675,7 +2678,7 @@ static const timezone_offset timezone_database_america_detroit[] =
 	{2140668000,-300}
 };
 
-static const timezone_offset timezone_database_america_edmonton[] = 
+static const timezone_offset timezone_database_america_edmonton[] =
 {
 	{0,-420},
 	{73472400,-360},
@@ -2812,7 +2815,7 @@ static const timezone_offset timezone_database_america_edmonton[] =
 	{2140675200,-420}
 };
 
-static const timezone_offset timezone_database_america_eirunepe[] = 
+static const timezone_offset timezone_database_america_eirunepe[] =
 {
 	{0,-300},
 	{499755600,-240},
@@ -2827,7 +2830,7 @@ static const timezone_offset timezone_database_america_eirunepe[] =
 	{1384056000,-300}
 };
 
-static const timezone_offset timezone_database_america_el_salvador[] = 
+static const timezone_offset timezone_database_america_el_salvador[] =
 {
 	{0,-360},
 	{547020000,-300},
@@ -2836,7 +2839,7 @@ static const timezone_offset timezone_database_america_el_salvador[] =
 	{591166800,-360}
 };
 
-static const timezone_offset timezone_database_america_fort_nelson[] = 
+static const timezone_offset timezone_database_america_fort_nelson[] =
 {
 	{0,-480},
 	{9972000,-420},
@@ -2932,7 +2935,7 @@ static const timezone_offset timezone_database_america_fort_nelson[] =
 	{1425808800,-420}
 };
 
-static const timezone_offset timezone_database_america_fortaleza[] = 
+static const timezone_offset timezone_database_america_fortaleza[] =
 {
 	{0,-180},
 	{499748400,-120},
@@ -2953,7 +2956,7 @@ static const timezone_offset timezone_database_america_fortaleza[] =
 	{1013911200,-180}
 };
 
-static const timezone_offset timezone_database_america_glace_bay[] = 
+static const timezone_offset timezone_database_america_glace_bay[] =
 {
 	{0,-240},
 	{73461600,-180},
@@ -3090,7 +3093,7 @@ static const timezone_offset timezone_database_america_glace_bay[] =
 	{2140664400,-240}
 };
 
-static const timezone_offset timezone_database_america_godthab[] = 
+static const timezone_offset timezone_database_america_godthab[] =
 {
 	{0,-180},
 	{323845200,-120},
@@ -3211,7 +3214,7 @@ static const timezone_offset timezone_database_america_godthab[] =
 	{2140045200,-180}
 };
 
-static const timezone_offset timezone_database_america_goose_bay[] = 
+static const timezone_offset timezone_database_america_goose_bay[] =
 {
 	{0,-240},
 	{9957600,-180},
@@ -3352,7 +3355,7 @@ static const timezone_offset timezone_database_america_goose_bay[] =
 	{2140664400,-240}
 };
 
-static const timezone_offset timezone_database_america_grand_turk[] = 
+static const timezone_offset timezone_database_america_grand_turk[] =
 {
 	{0,-300},
 	{294217200,-240},
@@ -3469,7 +3472,7 @@ static const timezone_offset timezone_database_america_grand_turk[] =
 	{2140668000,-300}
 };
 
-static const timezone_offset timezone_database_america_guatemala[] = 
+static const timezone_offset timezone_database_america_guatemala[] =
 {
 	{0,-360},
 	{123055200,-300},
@@ -3482,21 +3485,21 @@ static const timezone_offset timezone_database_america_guatemala[] =
 	{1159678800,-360}
 };
 
-static const timezone_offset timezone_database_america_guayaquil[] = 
+static const timezone_offset timezone_database_america_guayaquil[] =
 {
 	{0,-300},
 	{722926800,-240},
 	{728884800,-300}
 };
 
-static const timezone_offset timezone_database_america_guyana[] = 
+static const timezone_offset timezone_database_america_guyana[] =
 {
 	{0,-225},
 	{176010300,-180},
 	{662698800,-240}
 };
 
-static const timezone_offset timezone_database_america_halifax[] = 
+static const timezone_offset timezone_database_america_halifax[] =
 {
 	{0,-240},
 	{9957600,-180},
@@ -3637,7 +3640,7 @@ static const timezone_offset timezone_database_america_halifax[] =
 	{2140664400,-240}
 };
 
-static const timezone_offset timezone_database_america_havana[] = 
+static const timezone_offset timezone_database_america_havana[] =
 {
 	{0,-300},
 	{9954000,-240},
@@ -3774,7 +3777,7 @@ static const timezone_offset timezone_database_america_havana[] =
 	{2140664400,-300}
 };
 
-static const timezone_offset timezone_database_america_hermosillo[] = 
+static const timezone_offset timezone_database_america_hermosillo[] =
 {
 	{0,-480},
 	{28800,-420},
@@ -3786,7 +3789,7 @@ static const timezone_offset timezone_database_america_hermosillo[] =
 	{909302400,-420}
 };
 
-static const timezone_offset timezone_database_america_indiana_indianapolis[] = 
+static const timezone_offset timezone_database_america_indiana_indianapolis[] =
 {
 	{0,-300},
 	{9961200,-240},
@@ -3857,7 +3860,7 @@ static const timezone_offset timezone_database_america_indiana_indianapolis[] =
 	{2140668000,-300}
 };
 
-static const timezone_offset timezone_database_america_indiana_knox[] = 
+static const timezone_offset timezone_database_america_indiana_knox[] =
 {
 	{0,-360},
 	{9964800,-300},
@@ -3968,7 +3971,7 @@ static const timezone_offset timezone_database_america_indiana_knox[] =
 	{2140671600,-360}
 };
 
-static const timezone_offset timezone_database_america_indiana_marengo[] = 
+static const timezone_offset timezone_database_america_indiana_marengo[] =
 {
 	{0,-300},
 	{9961200,-240},
@@ -4047,7 +4050,7 @@ static const timezone_offset timezone_database_america_indiana_marengo[] =
 	{2140668000,-300}
 };
 
-static const timezone_offset timezone_database_america_indiana_petersburg[] = 
+static const timezone_offset timezone_database_america_indiana_petersburg[] =
 {
 	{0,-360},
 	{9964800,-300},
@@ -4129,7 +4132,7 @@ static const timezone_offset timezone_database_america_indiana_petersburg[] =
 	{2140668000,-300}
 };
 
-static const timezone_offset timezone_database_america_indiana_tell_city[] = 
+static const timezone_offset timezone_database_america_indiana_tell_city[] =
 {
 	{0,-300},
 	{9961200,-240},
@@ -4199,7 +4202,7 @@ static const timezone_offset timezone_database_america_indiana_tell_city[] =
 	{2140671600,-360}
 };
 
-static const timezone_offset timezone_database_america_indiana_vevay[] = 
+static const timezone_offset timezone_database_america_indiana_vevay[] =
 {
 	{0,-300},
 	{9961200,-240},
@@ -4274,7 +4277,7 @@ static const timezone_offset timezone_database_america_indiana_vevay[] =
 	{2140668000,-300}
 };
 
-static const timezone_offset timezone_database_america_indiana_vincennes[] = 
+static const timezone_offset timezone_database_america_indiana_vincennes[] =
 {
 	{0,-300},
 	{9961200,-240},
@@ -4343,7 +4346,7 @@ static const timezone_offset timezone_database_america_indiana_vincennes[] =
 	{2140668000,-300}
 };
 
-static const timezone_offset timezone_database_america_indiana_winamac[] = 
+static const timezone_offset timezone_database_america_indiana_winamac[] =
 {
 	{0,-300},
 	{9961200,-240},
@@ -4413,7 +4416,7 @@ static const timezone_offset timezone_database_america_indiana_winamac[] =
 	{2140668000,-300}
 };
 
-static const timezone_offset timezone_database_america_inuvik[] = 
+static const timezone_offset timezone_database_america_inuvik[] =
 {
 	{0,-480},
 	{294228000,-420},
@@ -4535,7 +4538,7 @@ static const timezone_offset timezone_database_america_inuvik[] =
 	{2140675200,-420}
 };
 
-static const timezone_offset timezone_database_america_iqaluit[] = 
+static const timezone_offset timezone_database_america_iqaluit[] =
 {
 	{0,-300},
 	{325666800,-240},
@@ -4655,7 +4658,7 @@ static const timezone_offset timezone_database_america_iqaluit[] =
 	{2140668000,-300}
 };
 
-static const timezone_offset timezone_database_america_jamaica[] = 
+static const timezone_offset timezone_database_america_jamaica[] =
 {
 	{0,-300},
 	{126687600,-240},
@@ -4680,7 +4683,7 @@ static const timezone_offset timezone_database_america_jamaica[] =
 	{436341600,-300}
 };
 
-static const timezone_offset timezone_database_america_juneau[] = 
+static const timezone_offset timezone_database_america_juneau[] =
 {
 	{0,-480},
 	{9972000,-420},
@@ -4819,7 +4822,7 @@ static const timezone_offset timezone_database_america_juneau[] =
 	{2140682400,-540}
 };
 
-static const timezone_offset timezone_database_america_kentucky_louisville[] = 
+static const timezone_offset timezone_database_america_kentucky_louisville[] =
 {
 	{0,-300},
 	{9961200,-240},
@@ -4958,7 +4961,7 @@ static const timezone_offset timezone_database_america_kentucky_louisville[] =
 	{2140668000,-300}
 };
 
-static const timezone_offset timezone_database_america_kentucky_monticello[] = 
+static const timezone_offset timezone_database_america_kentucky_monticello[] =
 {
 	{0,-360},
 	{9964800,-300},
@@ -5098,7 +5101,7 @@ static const timezone_offset timezone_database_america_kentucky_monticello[] =
 	{2140668000,-300}
 };
 
-static const timezone_offset timezone_database_america_lima[] = 
+static const timezone_offset timezone_database_america_lima[] =
 {
 	{0,-300},
 	{504939600,-240},
@@ -5111,7 +5114,7 @@ static const timezone_offset timezone_database_america_lima[] =
 	{765172800,-300}
 };
 
-static const timezone_offset timezone_database_america_los_angeles[] = 
+static const timezone_offset timezone_database_america_los_angeles[] =
 {
 	{0,-480},
 	{9972000,-420},
@@ -5252,7 +5255,7 @@ static const timezone_offset timezone_database_america_los_angeles[] =
 	{2140678800,-480}
 };
 
-static const timezone_offset timezone_database_america_maceio[] = 
+static const timezone_offset timezone_database_america_maceio[] =
 {
 	{0,-180},
 	{499748400,-120},
@@ -5275,7 +5278,7 @@ static const timezone_offset timezone_database_america_maceio[] =
 	{1013911200,-180}
 };
 
-static const timezone_offset timezone_database_america_managua[] = 
+static const timezone_offset timezone_database_america_managua[] =
 {
 	{0,-360},
 	{105084000,-300},
@@ -5294,7 +5297,7 @@ static const timezone_offset timezone_database_america_managua[] =
 	{1159682400,-360}
 };
 
-static const timezone_offset timezone_database_america_manaus[] = 
+static const timezone_offset timezone_database_america_manaus[] =
 {
 	{0,-240},
 	{499752000,-180},
@@ -5307,14 +5310,14 @@ static const timezone_offset timezone_database_america_manaus[] =
 	{761713200,-240}
 };
 
-static const timezone_offset timezone_database_america_martinique[] = 
+static const timezone_offset timezone_database_america_martinique[] =
 {
 	{0,-240},
 	{323841600,-180},
 	{338958000,-240}
 };
 
-static const timezone_offset timezone_database_america_matamoros[] = 
+static const timezone_offset timezone_database_america_matamoros[] =
 {
 	{0,-360},
 	{576057600,-300},
@@ -5405,7 +5408,7 @@ static const timezone_offset timezone_database_america_matamoros[] =
 	{2140671600,-360}
 };
 
-static const timezone_offset timezone_database_america_mazatlan[] = 
+static const timezone_offset timezone_database_america_mazatlan[] =
 {
 	{0,-480},
 	{28800,-420},
@@ -5495,7 +5498,7 @@ static const timezone_offset timezone_database_america_mazatlan[] =
 	{2140070400,-420}
 };
 
-static const timezone_offset timezone_database_america_menominee[] = 
+static const timezone_offset timezone_database_america_menominee[] =
 {
 	{0,-300},
 	{120639600,-360},
@@ -5629,7 +5632,7 @@ static const timezone_offset timezone_database_america_menominee[] =
 	{2140671600,-360}
 };
 
-static const timezone_offset timezone_database_america_merida[] = 
+static const timezone_offset timezone_database_america_merida[] =
 {
 	{0,-360},
 	{377935200,-300},
@@ -5720,7 +5723,7 @@ static const timezone_offset timezone_database_america_merida[] =
 	{2140066800,-360}
 };
 
-static const timezone_offset timezone_database_america_metlakatla[] = 
+static const timezone_offset timezone_database_america_metlakatla[] =
 {
 	{0,-480},
 	{9972000,-420},
@@ -5798,7 +5801,7 @@ static const timezone_offset timezone_database_america_metlakatla[] =
 	{2140682400,-540}
 };
 
-static const timezone_offset timezone_database_america_mexico_city[] = 
+static const timezone_offset timezone_database_america_mexico_city[] =
 {
 	{0,-360},
 	{828864000,-300},
@@ -5887,7 +5890,7 @@ static const timezone_offset timezone_database_america_mexico_city[] =
 	{2140066800,-360}
 };
 
-static const timezone_offset timezone_database_america_miquelon[] = 
+static const timezone_offset timezone_database_america_miquelon[] =
 {
 	{0,-240},
 	{326001600,-180},
@@ -5995,7 +5998,7 @@ static const timezone_offset timezone_database_america_miquelon[] =
 	{2140660800,-180}
 };
 
-static const timezone_offset timezone_database_america_moncton[] = 
+static const timezone_offset timezone_database_america_moncton[] =
 {
 	{0,-240},
 	{9957600,-180},
@@ -6134,7 +6137,7 @@ static const timezone_offset timezone_database_america_moncton[] =
 	{2140664400,-240}
 };
 
-static const timezone_offset timezone_database_america_monterrey[] = 
+static const timezone_offset timezone_database_america_monterrey[] =
 {
 	{0,-360},
 	{576057600,-300},
@@ -6225,7 +6228,7 @@ static const timezone_offset timezone_database_america_monterrey[] =
 	{2140066800,-360}
 };
 
-static const timezone_offset timezone_database_america_montevideo[] = 
+static const timezone_offset timezone_database_america_montevideo[] =
 {
 	{0,-180},
 	{9860400,-120},
@@ -6281,7 +6284,7 @@ static const timezone_offset timezone_database_america_montevideo[] =
 	{1425787200,-180}
 };
 
-static const timezone_offset timezone_database_america_nassau[] = 
+static const timezone_offset timezone_database_america_nassau[] =
 {
 	{0,-300},
 	{9961200,-240},
@@ -6422,7 +6425,7 @@ static const timezone_offset timezone_database_america_nassau[] =
 	{2140668000,-300}
 };
 
-static const timezone_offset timezone_database_america_new_york[] = 
+static const timezone_offset timezone_database_america_new_york[] =
 {
 	{0,-300},
 	{9961200,-240},
@@ -6563,7 +6566,7 @@ static const timezone_offset timezone_database_america_new_york[] =
 	{2140668000,-300}
 };
 
-static const timezone_offset timezone_database_america_nipigon[] = 
+static const timezone_offset timezone_database_america_nipigon[] =
 {
 	{0,-300},
 	{136364400,-240},
@@ -6696,7 +6699,7 @@ static const timezone_offset timezone_database_america_nipigon[] =
 	{2140668000,-300}
 };
 
-static const timezone_offset timezone_database_america_nome[] = 
+static const timezone_offset timezone_database_america_nome[] =
 {
 	{0,-660},
 	{9982800,-600},
@@ -6837,7 +6840,7 @@ static const timezone_offset timezone_database_america_nome[] =
 	{2140682400,-540}
 };
 
-static const timezone_offset timezone_database_america_noronha[] = 
+static const timezone_offset timezone_database_america_noronha[] =
 {
 	{0,-120},
 	{499744800,-60},
@@ -6858,7 +6861,7 @@ static const timezone_offset timezone_database_america_noronha[] =
 	{1013907600,-120}
 };
 
-static const timezone_offset timezone_database_america_north_dakota_beulah[] = 
+static const timezone_offset timezone_database_america_north_dakota_beulah[] =
 {
 	{0,-420},
 	{9968400,-360},
@@ -6998,7 +7001,7 @@ static const timezone_offset timezone_database_america_north_dakota_beulah[] =
 	{2140671600,-360}
 };
 
-static const timezone_offset timezone_database_america_north_dakota_center[] = 
+static const timezone_offset timezone_database_america_north_dakota_center[] =
 {
 	{0,-420},
 	{9968400,-360},
@@ -7138,7 +7141,7 @@ static const timezone_offset timezone_database_america_north_dakota_center[] =
 	{2140671600,-360}
 };
 
-static const timezone_offset timezone_database_america_north_dakota_new_salem[] = 
+static const timezone_offset timezone_database_america_north_dakota_new_salem[] =
 {
 	{0,-420},
 	{9968400,-360},
@@ -7278,7 +7281,7 @@ static const timezone_offset timezone_database_america_north_dakota_new_salem[] 
 	{2140671600,-360}
 };
 
-static const timezone_offset timezone_database_america_ojinaga[] = 
+static const timezone_offset timezone_database_america_ojinaga[] =
 {
 	{0,-360},
 	{828864000,-300},
@@ -7366,7 +7369,7 @@ static const timezone_offset timezone_database_america_ojinaga[] =
 	{2140675200,-420}
 };
 
-static const timezone_offset timezone_database_america_pangnirtung[] = 
+static const timezone_offset timezone_database_america_pangnirtung[] =
 {
 	{0,-240},
 	{325663200,-180},
@@ -7485,13 +7488,13 @@ static const timezone_offset timezone_database_america_pangnirtung[] =
 	{2140668000,-300}
 };
 
-static const timezone_offset timezone_database_america_paramaribo[] = 
+static const timezone_offset timezone_database_america_paramaribo[] =
 {
 	{0,-210},
 	{465449400,-180}
 };
 
-static const timezone_offset timezone_database_america_port_au_prince[] = 
+static const timezone_offset timezone_database_america_port_au_prince[] =
 {
 	{0,-300},
 	{421218000,-240},
@@ -7580,7 +7583,7 @@ static const timezone_offset timezone_database_america_port_au_prince[] =
 	{2140668000,-300}
 };
 
-static const timezone_offset timezone_database_america_porto_velho[] = 
+static const timezone_offset timezone_database_america_porto_velho[] =
 {
 	{0,-240},
 	{499752000,-180},
@@ -7591,7 +7594,7 @@ static const timezone_offset timezone_database_america_porto_velho[] =
 	{571201200,-240}
 };
 
-static const timezone_offset timezone_database_america_punta_arenas[] = 
+static const timezone_offset timezone_database_america_punta_arenas[] =
 {
 	{0,-180},
 	{7527600,-240},
@@ -7688,7 +7691,7 @@ static const timezone_offset timezone_database_america_punta_arenas[] =
 	{1471147200,-180}
 };
 
-static const timezone_offset timezone_database_america_rainy_river[] = 
+static const timezone_offset timezone_database_america_rainy_river[] =
 {
 	{0,-360},
 	{136368000,-300},
@@ -7821,7 +7824,7 @@ static const timezone_offset timezone_database_america_rainy_river[] =
 	{2140671600,-360}
 };
 
-static const timezone_offset timezone_database_america_rankin_inlet[] = 
+static const timezone_offset timezone_database_america_rankin_inlet[] =
 {
 	{0,-360},
 	{325670400,-300},
@@ -7940,7 +7943,7 @@ static const timezone_offset timezone_database_america_rankin_inlet[] =
 	{2140671600,-360}
 };
 
-static const timezone_offset timezone_database_america_recife[] = 
+static const timezone_offset timezone_database_america_recife[] =
 {
 	{0,-180},
 	{499748400,-120},
@@ -7961,7 +7964,7 @@ static const timezone_offset timezone_database_america_recife[] =
 	{1013911200,-180}
 };
 
-static const timezone_offset timezone_database_america_resolute[] = 
+static const timezone_offset timezone_database_america_resolute[] =
 {
 	{0,-360},
 	{325670400,-300},
@@ -8078,7 +8081,7 @@ static const timezone_offset timezone_database_america_resolute[] =
 	{2140671600,-360}
 };
 
-static const timezone_offset timezone_database_america_rio_branco[] = 
+static const timezone_offset timezone_database_america_rio_branco[] =
 {
 	{0,-300},
 	{499755600,-240},
@@ -8091,7 +8094,7 @@ static const timezone_offset timezone_database_america_rio_branco[] =
 	{1384056000,-300}
 };
 
-static const timezone_offset timezone_database_america_santarem[] = 
+static const timezone_offset timezone_database_america_santarem[] =
 {
 	{0,-240},
 	{499752000,-180},
@@ -8103,7 +8106,7 @@ static const timezone_offset timezone_database_america_santarem[] =
 	{1214280000,-180}
 };
 
-static const timezone_offset timezone_database_america_santiago[] = 
+static const timezone_offset timezone_database_america_santiago[] =
 {
 	{0,-180},
 	{7527600,-240},
@@ -8242,7 +8245,7 @@ static const timezone_offset timezone_database_america_santiago[] =
 	{2135822400,-180}
 };
 
-static const timezone_offset timezone_database_america_santo_domingo[] = 
+static const timezone_offset timezone_database_america_santo_domingo[] =
 {
 	{0,-270},
 	{4422600,-300},
@@ -8259,7 +8262,7 @@ static const timezone_offset timezone_database_america_santo_domingo[] =
 	{975823200,-240}
 };
 
-static const timezone_offset timezone_database_america_sao_paulo[] = 
+static const timezone_offset timezone_database_america_sao_paulo[] =
 {
 	{0,-180},
 	{499748400,-120},
@@ -8369,7 +8372,7 @@ static const timezone_offset timezone_database_america_sao_paulo[] =
 	{2140657200,-120}
 };
 
-static const timezone_offset timezone_database_america_scoresbysund[] = 
+static const timezone_offset timezone_database_america_scoresbysund[] =
 {
 	{0,-120},
 	{323841600,-60},
@@ -8490,7 +8493,7 @@ static const timezone_offset timezone_database_america_scoresbysund[] =
 	{2140045200,-60}
 };
 
-static const timezone_offset timezone_database_america_sitka[] = 
+static const timezone_offset timezone_database_america_sitka[] =
 {
 	{0,-480},
 	{9972000,-420},
@@ -8631,7 +8634,7 @@ static const timezone_offset timezone_database_america_sitka[] =
 	{2140682400,-540}
 };
 
-static const timezone_offset timezone_database_america_st_johns[] = 
+static const timezone_offset timezone_database_america_st_johns[] =
 {
 	{0,-210},
 	{9955800,-150},
@@ -8772,13 +8775,13 @@ static const timezone_offset timezone_database_america_st_johns[] =
 	{2140662600,-210}
 };
 
-static const timezone_offset timezone_database_america_swift_current[] = 
+static const timezone_offset timezone_database_america_swift_current[] =
 {
 	{0,-420},
 	{73472400,-360}
 };
 
-static const timezone_offset timezone_database_america_tegucigalpa[] = 
+static const timezone_offset timezone_database_america_tegucigalpa[] =
 {
 	{0,-360},
 	{547020000,-300},
@@ -8789,7 +8792,7 @@ static const timezone_offset timezone_database_america_tegucigalpa[] =
 	{1154926800,-360}
 };
 
-static const timezone_offset timezone_database_america_thule[] = 
+static const timezone_offset timezone_database_america_thule[] =
 {
 	{0,-240},
 	{670399200,-180},
@@ -8888,7 +8891,7 @@ static const timezone_offset timezone_database_america_thule[] =
 	{2140664400,-240}
 };
 
-static const timezone_offset timezone_database_america_thunder_bay[] = 
+static const timezone_offset timezone_database_america_thunder_bay[] =
 {
 	{0,-300},
 	{9961200,-240},
@@ -9027,7 +9030,7 @@ static const timezone_offset timezone_database_america_thunder_bay[] =
 	{2140668000,-300}
 };
 
-static const timezone_offset timezone_database_america_tijuana[] = 
+static const timezone_offset timezone_database_america_tijuana[] =
 {
 	{0,-480},
 	{199274400,-420},
@@ -9156,7 +9159,7 @@ static const timezone_offset timezone_database_america_tijuana[] =
 	{2140678800,-480}
 };
 
-static const timezone_offset timezone_database_america_toronto[] = 
+static const timezone_offset timezone_database_america_toronto[] =
 {
 	{0,-300},
 	{9961200,-240},
@@ -9297,7 +9300,7 @@ static const timezone_offset timezone_database_america_toronto[] =
 	{2140668000,-300}
 };
 
-static const timezone_offset timezone_database_america_vancouver[] = 
+static const timezone_offset timezone_database_america_vancouver[] =
 {
 	{0,-480},
 	{9972000,-420},
@@ -9438,7 +9441,7 @@ static const timezone_offset timezone_database_america_vancouver[] =
 	{2140678800,-480}
 };
 
-static const timezone_offset timezone_database_america_whitehorse[] = 
+static const timezone_offset timezone_database_america_whitehorse[] =
 {
 	{0,-480},
 	{325677600,-420},
@@ -9559,7 +9562,7 @@ static const timezone_offset timezone_database_america_whitehorse[] =
 	{2140678800,-480}
 };
 
-static const timezone_offset timezone_database_america_winnipeg[] = 
+static const timezone_offset timezone_database_america_winnipeg[] =
 {
 	{0,-360},
 	{9964800,-300},
@@ -9700,7 +9703,7 @@ static const timezone_offset timezone_database_america_winnipeg[] =
 	{2140671600,-360}
 };
 
-static const timezone_offset timezone_database_america_yakutat[] = 
+static const timezone_offset timezone_database_america_yakutat[] =
 {
 	{0,-540},
 	{9975600,-480},
@@ -9841,7 +9844,7 @@ static const timezone_offset timezone_database_america_yakutat[] =
 	{2140682400,-540}
 };
 
-static const timezone_offset timezone_database_america_yellowknife[] = 
+static const timezone_offset timezone_database_america_yellowknife[] =
 {
 	{0,-420},
 	{325674000,-360},
@@ -9962,7 +9965,7 @@ static const timezone_offset timezone_database_america_yellowknife[] =
 	{2140675200,-420}
 };
 
-static const timezone_offset timezone_database_antarctica_casey[] = 
+static const timezone_offset timezone_database_antarctica_casey[] =
 {
 	{0,480},
 	{1255802400,660},
@@ -9973,7 +9976,7 @@ static const timezone_offset timezone_database_antarctica_casey[] =
 	{1520701200,480}
 };
 
-static const timezone_offset timezone_database_antarctica_davis[] = 
+static const timezone_offset timezone_database_antarctica_davis[] =
 {
 	{0,420},
 	{1255806000,300},
@@ -9982,7 +9985,7 @@ static const timezone_offset timezone_database_antarctica_davis[] =
 	{1329854400,420}
 };
 
-static const timezone_offset timezone_database_antarctica_macquarie[] = 
+static const timezone_offset timezone_database_antarctica_macquarie[] =
 {
 	{0,660},
 	{5673600,600},
@@ -10067,145 +10070,13 @@ static const timezone_offset timezone_database_antarctica_macquarie[] =
 	{1254585600,660}
 };
 
-static const timezone_offset timezone_database_antarctica_mawson[] = 
+static const timezone_offset timezone_database_antarctica_mawson[] =
 {
 	{0,360},
 	{1255809600,300}
 };
 
-static const timezone_offset timezone_database_antarctica_mcmurdo[] = 
-{
-	{0,720},
-	{152632800,780},
-	{162309600,720},
-	{183477600,780},
-	{194968800,720},
-	{215532000,780},
-	{226418400,720},
-	{246981600,780},
-	{257868000,720},
-	{278431200,780},
-	{289317600,720},
-	{309880800,780},
-	{320767200,720},
-	{341330400,780},
-	{352216800,720},
-	{372780000,780},
-	{384271200,720},
-	{404834400,780},
-	{415720800,720},
-	{436284000,780},
-	{447170400,720},
-	{467733600,780},
-	{478620000,720},
-	{499183200,780},
-	{510069600,720},
-	{530632800,780},
-	{541519200,720},
-	{562082400,780},
-	{573573600,720},
-	{594136800,780},
-	{605023200,720},
-	{623772000,780},
-	{637682400,720},
-	{655221600,780},
-	{669132000,720},
-	{686671200,780},
-	{700581600,720},
-	{718120800,780},
-	{732636000,720},
-	{749570400,780},
-	{764085600,720},
-	{781020000,780},
-	{795535200,720},
-	{812469600,780},
-	{826984800,720},
-	{844524000,780},
-	{858434400,720},
-	{875973600,780},
-	{889884000,720},
-	{907423200,780},
-	{921938400,720},
-	{938872800,780},
-	{953388000,720},
-	{970322400,780},
-	{984837600,720},
-	{1002376800,780},
-	{1016287200,720},
-	{1033826400,780},
-	{1047736800,720},
-	{1065276000,780},
-	{1079791200,720},
-	{1096725600,780},
-	{1111240800,720},
-	{1128175200,780},
-	{1142690400,720},
-	{1159624800,780},
-	{1174140000,720},
-	{1191074400,780},
-	{1207404000,720},
-	{1222524000,780},
-	{1238853600,720},
-	{1253973600,780},
-	{1270303200,720},
-	{1285423200,780},
-	{1301752800,720},
-	{1316872800,780},
-	{1333202400,720},
-	{1348927200,780},
-	{1365256800,720},
-	{1380376800,780},
-	{1396706400,720},
-	{1411826400,780},
-	{1428156000,720},
-	{1443276000,780},
-	{1459605600,720},
-	{1474725600,780},
-	{1491055200,720},
-	{1506175200,780},
-	{1522504800,720},
-	{1538229600,780},
-	{1554559200,720},
-	{1569679200,780},
-	{1586008800,720},
-	{1601128800,780},
-	{1617458400,720},
-	{1632578400,780},
-	{1648908000,720},
-	{1664028000,780},
-	{1680357600,720},
-	{1695477600,780},
-	{1712412000,720},
-	{1727532000,780},
-	{1743861600,720},
-	{1758981600,780},
-	{1775311200,720},
-	{1790431200,780},
-	{1806760800,720},
-	{1821880800,780},
-	{1838210400,720},
-	{1853330400,780},
-	{1869660000,720},
-	{1885384800,780},
-	{1901714400,720},
-	{1916834400,780},
-	{1933164000,720},
-	{1948284000,780},
-	{1964613600,720},
-	{1979733600,780},
-	{1996063200,720},
-	{2011183200,780},
-	{2027512800,720},
-	{2042632800,780},
-	{2058962400,720},
-	{2074687200,780},
-	{2091016800,720},
-	{2106136800,780},
-	{2122466400,720},
-	{2137586400,780}
-};
-
-static const timezone_offset timezone_database_antarctica_palmer[] = 
+static const timezone_offset timezone_database_antarctica_palmer[] =
 {
 	{0,-180},
 	{128142000,-120},
@@ -10280,13 +10151,13 @@ static const timezone_offset timezone_database_antarctica_palmer[] =
 	{1471147200,-180}
 };
 
-static const timezone_offset timezone_database_antarctica_rothera[] = 
+static const timezone_offset timezone_database_antarctica_rothera[] =
 {
 	{0,0},
 	{218246400,-180}
 };
 
-static const timezone_offset timezone_database_antarctica_troll[] = 
+static const timezone_offset timezone_database_antarctica_troll[] =
 {
 	{0,0},
 	{1111885200,120},
@@ -10357,128 +10228,7 @@ static const timezone_offset timezone_database_antarctica_troll[] =
 	{2140045200,0}
 };
 
-static const timezone_offset timezone_database_arctic_longyearbyen[] = 
-{
-	{0,60},
-	{323830800,120},
-	{338950800,60},
-	{354675600,120},
-	{370400400,60},
-	{386125200,120},
-	{401850000,60},
-	{417574800,120},
-	{433299600,60},
-	{449024400,120},
-	{465354000,60},
-	{481078800,120},
-	{496803600,60},
-	{512528400,120},
-	{528253200,60},
-	{543978000,120},
-	{559702800,60},
-	{575427600,120},
-	{591152400,60},
-	{606877200,120},
-	{622602000,60},
-	{638326800,120},
-	{654656400,60},
-	{670381200,120},
-	{686106000,60},
-	{701830800,120},
-	{717555600,60},
-	{733280400,120},
-	{749005200,60},
-	{764730000,120},
-	{780454800,60},
-	{796179600,120},
-	{811904400,60},
-	{828234000,120},
-	{846378000,60},
-	{859683600,120},
-	{877827600,60},
-	{891133200,120},
-	{909277200,60},
-	{922582800,120},
-	{941331600,60},
-	{954032400,120},
-	{972781200,60},
-	{985482000,120},
-	{1004230800,60},
-	{1017536400,120},
-	{1035680400,60},
-	{1048986000,120},
-	{1067130000,60},
-	{1080435600,120},
-	{1099184400,60},
-	{1111885200,120},
-	{1130634000,60},
-	{1143334800,120},
-	{1162083600,60},
-	{1174784400,120},
-	{1193533200,60},
-	{1206838800,120},
-	{1224982800,60},
-	{1238288400,120},
-	{1256432400,60},
-	{1269738000,120},
-	{1288486800,60},
-	{1301187600,120},
-	{1319936400,60},
-	{1332637200,120},
-	{1351386000,60},
-	{1364691600,120},
-	{1382835600,60},
-	{1396141200,120},
-	{1414285200,60},
-	{1427590800,120},
-	{1445734800,60},
-	{1459040400,120},
-	{1477789200,60},
-	{1490490000,120},
-	{1509238800,60},
-	{1521939600,120},
-	{1540688400,60},
-	{1553994000,120},
-	{1572138000,60},
-	{1585443600,120},
-	{1603587600,60},
-	{1616893200,120},
-	{1635642000,60},
-	{1648342800,120},
-	{1667091600,60},
-	{1679792400,120},
-	{1698541200,60},
-	{1711846800,120},
-	{1729990800,60},
-	{1743296400,120},
-	{1761440400,60},
-	{1774746000,120},
-	{1792890000,60},
-	{1806195600,120},
-	{1824944400,60},
-	{1837645200,120},
-	{1856394000,60},
-	{1869094800,120},
-	{1887843600,60},
-	{1901149200,120},
-	{1919293200,60},
-	{1932598800,120},
-	{1950742800,60},
-	{1964048400,120},
-	{1982797200,60},
-	{1995498000,120},
-	{2014246800,60},
-	{2026947600,120},
-	{2045696400,60},
-	{2058397200,120},
-	{2077146000,60},
-	{2090451600,120},
-	{2108595600,60},
-	{2121901200,120},
-	{2140045200,60}
-};
-
-static const timezone_offset timezone_database_asia_almaty[] = 
+static const timezone_offset timezone_database_asia_almaty[] =
 {
 	{0,360},
 	{354909600,420},
@@ -10531,7 +10281,7 @@ static const timezone_offset timezone_database_asia_almaty[] =
 	{1099166400,360}
 };
 
-static const timezone_offset timezone_database_asia_amman[] = 
+static const timezone_offset timezone_database_asia_amman[] =
 {
 	{0,120},
 	{108165600,180},
@@ -10652,7 +10402,7 @@ static const timezone_offset timezone_database_asia_amman[] =
 	{2140466400,120}
 };
 
-static const timezone_offset timezone_database_asia_anadyr[] = 
+static const timezone_offset timezone_database_asia_anadyr[] =
 {
 	{0,780},
 	{354884400,840},
@@ -10716,7 +10466,7 @@ static const timezone_offset timezone_database_asia_anadyr[] =
 	{1301151600,720}
 };
 
-static const timezone_offset timezone_database_asia_aqtau[] = 
+static const timezone_offset timezone_database_asia_aqtau[] =
 {
 	{0,300},
 	{370724400,360},
@@ -10766,7 +10516,7 @@ static const timezone_offset timezone_database_asia_aqtau[] =
 	{1080424800,300}
 };
 
-static const timezone_offset timezone_database_asia_aqtobe[] = 
+static const timezone_offset timezone_database_asia_aqtobe[] =
 {
 	{0,300},
 	{354913200,360},
@@ -10817,7 +10567,7 @@ static const timezone_offset timezone_database_asia_aqtobe[] =
 	{1099170000,300}
 };
 
-static const timezone_offset timezone_database_asia_ashgabat[] = 
+static const timezone_offset timezone_database_asia_ashgabat[] =
 {
 	{0,300},
 	{354913200,360},
@@ -10844,7 +10594,7 @@ static const timezone_offset timezone_database_asia_ashgabat[] =
 	{695772000,300}
 };
 
-static const timezone_offset timezone_database_asia_atyrau[] = 
+static const timezone_offset timezone_database_asia_atyrau[] =
 {
 	{0,300},
 	{370724400,360},
@@ -10893,7 +10643,7 @@ static const timezone_offset timezone_database_asia_atyrau[] =
 	{1080424800,300}
 };
 
-static const timezone_offset timezone_database_asia_baghdad[] = 
+static const timezone_offset timezone_database_asia_baghdad[] =
 {
 	{0,180},
 	{389048400,240},
@@ -10950,13 +10700,7 @@ static const timezone_offset timezone_database_asia_baghdad[] =
 	{1191196800,180}
 };
 
-static const timezone_offset timezone_database_asia_bahrain[] = 
-{
-	{0,240},
-	{76190400,180}
-};
-
-static const timezone_offset timezone_database_asia_baku[] = 
+static const timezone_offset timezone_database_asia_baku[] =
 {
 	{0,240},
 	{354916800,300},
@@ -11023,7 +10767,7 @@ static const timezone_offset timezone_database_asia_baku[] =
 	{1445731200,240}
 };
 
-static const timezone_offset timezone_database_asia_barnaul[] = 
+static const timezone_offset timezone_database_asia_barnaul[] =
 {
 	{0,420},
 	{354906000,480},
@@ -11092,7 +10836,7 @@ static const timezone_offset timezone_database_asia_barnaul[] =
 	{1459022400,420}
 };
 
-static const timezone_offset timezone_database_asia_beirut[] = 
+static const timezone_offset timezone_database_asia_beirut[] =
 {
 	{0,120},
 	{78012000,180},
@@ -11219,7 +10963,7 @@ static const timezone_offset timezone_database_asia_beirut[] =
 	{2140030800,120}
 };
 
-static const timezone_offset timezone_database_asia_bishkek[] = 
+static const timezone_offset timezone_database_asia_bishkek[] =
 {
 	{0,360},
 	{354909600,420},
@@ -11272,7 +11016,7 @@ static const timezone_offset timezone_database_asia_bishkek[] =
 	{1111872600,360}
 };
 
-static const timezone_offset timezone_database_asia_chita[] = 
+static const timezone_offset timezone_database_asia_chita[] =
 {
 	{0,540},
 	{354898800,600},
@@ -11340,7 +11084,7 @@ static const timezone_offset timezone_database_asia_chita[] =
 	{1459015200,540}
 };
 
-static const timezone_offset timezone_database_asia_choibalsan[] = 
+static const timezone_offset timezone_database_asia_choibalsan[] =
 {
 	{0,420},
 	{252435600,480},
@@ -11395,7 +11139,7 @@ static const timezone_offset timezone_database_asia_choibalsan[] =
 	{1474642800,480}
 };
 
-static const timezone_offset timezone_database_asia_colombo[] = 
+static const timezone_offset timezone_database_asia_colombo[] =
 {
 	{0,330},
 	{832962600,390},
@@ -11403,7 +11147,7 @@ static const timezone_offset timezone_database_asia_colombo[] =
 	{1145039400,330}
 };
 
-static const timezone_offset timezone_database_asia_damascus[] = 
+static const timezone_offset timezone_database_asia_damascus[] =
 {
 	{0,120},
 	{10368000,180},
@@ -11534,21 +11278,21 @@ static const timezone_offset timezone_database_asia_damascus[] =
 	{2140462800,120}
 };
 
-static const timezone_offset timezone_database_asia_dhaka[] = 
+static const timezone_offset timezone_database_asia_dhaka[] =
 {
 	{0,360},
 	{1245430800,420},
 	{1262278800,360}
 };
 
-static const timezone_offset timezone_database_asia_dili[] = 
+static const timezone_offset timezone_database_asia_dili[] =
 {
 	{0,540},
 	{199897200,480},
 	{969120000,540}
 };
 
-static const timezone_offset timezone_database_asia_dushanbe[] = 
+static const timezone_offset timezone_database_asia_dushanbe[] =
 {
 	{0,360},
 	{354909600,420},
@@ -11574,7 +11318,7 @@ static const timezone_offset timezone_database_asia_dushanbe[] =
 	{684363600,300}
 };
 
-static const timezone_offset timezone_database_asia_famagusta[] = 
+static const timezone_offset timezone_database_asia_famagusta[] =
 {
 	{0,120},
 	{166572000,180},
@@ -11703,7 +11447,7 @@ static const timezone_offset timezone_database_asia_famagusta[] =
 	{2140045200,120}
 };
 
-static const timezone_offset timezone_database_asia_gaza[] = 
+static const timezone_offset timezone_database_asia_gaza[] =
 {
 	{0,120},
 	{142380000,180},
@@ -11818,7 +11562,7 @@ static const timezone_offset timezone_database_asia_gaza[] =
 	{2140552800,120}
 };
 
-static const timezone_offset timezone_database_asia_hebron[] = 
+static const timezone_offset timezone_database_asia_hebron[] =
 {
 	{0,120},
 	{142380000,180},
@@ -11935,13 +11679,13 @@ static const timezone_offset timezone_database_asia_hebron[] =
 	{2140552800,120}
 };
 
-static const timezone_offset timezone_database_asia_ho_chi_minh[] = 
+static const timezone_offset timezone_database_asia_ho_chi_minh[] =
 {
 	{0,480},
 	{171820800,420}
 };
 
-static const timezone_offset timezone_database_asia_hong_kong[] = 
+static const timezone_offset timezone_database_asia_hong_kong[] =
 {
 	{0,480},
 	{9315000,540},
@@ -11962,7 +11706,7 @@ static const timezone_offset timezone_database_asia_hong_kong[] =
 	{309292200,480}
 };
 
-static const timezone_offset timezone_database_asia_hovd[] = 
+static const timezone_offset timezone_database_asia_hovd[] =
 {
 	{0,360},
 	{252439200,420},
@@ -12016,7 +11760,7 @@ static const timezone_offset timezone_database_asia_hovd[] =
 	{1474646400,420}
 };
 
-static const timezone_offset timezone_database_asia_irkutsk[] = 
+static const timezone_offset timezone_database_asia_irkutsk[] =
 {
 	{0,480},
 	{354902400,540},
@@ -12083,7 +11827,7 @@ static const timezone_offset timezone_database_asia_irkutsk[] =
 	{1414256400,480}
 };
 
-static const timezone_offset timezone_database_asia_jerusalem[] = 
+static const timezone_offset timezone_database_asia_jerusalem[] =
 {
 	{0,120},
 	{142380000,180},
@@ -12198,7 +11942,7 @@ static const timezone_offset timezone_database_asia_jerusalem[] =
 	{2140038000,120}
 };
 
-static const timezone_offset timezone_database_asia_kamchatka[] = 
+static const timezone_offset timezone_database_asia_kamchatka[] =
 {
 	{0,720},
 	{354888000,780},
@@ -12263,7 +12007,7 @@ static const timezone_offset timezone_database_asia_kamchatka[] =
 	{1301151600,720}
 };
 
-static const timezone_offset timezone_database_asia_karachi[] = 
+static const timezone_offset timezone_database_asia_karachi[] =
 {
 	{0,300},
 	{1018119600,360},
@@ -12274,13 +12018,13 @@ static const timezone_offset timezone_database_asia_karachi[] =
 	{1257012000,300}
 };
 
-static const timezone_offset timezone_database_asia_kathmandu[] = 
+static const timezone_offset timezone_database_asia_kathmandu[] =
 {
 	{0,330},
 	{504901800,345}
 };
 
-static const timezone_offset timezone_database_asia_khandyga[] = 
+static const timezone_offset timezone_database_asia_khandyga[] =
 {
 	{0,540},
 	{354898800,600},
@@ -12349,7 +12093,7 @@ static const timezone_offset timezone_database_asia_khandyga[] =
 	{1414252800,540}
 };
 
-static const timezone_offset timezone_database_asia_krasnoyarsk[] = 
+static const timezone_offset timezone_database_asia_krasnoyarsk[] =
 {
 	{0,420},
 	{354906000,480},
@@ -12416,13 +12160,13 @@ static const timezone_offset timezone_database_asia_krasnoyarsk[] =
 	{1414260000,420}
 };
 
-static const timezone_offset timezone_database_asia_kuala_lumpur[] = 
+static const timezone_offset timezone_database_asia_kuala_lumpur[] =
 {
 	{0,450},
 	{378664200,480}
 };
 
-static const timezone_offset timezone_database_asia_macau[] = 
+static const timezone_offset timezone_database_asia_macau[] =
 {
 	{0,480},
 	{9315000,540},
@@ -12443,7 +12187,7 @@ static const timezone_offset timezone_database_asia_macau[] =
 	{309292200,480}
 };
 
-static const timezone_offset timezone_database_asia_magadan[] = 
+static const timezone_offset timezone_database_asia_magadan[] =
 {
 	{0,660},
 	{354891600,720},
@@ -12511,14 +12255,14 @@ static const timezone_offset timezone_database_asia_magadan[] =
 	{1461427200,660}
 };
 
-static const timezone_offset timezone_database_asia_manila[] = 
+static const timezone_offset timezone_database_asia_manila[] =
 {
 	{0,480},
 	{259344000,540},
 	{275151600,480}
 };
 
-static const timezone_offset timezone_database_asia_nicosia[] = 
+static const timezone_offset timezone_database_asia_nicosia[] =
 {
 	{0,120},
 	{166572000,180},
@@ -12649,7 +12393,7 @@ static const timezone_offset timezone_database_asia_nicosia[] =
 	{2140045200,120}
 };
 
-static const timezone_offset timezone_database_asia_novokuznetsk[] = 
+static const timezone_offset timezone_database_asia_novokuznetsk[] =
 {
 	{0,420},
 	{354906000,480},
@@ -12714,7 +12458,7 @@ static const timezone_offset timezone_database_asia_novokuznetsk[] =
 	{1301169600,420}
 };
 
-static const timezone_offset timezone_database_asia_novosibirsk[] = 
+static const timezone_offset timezone_database_asia_novosibirsk[] =
 {
 	{0,420},
 	{354906000,480},
@@ -12783,7 +12527,7 @@ static const timezone_offset timezone_database_asia_novosibirsk[] =
 	{1469304000,420}
 };
 
-static const timezone_offset timezone_database_asia_omsk[] = 
+static const timezone_offset timezone_database_asia_omsk[] =
 {
 	{0,360},
 	{354909600,420},
@@ -12850,7 +12594,7 @@ static const timezone_offset timezone_database_asia_omsk[] =
 	{1414263600,360}
 };
 
-static const timezone_offset timezone_database_asia_oral[] = 
+static const timezone_offset timezone_database_asia_oral[] =
 {
 	{0,300},
 	{354913200,360},
@@ -12899,26 +12643,26 @@ static const timezone_offset timezone_database_asia_oral[] =
 	{1080424800,300}
 };
 
-static const timezone_offset timezone_database_asia_pontianak[] = 
+static const timezone_offset timezone_database_asia_pontianak[] =
 {
 	{0,480},
 	{567964800,420}
 };
 
-static const timezone_offset timezone_database_asia_pyongyang[] = 
+static const timezone_offset timezone_database_asia_pyongyang[] =
 {
 	{0,540},
 	{1439564400,510},
 	{1525446000,540}
 };
 
-static const timezone_offset timezone_database_asia_qatar[] = 
+static const timezone_offset timezone_database_asia_qatar[] =
 {
 	{0,240},
 	{76190400,180}
 };
 
-static const timezone_offset timezone_database_asia_qyzylorda[] = 
+static const timezone_offset timezone_database_asia_qyzylorda[] =
 {
 	{0,300},
 	{354913200,360},
@@ -12966,7 +12710,7 @@ static const timezone_offset timezone_database_asia_qyzylorda[] =
 	{1080421200,360}
 };
 
-static const timezone_offset timezone_database_asia_sakhalin[] = 
+static const timezone_offset timezone_database_asia_sakhalin[] =
 {
 	{0,660},
 	{354891600,720},
@@ -13033,7 +12777,7 @@ static const timezone_offset timezone_database_asia_sakhalin[] =
 	{1459008000,660}
 };
 
-static const timezone_offset timezone_database_asia_samarkand[] = 
+static const timezone_offset timezone_database_asia_samarkand[] =
 {
 	{0,300},
 	{354913200,360},
@@ -13058,7 +12802,7 @@ static const timezone_offset timezone_database_asia_samarkand[] =
 	{686091600,300}
 };
 
-static const timezone_offset timezone_database_asia_seoul[] = 
+static const timezone_offset timezone_database_asia_seoul[] =
 {
 	{0,540},
 	{547578000,600},
@@ -13067,7 +12811,7 @@ static const timezone_offset timezone_database_asia_seoul[] =
 	{592333200,540}
 };
 
-static const timezone_offset timezone_database_asia_shanghai[] = 
+static const timezone_offset timezone_database_asia_shanghai[] =
 {
 	{0,480},
 	{515527200,540},
@@ -13084,13 +12828,13 @@ static const timezone_offset timezone_database_asia_shanghai[] =
 	{684867600,480}
 };
 
-static const timezone_offset timezone_database_asia_singapore[] = 
+static const timezone_offset timezone_database_asia_singapore[] =
 {
 	{0,450},
 	{378664200,480}
 };
 
-static const timezone_offset timezone_database_asia_srednekolymsk[] = 
+static const timezone_offset timezone_database_asia_srednekolymsk[] =
 {
 	{0,660},
 	{354891600,720},
@@ -13157,7 +12901,7 @@ static const timezone_offset timezone_database_asia_srednekolymsk[] =
 	{1414245600,660}
 };
 
-static const timezone_offset timezone_database_asia_taipei[] = 
+static const timezone_offset timezone_database_asia_taipei[] =
 {
 	{0,480},
 	{133977600,540},
@@ -13168,7 +12912,7 @@ static const timezone_offset timezone_database_asia_taipei[] =
 	{307551600,480}
 };
 
-static const timezone_offset timezone_database_asia_tashkent[] = 
+static const timezone_offset timezone_database_asia_tashkent[] =
 {
 	{0,360},
 	{354909600,420},
@@ -13194,7 +12938,7 @@ static const timezone_offset timezone_database_asia_tashkent[] =
 	{686091600,300}
 };
 
-static const timezone_offset timezone_database_asia_tbilisi[] = 
+static const timezone_offset timezone_database_asia_tbilisi[] =
 {
 	{0,240},
 	{354916800,300},
@@ -13245,7 +12989,7 @@ static const timezone_offset timezone_database_asia_tbilisi[] =
 	{1111878000,240}
 };
 
-static const timezone_offset timezone_database_asia_tehran[] = 
+static const timezone_offset timezone_database_asia_tehran[] =
 {
 	{0,210},
 	{247177800,240},
@@ -13348,13 +13092,13 @@ static const timezone_offset timezone_database_asia_tehran[] =
 	{2137087800,210}
 };
 
-static const timezone_offset timezone_database_asia_thimphu[] = 
+static const timezone_offset timezone_database_asia_thimphu[] =
 {
 	{0,330},
 	{560025000,360}
 };
 
-static const timezone_offset timezone_database_asia_tomsk[] = 
+static const timezone_offset timezone_database_asia_tomsk[] =
 {
 	{0,420},
 	{354906000,480},
@@ -13423,7 +13167,7 @@ static const timezone_offset timezone_database_asia_tomsk[] =
 	{1464465600,420}
 };
 
-static const timezone_offset timezone_database_asia_ulaanbaatar[] = 
+static const timezone_offset timezone_database_asia_ulaanbaatar[] =
 {
 	{0,420},
 	{252435600,480},
@@ -13477,7 +13221,7 @@ static const timezone_offset timezone_database_asia_ulaanbaatar[] =
 	{1474642800,480}
 };
 
-static const timezone_offset timezone_database_asia_ust_nera[] = 
+static const timezone_offset timezone_database_asia_ust_nera[] =
 {
 	{0,540},
 	{354898800,720},
@@ -13545,7 +13289,7 @@ static const timezone_offset timezone_database_asia_ust_nera[] =
 	{1414249200,600}
 };
 
-static const timezone_offset timezone_database_asia_vladivostok[] = 
+static const timezone_offset timezone_database_asia_vladivostok[] =
 {
 	{0,600},
 	{354895200,660},
@@ -13612,7 +13356,7 @@ static const timezone_offset timezone_database_asia_vladivostok[] =
 	{1414249200,600}
 };
 
-static const timezone_offset timezone_database_asia_yakutsk[] = 
+static const timezone_offset timezone_database_asia_yakutsk[] =
 {
 	{0,540},
 	{354898800,600},
@@ -13679,7 +13423,7 @@ static const timezone_offset timezone_database_asia_yakutsk[] =
 	{1414252800,540}
 };
 
-static const timezone_offset timezone_database_asia_yekaterinburg[] = 
+static const timezone_offset timezone_database_asia_yekaterinburg[] =
 {
 	{0,300},
 	{354913200,360},
@@ -13746,7 +13490,7 @@ static const timezone_offset timezone_database_asia_yekaterinburg[] =
 	{1414267200,300}
 };
 
-static const timezone_offset timezone_database_asia_yerevan[] = 
+static const timezone_offset timezone_database_asia_yerevan[] =
 {
 	{0,240},
 	{354916800,300},
@@ -13809,7 +13553,7 @@ static const timezone_offset timezone_database_asia_yerevan[] =
 	{1319925600,240}
 };
 
-static const timezone_offset timezone_database_atlantic_azores[] = 
+static const timezone_offset timezone_database_atlantic_azores[] =
 {
 	{0,-60},
 	{228272400,0},
@@ -13934,7 +13678,7 @@ static const timezone_offset timezone_database_atlantic_azores[] =
 	{2140045200,-60}
 };
 
-static const timezone_offset timezone_database_atlantic_bermuda[] = 
+static const timezone_offset timezone_database_atlantic_bermuda[] =
 {
 	{0,-240},
 	{136360800,-180},
@@ -14067,7 +13811,7 @@ static const timezone_offset timezone_database_atlantic_bermuda[] =
 	{2140664400,-240}
 };
 
-static const timezone_offset timezone_database_atlantic_canary[] = 
+static const timezone_offset timezone_database_atlantic_canary[] =
 {
 	{0,0},
 	{323827200,60},
@@ -14188,13 +13932,13 @@ static const timezone_offset timezone_database_atlantic_canary[] =
 	{2140045200,0}
 };
 
-static const timezone_offset timezone_database_atlantic_cape_verde[] = 
+static const timezone_offset timezone_database_atlantic_cape_verde[] =
 {
 	{0,-120},
 	{186120000,-60}
 };
 
-static const timezone_offset timezone_database_atlantic_faroe[] = 
+static const timezone_offset timezone_database_atlantic_faroe[] =
 {
 	{0,0},
 	{354675600,60},
@@ -14313,7 +14057,7 @@ static const timezone_offset timezone_database_atlantic_faroe[] =
 	{2140045200,0}
 };
 
-static const timezone_offset timezone_database_atlantic_madeira[] = 
+static const timezone_offset timezone_database_atlantic_madeira[] =
 {
 	{0,0},
 	{228268800,60},
@@ -14440,7 +14184,7 @@ static const timezone_offset timezone_database_atlantic_madeira[] =
 	{2140045200,0}
 };
 
-static const timezone_offset timezone_database_atlantic_stanley[] = 
+static const timezone_offset timezone_database_atlantic_stanley[] =
 {
 	{0,-240},
 	{420609600,-180},
@@ -14500,7 +14244,7 @@ static const timezone_offset timezone_database_atlantic_stanley[] =
 	{1283666400,-180}
 };
 
-static const timezone_offset timezone_database_australia_adelaide[] = 
+static const timezone_offset timezone_database_australia_adelaide[] =
 {
 	{0,570},
 	{57688200,630},
@@ -14638,7 +14382,7 @@ static const timezone_offset timezone_database_australia_adelaide[] =
 	{2138200200,630}
 };
 
-static const timezone_offset timezone_database_australia_brisbane[] = 
+static const timezone_offset timezone_database_australia_brisbane[] =
 {
 	{0,600},
 	{57686400,660},
@@ -14651,7 +14395,7 @@ static const timezone_offset timezone_database_australia_brisbane[] =
 	{699379200,600}
 };
 
-static const timezone_offset timezone_database_australia_broken_hill[] = 
+static const timezone_offset timezone_database_australia_broken_hill[] =
 {
 	{0,570},
 	{57688200,630},
@@ -14789,7 +14533,7 @@ static const timezone_offset timezone_database_australia_broken_hill[] =
 	{2138200200,630}
 };
 
-static const timezone_offset timezone_database_australia_currie[] = 
+static const timezone_offset timezone_database_australia_currie[] =
 {
 	{0,600},
 	{57686400,660},
@@ -14927,7 +14671,7 @@ static const timezone_offset timezone_database_australia_currie[] =
 	{2138198400,660}
 };
 
-static const timezone_offset timezone_database_australia_eucla[] = 
+static const timezone_offset timezone_database_australia_eucla[] =
 {
 	{0,525},
 	{152039700,585},
@@ -14944,7 +14688,7 @@ static const timezone_offset timezone_database_australia_eucla[] =
 	{1238260500,525}
 };
 
-static const timezone_offset timezone_database_australia_hobart[] = 
+static const timezone_offset timezone_database_australia_hobart[] =
 {
 	{0,660},
 	{5673600,600},
@@ -15085,7 +14829,7 @@ static const timezone_offset timezone_database_australia_hobart[] =
 	{2138198400,660}
 };
 
-static const timezone_offset timezone_database_australia_lindeman[] = 
+static const timezone_offset timezone_database_australia_lindeman[] =
 {
 	{0,600},
 	{57686400,660},
@@ -15102,7 +14846,7 @@ static const timezone_offset timezone_database_australia_lindeman[] =
 	{762883200,600}
 };
 
-static const timezone_offset timezone_database_australia_lord_howe[] = 
+static const timezone_offset timezone_database_australia_lord_howe[] =
 {
 	{0,600},
 	{352216800,630},
@@ -15221,7 +14965,7 @@ static const timezone_offset timezone_database_australia_lord_howe[] =
 	{2138196600,660}
 };
 
-static const timezone_offset timezone_database_australia_melbourne[] = 
+static const timezone_offset timezone_database_australia_melbourne[] =
 {
 	{0,600},
 	{57686400,660},
@@ -15359,7 +15103,7 @@ static const timezone_offset timezone_database_australia_melbourne[] =
 	{2138198400,660}
 };
 
-static const timezone_offset timezone_database_australia_perth[] = 
+static const timezone_offset timezone_database_australia_perth[] =
 {
 	{0,480},
 	{152042400,540},
@@ -15376,7 +15120,7 @@ static const timezone_offset timezone_database_australia_perth[] =
 	{1238263200,480}
 };
 
-static const timezone_offset timezone_database_australia_sydney[] = 
+static const timezone_offset timezone_database_australia_sydney[] =
 {
 	{0,600},
 	{57686400,660},
@@ -15514,7 +15258,7 @@ static const timezone_offset timezone_database_australia_sydney[] =
 	{2138198400,660}
 };
 
-static const timezone_offset timezone_database_europe_amsterdam[] = 
+static const timezone_offset timezone_database_cet[] =
 {
 	{0,60},
 	{228877200,120},
@@ -15641,7 +15385,543 @@ static const timezone_offset timezone_database_europe_amsterdam[] =
 	{2140045200,60}
 };
 
-static const timezone_offset timezone_database_europe_andorra[] = 
+static const timezone_offset timezone_database_cst6cdt[] =
+{
+	{0,-360},
+	{9964800,-300},
+	{25686000,-360},
+	{41414400,-300},
+	{57740400,-360},
+	{73468800,-300},
+	{89190000,-360},
+	{104918400,-300},
+	{120639600,-360},
+	{126691200,-300},
+	{152089200,-360},
+	{162374400,-300},
+	{183538800,-360},
+	{199267200,-300},
+	{215593200,-360},
+	{230716800,-300},
+	{247042800,-360},
+	{262771200,-300},
+	{278492400,-360},
+	{294220800,-300},
+	{309942000,-360},
+	{325670400,-300},
+	{341391600,-360},
+	{357120000,-300},
+	{372841200,-360},
+	{388569600,-300},
+	{404895600,-360},
+	{420019200,-300},
+	{436345200,-360},
+	{452073600,-300},
+	{467794800,-360},
+	{483523200,-300},
+	{499244400,-360},
+	{514972800,-300},
+	{530694000,-360},
+	{544608000,-300},
+	{562143600,-360},
+	{576057600,-300},
+	{594198000,-360},
+	{607507200,-300},
+	{625647600,-360},
+	{638956800,-300},
+	{657097200,-360},
+	{671011200,-300},
+	{688546800,-360},
+	{702460800,-300},
+	{719996400,-360},
+	{733910400,-300},
+	{752050800,-360},
+	{765360000,-300},
+	{783500400,-360},
+	{796809600,-300},
+	{814950000,-360},
+	{828864000,-300},
+	{846399600,-360},
+	{860313600,-300},
+	{877849200,-360},
+	{891763200,-300},
+	{909298800,-360},
+	{923212800,-300},
+	{941353200,-360},
+	{954662400,-300},
+	{972802800,-360},
+	{986112000,-300},
+	{1004252400,-360},
+	{1018166400,-300},
+	{1035702000,-360},
+	{1049616000,-300},
+	{1067151600,-360},
+	{1081065600,-300},
+	{1099206000,-360},
+	{1112515200,-300},
+	{1130655600,-360},
+	{1143964800,-300},
+	{1162105200,-360},
+	{1173600000,-300},
+	{1194159600,-360},
+	{1205049600,-300},
+	{1225609200,-360},
+	{1236499200,-300},
+	{1257058800,-360},
+	{1268553600,-300},
+	{1289113200,-360},
+	{1300003200,-300},
+	{1320562800,-360},
+	{1331452800,-300},
+	{1352012400,-360},
+	{1362902400,-300},
+	{1383462000,-360},
+	{1394352000,-300},
+	{1414911600,-360},
+	{1425801600,-300},
+	{1446361200,-360},
+	{1457856000,-300},
+	{1478415600,-360},
+	{1489305600,-300},
+	{1509865200,-360},
+	{1520755200,-300},
+	{1541314800,-360},
+	{1552204800,-300},
+	{1572764400,-360},
+	{1583654400,-300},
+	{1604214000,-360},
+	{1615708800,-300},
+	{1636268400,-360},
+	{1647158400,-300},
+	{1667718000,-360},
+	{1678608000,-300},
+	{1699167600,-360},
+	{1710057600,-300},
+	{1730617200,-360},
+	{1741507200,-300},
+	{1762066800,-360},
+	{1772956800,-300},
+	{1793516400,-360},
+	{1805011200,-300},
+	{1825570800,-360},
+	{1836460800,-300},
+	{1857020400,-360},
+	{1867910400,-300},
+	{1888470000,-360},
+	{1899360000,-300},
+	{1919919600,-360},
+	{1930809600,-300},
+	{1951369200,-360},
+	{1962864000,-300},
+	{1983423600,-360},
+	{1994313600,-300},
+	{2014873200,-360},
+	{2025763200,-300},
+	{2046322800,-360},
+	{2057212800,-300},
+	{2077772400,-360},
+	{2088662400,-300},
+	{2109222000,-360},
+	{2120112000,-300},
+	{2140671600,-360}
+};
+
+static const timezone_offset timezone_database_eet[] =
+{
+	{0,120},
+	{228877200,180},
+	{243997200,120},
+	{260326800,180},
+	{276051600,120},
+	{291776400,180},
+	{307501200,120},
+	{323830800,180},
+	{338950800,120},
+	{354675600,180},
+	{370400400,120},
+	{386125200,180},
+	{401850000,120},
+	{417574800,180},
+	{433299600,120},
+	{449024400,180},
+	{465354000,120},
+	{481078800,180},
+	{496803600,120},
+	{512528400,180},
+	{528253200,120},
+	{543978000,180},
+	{559702800,120},
+	{575427600,180},
+	{591152400,120},
+	{606877200,180},
+	{622602000,120},
+	{638326800,180},
+	{654656400,120},
+	{670381200,180},
+	{686106000,120},
+	{701830800,180},
+	{717555600,120},
+	{733280400,180},
+	{749005200,120},
+	{764730000,180},
+	{780454800,120},
+	{796179600,180},
+	{811904400,120},
+	{828234000,180},
+	{846378000,120},
+	{859683600,180},
+	{877827600,120},
+	{891133200,180},
+	{909277200,120},
+	{922582800,180},
+	{941331600,120},
+	{954032400,180},
+	{972781200,120},
+	{985482000,180},
+	{1004230800,120},
+	{1017536400,180},
+	{1035680400,120},
+	{1048986000,180},
+	{1067130000,120},
+	{1080435600,180},
+	{1099184400,120},
+	{1111885200,180},
+	{1130634000,120},
+	{1143334800,180},
+	{1162083600,120},
+	{1174784400,180},
+	{1193533200,120},
+	{1206838800,180},
+	{1224982800,120},
+	{1238288400,180},
+	{1256432400,120},
+	{1269738000,180},
+	{1288486800,120},
+	{1301187600,180},
+	{1319936400,120},
+	{1332637200,180},
+	{1351386000,120},
+	{1364691600,180},
+	{1382835600,120},
+	{1396141200,180},
+	{1414285200,120},
+	{1427590800,180},
+	{1445734800,120},
+	{1459040400,180},
+	{1477789200,120},
+	{1490490000,180},
+	{1509238800,120},
+	{1521939600,180},
+	{1540688400,120},
+	{1553994000,180},
+	{1572138000,120},
+	{1585443600,180},
+	{1603587600,120},
+	{1616893200,180},
+	{1635642000,120},
+	{1648342800,180},
+	{1667091600,120},
+	{1679792400,180},
+	{1698541200,120},
+	{1711846800,180},
+	{1729990800,120},
+	{1743296400,180},
+	{1761440400,120},
+	{1774746000,180},
+	{1792890000,120},
+	{1806195600,180},
+	{1824944400,120},
+	{1837645200,180},
+	{1856394000,120},
+	{1869094800,180},
+	{1887843600,120},
+	{1901149200,180},
+	{1919293200,120},
+	{1932598800,180},
+	{1950742800,120},
+	{1964048400,180},
+	{1982797200,120},
+	{1995498000,180},
+	{2014246800,120},
+	{2026947600,180},
+	{2045696400,120},
+	{2058397200,180},
+	{2077146000,120},
+	{2090451600,180},
+	{2108595600,120},
+	{2121901200,180},
+	{2140045200,120}
+};
+
+static const timezone_offset timezone_database_est5edt[] =
+{
+	{0,-300},
+	{9961200,-240},
+	{25682400,-300},
+	{41410800,-240},
+	{57736800,-300},
+	{73465200,-240},
+	{89186400,-300},
+	{104914800,-240},
+	{120636000,-300},
+	{126687600,-240},
+	{152085600,-300},
+	{162370800,-240},
+	{183535200,-300},
+	{199263600,-240},
+	{215589600,-300},
+	{230713200,-240},
+	{247039200,-300},
+	{262767600,-240},
+	{278488800,-300},
+	{294217200,-240},
+	{309938400,-300},
+	{325666800,-240},
+	{341388000,-300},
+	{357116400,-240},
+	{372837600,-300},
+	{388566000,-240},
+	{404892000,-300},
+	{420015600,-240},
+	{436341600,-300},
+	{452070000,-240},
+	{467791200,-300},
+	{483519600,-240},
+	{499240800,-300},
+	{514969200,-240},
+	{530690400,-300},
+	{544604400,-240},
+	{562140000,-300},
+	{576054000,-240},
+	{594194400,-300},
+	{607503600,-240},
+	{625644000,-300},
+	{638953200,-240},
+	{657093600,-300},
+	{671007600,-240},
+	{688543200,-300},
+	{702457200,-240},
+	{719992800,-300},
+	{733906800,-240},
+	{752047200,-300},
+	{765356400,-240},
+	{783496800,-300},
+	{796806000,-240},
+	{814946400,-300},
+	{828860400,-240},
+	{846396000,-300},
+	{860310000,-240},
+	{877845600,-300},
+	{891759600,-240},
+	{909295200,-300},
+	{923209200,-240},
+	{941349600,-300},
+	{954658800,-240},
+	{972799200,-300},
+	{986108400,-240},
+	{1004248800,-300},
+	{1018162800,-240},
+	{1035698400,-300},
+	{1049612400,-240},
+	{1067148000,-300},
+	{1081062000,-240},
+	{1099202400,-300},
+	{1112511600,-240},
+	{1130652000,-300},
+	{1143961200,-240},
+	{1162101600,-300},
+	{1173596400,-240},
+	{1194156000,-300},
+	{1205046000,-240},
+	{1225605600,-300},
+	{1236495600,-240},
+	{1257055200,-300},
+	{1268550000,-240},
+	{1289109600,-300},
+	{1299999600,-240},
+	{1320559200,-300},
+	{1331449200,-240},
+	{1352008800,-300},
+	{1362898800,-240},
+	{1383458400,-300},
+	{1394348400,-240},
+	{1414908000,-300},
+	{1425798000,-240},
+	{1446357600,-300},
+	{1457852400,-240},
+	{1478412000,-300},
+	{1489302000,-240},
+	{1509861600,-300},
+	{1520751600,-240},
+	{1541311200,-300},
+	{1552201200,-240},
+	{1572760800,-300},
+	{1583650800,-240},
+	{1604210400,-300},
+	{1615705200,-240},
+	{1636264800,-300},
+	{1647154800,-240},
+	{1667714400,-300},
+	{1678604400,-240},
+	{1699164000,-300},
+	{1710054000,-240},
+	{1730613600,-300},
+	{1741503600,-240},
+	{1762063200,-300},
+	{1772953200,-240},
+	{1793512800,-300},
+	{1805007600,-240},
+	{1825567200,-300},
+	{1836457200,-240},
+	{1857016800,-300},
+	{1867906800,-240},
+	{1888466400,-300},
+	{1899356400,-240},
+	{1919916000,-300},
+	{1930806000,-240},
+	{1951365600,-300},
+	{1962860400,-240},
+	{1983420000,-300},
+	{1994310000,-240},
+	{2014869600,-300},
+	{2025759600,-240},
+	{2046319200,-300},
+	{2057209200,-240},
+	{2077768800,-300},
+	{2088658800,-240},
+	{2109218400,-300},
+	{2120108400,-240},
+	{2140668000,-300}
+};
+
+static const timezone_offset timezone_database_europe_amsterdam[] =
+{
+	{0,60},
+	{228877200,120},
+	{243997200,60},
+	{260326800,120},
+	{276051600,60},
+	{291776400,120},
+	{307501200,60},
+	{323830800,120},
+	{338950800,60},
+	{354675600,120},
+	{370400400,60},
+	{386125200,120},
+	{401850000,60},
+	{417574800,120},
+	{433299600,60},
+	{449024400,120},
+	{465354000,60},
+	{481078800,120},
+	{496803600,60},
+	{512528400,120},
+	{528253200,60},
+	{543978000,120},
+	{559702800,60},
+	{575427600,120},
+	{591152400,60},
+	{606877200,120},
+	{622602000,60},
+	{638326800,120},
+	{654656400,60},
+	{670381200,120},
+	{686106000,60},
+	{701830800,120},
+	{717555600,60},
+	{733280400,120},
+	{749005200,60},
+	{764730000,120},
+	{780454800,60},
+	{796179600,120},
+	{811904400,60},
+	{828234000,120},
+	{846378000,60},
+	{859683600,120},
+	{877827600,60},
+	{891133200,120},
+	{909277200,60},
+	{922582800,120},
+	{941331600,60},
+	{954032400,120},
+	{972781200,60},
+	{985482000,120},
+	{1004230800,60},
+	{1017536400,120},
+	{1035680400,60},
+	{1048986000,120},
+	{1067130000,60},
+	{1080435600,120},
+	{1099184400,60},
+	{1111885200,120},
+	{1130634000,60},
+	{1143334800,120},
+	{1162083600,60},
+	{1174784400,120},
+	{1193533200,60},
+	{1206838800,120},
+	{1224982800,60},
+	{1238288400,120},
+	{1256432400,60},
+	{1269738000,120},
+	{1288486800,60},
+	{1301187600,120},
+	{1319936400,60},
+	{1332637200,120},
+	{1351386000,60},
+	{1364691600,120},
+	{1382835600,60},
+	{1396141200,120},
+	{1414285200,60},
+	{1427590800,120},
+	{1445734800,60},
+	{1459040400,120},
+	{1477789200,60},
+	{1490490000,120},
+	{1509238800,60},
+	{1521939600,120},
+	{1540688400,60},
+	{1553994000,120},
+	{1572138000,60},
+	{1585443600,120},
+	{1603587600,60},
+	{1616893200,120},
+	{1635642000,60},
+	{1648342800,120},
+	{1667091600,60},
+	{1679792400,120},
+	{1698541200,60},
+	{1711846800,120},
+	{1729990800,60},
+	{1743296400,120},
+	{1761440400,60},
+	{1774746000,120},
+	{1792890000,60},
+	{1806195600,120},
+	{1824944400,60},
+	{1837645200,120},
+	{1856394000,60},
+	{1869094800,120},
+	{1887843600,60},
+	{1901149200,120},
+	{1919293200,60},
+	{1932598800,120},
+	{1950742800,60},
+	{1964048400,120},
+	{1982797200,60},
+	{1995498000,120},
+	{2014246800,60},
+	{2026947600,120},
+	{2045696400,60},
+	{2058397200,120},
+	{2077146000,60},
+	{2090451600,120},
+	{2108595600,60},
+	{2121901200,120},
+	{2140045200,60}
+};
+
+static const timezone_offset timezone_database_europe_andorra[] =
 {
 	{0,60},
 	{481078800,120},
@@ -15752,7 +16032,7 @@ static const timezone_offset timezone_database_europe_andorra[] =
 	{2140045200,60}
 };
 
-static const timezone_offset timezone_database_europe_astrakhan[] = 
+static const timezone_offset timezone_database_europe_astrakhan[] =
 {
 	{0,240},
 	{354916800,300},
@@ -15817,7 +16097,7 @@ static const timezone_offset timezone_database_europe_astrakhan[] =
 	{1459033200,240}
 };
 
-static const timezone_offset timezone_database_europe_athens[] = 
+static const timezone_offset timezone_database_europe_athens[] =
 {
 	{0,120},
 	{166485600,180},
@@ -15948,7 +16228,7 @@ static const timezone_offset timezone_database_europe_athens[] =
 	{2140045200,120}
 };
 
-static const timezone_offset timezone_database_europe_belgrade[] = 
+static const timezone_offset timezone_database_europe_belgrade[] =
 {
 	{0,60},
 	{417574800,120},
@@ -16063,7 +16343,7 @@ static const timezone_offset timezone_database_europe_belgrade[] =
 	{2140045200,60}
 };
 
-static const timezone_offset timezone_database_europe_berlin[] = 
+static const timezone_offset timezone_database_europe_berlin[] =
 {
 	{0,60},
 	{323830800,120},
@@ -16184,130 +16464,7 @@ static const timezone_offset timezone_database_europe_berlin[] =
 	{2140045200,60}
 };
 
-static const timezone_offset timezone_database_europe_bratislava[] = 
-{
-	{0,60},
-	{291776400,120},
-	{307501200,60},
-	{323830800,120},
-	{338950800,60},
-	{354675600,120},
-	{370400400,60},
-	{386125200,120},
-	{401850000,60},
-	{417574800,120},
-	{433299600,60},
-	{449024400,120},
-	{465354000,60},
-	{481078800,120},
-	{496803600,60},
-	{512528400,120},
-	{528253200,60},
-	{543978000,120},
-	{559702800,60},
-	{575427600,120},
-	{591152400,60},
-	{606877200,120},
-	{622602000,60},
-	{638326800,120},
-	{654656400,60},
-	{670381200,120},
-	{686106000,60},
-	{701830800,120},
-	{717555600,60},
-	{733280400,120},
-	{749005200,60},
-	{764730000,120},
-	{780454800,60},
-	{796179600,120},
-	{811904400,60},
-	{828234000,120},
-	{846378000,60},
-	{859683600,120},
-	{877827600,60},
-	{891133200,120},
-	{909277200,60},
-	{922582800,120},
-	{941331600,60},
-	{954032400,120},
-	{972781200,60},
-	{985482000,120},
-	{1004230800,60},
-	{1017536400,120},
-	{1035680400,60},
-	{1048986000,120},
-	{1067130000,60},
-	{1080435600,120},
-	{1099184400,60},
-	{1111885200,120},
-	{1130634000,60},
-	{1143334800,120},
-	{1162083600,60},
-	{1174784400,120},
-	{1193533200,60},
-	{1206838800,120},
-	{1224982800,60},
-	{1238288400,120},
-	{1256432400,60},
-	{1269738000,120},
-	{1288486800,60},
-	{1301187600,120},
-	{1319936400,60},
-	{1332637200,120},
-	{1351386000,60},
-	{1364691600,120},
-	{1382835600,60},
-	{1396141200,120},
-	{1414285200,60},
-	{1427590800,120},
-	{1445734800,60},
-	{1459040400,120},
-	{1477789200,60},
-	{1490490000,120},
-	{1509238800,60},
-	{1521939600,120},
-	{1540688400,60},
-	{1553994000,120},
-	{1572138000,60},
-	{1585443600,120},
-	{1603587600,60},
-	{1616893200,120},
-	{1635642000,60},
-	{1648342800,120},
-	{1667091600,60},
-	{1679792400,120},
-	{1698541200,60},
-	{1711846800,120},
-	{1729990800,60},
-	{1743296400,120},
-	{1761440400,60},
-	{1774746000,120},
-	{1792890000,60},
-	{1806195600,120},
-	{1824944400,60},
-	{1837645200,120},
-	{1856394000,60},
-	{1869094800,120},
-	{1887843600,60},
-	{1901149200,120},
-	{1919293200,60},
-	{1932598800,120},
-	{1950742800,60},
-	{1964048400,120},
-	{1982797200,60},
-	{1995498000,120},
-	{2014246800,60},
-	{2026947600,120},
-	{2045696400,60},
-	{2058397200,120},
-	{2077146000,60},
-	{2090451600,120},
-	{2108595600,60},
-	{2121901200,120},
-	{2140045200,60}
-};
-
-static const timezone_offset timezone_database_europe_brussels[] = 
+static const timezone_offset timezone_database_europe_brussels[] =
 {
 	{0,60},
 	{228877200,120},
@@ -16434,7 +16591,7 @@ static const timezone_offset timezone_database_europe_brussels[] =
 	{2140045200,60}
 };
 
-static const timezone_offset timezone_database_europe_bucharest[] = 
+static const timezone_offset timezone_database_europe_bucharest[] =
 {
 	{0,120},
 	{296604000,180},
@@ -16557,7 +16714,7 @@ static const timezone_offset timezone_database_europe_bucharest[] =
 	{2140045200,120}
 };
 
-static const timezone_offset timezone_database_europe_budapest[] = 
+static const timezone_offset timezone_database_europe_budapest[] =
 {
 	{0,60},
 	{323827200,120},
@@ -16678,126 +16835,7 @@ static const timezone_offset timezone_database_europe_budapest[] =
 	{2140045200,60}
 };
 
-static const timezone_offset timezone_database_europe_busingen[] = 
-{
-	{0,60},
-	{354675600,120},
-	{370400400,60},
-	{386125200,120},
-	{401850000,60},
-	{417574800,120},
-	{433299600,60},
-	{449024400,120},
-	{465354000,60},
-	{481078800,120},
-	{496803600,60},
-	{512528400,120},
-	{528253200,60},
-	{543978000,120},
-	{559702800,60},
-	{575427600,120},
-	{591152400,60},
-	{606877200,120},
-	{622602000,60},
-	{638326800,120},
-	{654656400,60},
-	{670381200,120},
-	{686106000,60},
-	{701830800,120},
-	{717555600,60},
-	{733280400,120},
-	{749005200,60},
-	{764730000,120},
-	{780454800,60},
-	{796179600,120},
-	{811904400,60},
-	{828234000,120},
-	{846378000,60},
-	{859683600,120},
-	{877827600,60},
-	{891133200,120},
-	{909277200,60},
-	{922582800,120},
-	{941331600,60},
-	{954032400,120},
-	{972781200,60},
-	{985482000,120},
-	{1004230800,60},
-	{1017536400,120},
-	{1035680400,60},
-	{1048986000,120},
-	{1067130000,60},
-	{1080435600,120},
-	{1099184400,60},
-	{1111885200,120},
-	{1130634000,60},
-	{1143334800,120},
-	{1162083600,60},
-	{1174784400,120},
-	{1193533200,60},
-	{1206838800,120},
-	{1224982800,60},
-	{1238288400,120},
-	{1256432400,60},
-	{1269738000,120},
-	{1288486800,60},
-	{1301187600,120},
-	{1319936400,60},
-	{1332637200,120},
-	{1351386000,60},
-	{1364691600,120},
-	{1382835600,60},
-	{1396141200,120},
-	{1414285200,60},
-	{1427590800,120},
-	{1445734800,60},
-	{1459040400,120},
-	{1477789200,60},
-	{1490490000,120},
-	{1509238800,60},
-	{1521939600,120},
-	{1540688400,60},
-	{1553994000,120},
-	{1572138000,60},
-	{1585443600,120},
-	{1603587600,60},
-	{1616893200,120},
-	{1635642000,60},
-	{1648342800,120},
-	{1667091600,60},
-	{1679792400,120},
-	{1698541200,60},
-	{1711846800,120},
-	{1729990800,60},
-	{1743296400,120},
-	{1761440400,60},
-	{1774746000,120},
-	{1792890000,60},
-	{1806195600,120},
-	{1824944400,60},
-	{1837645200,120},
-	{1856394000,60},
-	{1869094800,120},
-	{1887843600,60},
-	{1901149200,120},
-	{1919293200,60},
-	{1932598800,120},
-	{1950742800,60},
-	{1964048400,120},
-	{1982797200,60},
-	{1995498000,120},
-	{2014246800,60},
-	{2026947600,120},
-	{2045696400,60},
-	{2058397200,120},
-	{2077146000,60},
-	{2090451600,120},
-	{2108595600,60},
-	{2121901200,120},
-	{2140045200,60}
-};
-
-static const timezone_offset timezone_database_europe_chisinau[] = 
+static const timezone_offset timezone_database_europe_chisinau[] =
 {
 	{0,180},
 	{354920400,240},
@@ -16917,7 +16955,7 @@ static const timezone_offset timezone_database_europe_chisinau[] =
 	{2140041600,120}
 };
 
-static const timezone_offset timezone_database_europe_copenhagen[] = 
+static const timezone_offset timezone_database_europe_copenhagen[] =
 {
 	{0,60},
 	{323830800,120},
@@ -17038,7 +17076,7 @@ static const timezone_offset timezone_database_europe_copenhagen[] =
 	{2140045200,60}
 };
 
-static const timezone_offset timezone_database_europe_dublin[] = 
+static const timezone_offset timezone_database_europe_dublin[] =
 {
 	{0,60},
 	{57722400,0},
@@ -17176,7 +17214,7 @@ static const timezone_offset timezone_database_europe_dublin[] =
 	{2140045200,0}
 };
 
-static const timezone_offset timezone_database_europe_gibraltar[] = 
+static const timezone_offset timezone_database_europe_gibraltar[] =
 {
 	{0,60},
 	{386125200,120},
@@ -17293,145 +17331,7 @@ static const timezone_offset timezone_database_europe_gibraltar[] =
 	{2140045200,60}
 };
 
-static const timezone_offset timezone_database_europe_guernsey[] = 
-{
-	{0,60},
-	{57722400,0},
-	{69818400,60},
-	{89172000,0},
-	{101268000,60},
-	{120621600,0},
-	{132717600,60},
-	{152071200,0},
-	{164167200,60},
-	{183520800,0},
-	{196221600,60},
-	{214970400,0},
-	{227671200,60},
-	{246420000,0},
-	{259120800,60},
-	{278474400,0},
-	{290570400,60},
-	{309924000,0},
-	{322020000,60},
-	{341373600,0},
-	{354675600,60},
-	{372819600,0},
-	{386125200,60},
-	{404269200,0},
-	{417574800,60},
-	{435718800,0},
-	{449024400,60},
-	{467773200,0},
-	{481078800,60},
-	{499222800,0},
-	{512528400,60},
-	{530672400,0},
-	{543978000,60},
-	{562122000,0},
-	{575427600,60},
-	{593571600,0},
-	{606877200,60},
-	{625626000,0},
-	{638326800,60},
-	{657075600,0},
-	{670381200,60},
-	{688525200,0},
-	{701830800,60},
-	{719974800,0},
-	{733280400,60},
-	{751424400,0},
-	{764730000,60},
-	{782874000,0},
-	{796179600,60},
-	{814323600,0},
-	{828234000,60},
-	{846378000,0},
-	{859683600,60},
-	{877827600,0},
-	{891133200,60},
-	{909277200,0},
-	{922582800,60},
-	{941331600,0},
-	{954032400,60},
-	{972781200,0},
-	{985482000,60},
-	{1004230800,0},
-	{1017536400,60},
-	{1035680400,0},
-	{1048986000,60},
-	{1067130000,0},
-	{1080435600,60},
-	{1099184400,0},
-	{1111885200,60},
-	{1130634000,0},
-	{1143334800,60},
-	{1162083600,0},
-	{1174784400,60},
-	{1193533200,0},
-	{1206838800,60},
-	{1224982800,0},
-	{1238288400,60},
-	{1256432400,0},
-	{1269738000,60},
-	{1288486800,0},
-	{1301187600,60},
-	{1319936400,0},
-	{1332637200,60},
-	{1351386000,0},
-	{1364691600,60},
-	{1382835600,0},
-	{1396141200,60},
-	{1414285200,0},
-	{1427590800,60},
-	{1445734800,0},
-	{1459040400,60},
-	{1477789200,0},
-	{1490490000,60},
-	{1509238800,0},
-	{1521939600,60},
-	{1540688400,0},
-	{1553994000,60},
-	{1572138000,0},
-	{1585443600,60},
-	{1603587600,0},
-	{1616893200,60},
-	{1635642000,0},
-	{1648342800,60},
-	{1667091600,0},
-	{1679792400,60},
-	{1698541200,0},
-	{1711846800,60},
-	{1729990800,0},
-	{1743296400,60},
-	{1761440400,0},
-	{1774746000,60},
-	{1792890000,0},
-	{1806195600,60},
-	{1824944400,0},
-	{1837645200,60},
-	{1856394000,0},
-	{1869094800,60},
-	{1887843600,0},
-	{1901149200,60},
-	{1919293200,0},
-	{1932598800,60},
-	{1950742800,0},
-	{1964048400,60},
-	{1982797200,0},
-	{1995498000,60},
-	{2014246800,0},
-	{2026947600,60},
-	{2045696400,0},
-	{2058397200,60},
-	{2077146000,0},
-	{2090451600,60},
-	{2108595600,0},
-	{2121901200,60},
-	{2140045200,0}
-};
-
-static const timezone_offset timezone_database_europe_helsinki[] = 
+static const timezone_offset timezone_database_europe_helsinki[] =
 {
 	{0,120},
 	{354672000,180},
@@ -17550,145 +17450,7 @@ static const timezone_offset timezone_database_europe_helsinki[] =
 	{2140045200,120}
 };
 
-static const timezone_offset timezone_database_europe_isle_of_man[] = 
-{
-	{0,60},
-	{57722400,0},
-	{69818400,60},
-	{89172000,0},
-	{101268000,60},
-	{120621600,0},
-	{132717600,60},
-	{152071200,0},
-	{164167200,60},
-	{183520800,0},
-	{196221600,60},
-	{214970400,0},
-	{227671200,60},
-	{246420000,0},
-	{259120800,60},
-	{278474400,0},
-	{290570400,60},
-	{309924000,0},
-	{322020000,60},
-	{341373600,0},
-	{354675600,60},
-	{372819600,0},
-	{386125200,60},
-	{404269200,0},
-	{417574800,60},
-	{435718800,0},
-	{449024400,60},
-	{467773200,0},
-	{481078800,60},
-	{499222800,0},
-	{512528400,60},
-	{530672400,0},
-	{543978000,60},
-	{562122000,0},
-	{575427600,60},
-	{593571600,0},
-	{606877200,60},
-	{625626000,0},
-	{638326800,60},
-	{657075600,0},
-	{670381200,60},
-	{688525200,0},
-	{701830800,60},
-	{719974800,0},
-	{733280400,60},
-	{751424400,0},
-	{764730000,60},
-	{782874000,0},
-	{796179600,60},
-	{814323600,0},
-	{828234000,60},
-	{846378000,0},
-	{859683600,60},
-	{877827600,0},
-	{891133200,60},
-	{909277200,0},
-	{922582800,60},
-	{941331600,0},
-	{954032400,60},
-	{972781200,0},
-	{985482000,60},
-	{1004230800,0},
-	{1017536400,60},
-	{1035680400,0},
-	{1048986000,60},
-	{1067130000,0},
-	{1080435600,60},
-	{1099184400,0},
-	{1111885200,60},
-	{1130634000,0},
-	{1143334800,60},
-	{1162083600,0},
-	{1174784400,60},
-	{1193533200,0},
-	{1206838800,60},
-	{1224982800,0},
-	{1238288400,60},
-	{1256432400,0},
-	{1269738000,60},
-	{1288486800,0},
-	{1301187600,60},
-	{1319936400,0},
-	{1332637200,60},
-	{1351386000,0},
-	{1364691600,60},
-	{1382835600,0},
-	{1396141200,60},
-	{1414285200,0},
-	{1427590800,60},
-	{1445734800,0},
-	{1459040400,60},
-	{1477789200,0},
-	{1490490000,60},
-	{1509238800,0},
-	{1521939600,60},
-	{1540688400,0},
-	{1553994000,60},
-	{1572138000,0},
-	{1585443600,60},
-	{1603587600,0},
-	{1616893200,60},
-	{1635642000,0},
-	{1648342800,60},
-	{1667091600,0},
-	{1679792400,60},
-	{1698541200,0},
-	{1711846800,60},
-	{1729990800,0},
-	{1743296400,60},
-	{1761440400,0},
-	{1774746000,60},
-	{1792890000,0},
-	{1806195600,60},
-	{1824944400,0},
-	{1837645200,60},
-	{1856394000,0},
-	{1869094800,60},
-	{1887843600,0},
-	{1901149200,60},
-	{1919293200,0},
-	{1932598800,60},
-	{1950742800,0},
-	{1964048400,60},
-	{1982797200,0},
-	{1995498000,60},
-	{2014246800,0},
-	{2026947600,60},
-	{2045696400,0},
-	{2058397200,60},
-	{2077146000,0},
-	{2090451600,60},
-	{2108595600,0},
-	{2121901200,60},
-	{2140045200,0}
-};
-
-static const timezone_offset timezone_database_europe_istanbul[] = 
+static const timezone_offset timezone_database_europe_istanbul[] =
 {
 	{0,120},
 	{10533600,180},
@@ -17782,145 +17544,7 @@ static const timezone_offset timezone_database_europe_istanbul[] =
 	{1459040400,180}
 };
 
-static const timezone_offset timezone_database_europe_jersey[] = 
-{
-	{0,60},
-	{57722400,0},
-	{69818400,60},
-	{89172000,0},
-	{101268000,60},
-	{120621600,0},
-	{132717600,60},
-	{152071200,0},
-	{164167200,60},
-	{183520800,0},
-	{196221600,60},
-	{214970400,0},
-	{227671200,60},
-	{246420000,0},
-	{259120800,60},
-	{278474400,0},
-	{290570400,60},
-	{309924000,0},
-	{322020000,60},
-	{341373600,0},
-	{354675600,60},
-	{372819600,0},
-	{386125200,60},
-	{404269200,0},
-	{417574800,60},
-	{435718800,0},
-	{449024400,60},
-	{467773200,0},
-	{481078800,60},
-	{499222800,0},
-	{512528400,60},
-	{530672400,0},
-	{543978000,60},
-	{562122000,0},
-	{575427600,60},
-	{593571600,0},
-	{606877200,60},
-	{625626000,0},
-	{638326800,60},
-	{657075600,0},
-	{670381200,60},
-	{688525200,0},
-	{701830800,60},
-	{719974800,0},
-	{733280400,60},
-	{751424400,0},
-	{764730000,60},
-	{782874000,0},
-	{796179600,60},
-	{814323600,0},
-	{828234000,60},
-	{846378000,0},
-	{859683600,60},
-	{877827600,0},
-	{891133200,60},
-	{909277200,0},
-	{922582800,60},
-	{941331600,0},
-	{954032400,60},
-	{972781200,0},
-	{985482000,60},
-	{1004230800,0},
-	{1017536400,60},
-	{1035680400,0},
-	{1048986000,60},
-	{1067130000,0},
-	{1080435600,60},
-	{1099184400,0},
-	{1111885200,60},
-	{1130634000,0},
-	{1143334800,60},
-	{1162083600,0},
-	{1174784400,60},
-	{1193533200,0},
-	{1206838800,60},
-	{1224982800,0},
-	{1238288400,60},
-	{1256432400,0},
-	{1269738000,60},
-	{1288486800,0},
-	{1301187600,60},
-	{1319936400,0},
-	{1332637200,60},
-	{1351386000,0},
-	{1364691600,60},
-	{1382835600,0},
-	{1396141200,60},
-	{1414285200,0},
-	{1427590800,60},
-	{1445734800,0},
-	{1459040400,60},
-	{1477789200,0},
-	{1490490000,60},
-	{1509238800,0},
-	{1521939600,60},
-	{1540688400,0},
-	{1553994000,60},
-	{1572138000,0},
-	{1585443600,60},
-	{1603587600,0},
-	{1616893200,60},
-	{1635642000,0},
-	{1648342800,60},
-	{1667091600,0},
-	{1679792400,60},
-	{1698541200,0},
-	{1711846800,60},
-	{1729990800,0},
-	{1743296400,60},
-	{1761440400,0},
-	{1774746000,60},
-	{1792890000,0},
-	{1806195600,60},
-	{1824944400,0},
-	{1837645200,60},
-	{1856394000,0},
-	{1869094800,60},
-	{1887843600,0},
-	{1901149200,60},
-	{1919293200,0},
-	{1932598800,60},
-	{1950742800,0},
-	{1964048400,60},
-	{1982797200,0},
-	{1995498000,60},
-	{2014246800,0},
-	{2026947600,60},
-	{2045696400,0},
-	{2058397200,60},
-	{2077146000,0},
-	{2090451600,60},
-	{2108595600,0},
-	{2121901200,60},
-	{2140045200,0}
-};
-
-static const timezone_offset timezone_database_europe_kaliningrad[] = 
+static const timezone_offset timezone_database_europe_kaliningrad[] =
 {
 	{0,180},
 	{354920400,240},
@@ -17986,7 +17610,7 @@ static const timezone_offset timezone_database_europe_kaliningrad[] =
 	{1414278000,120}
 };
 
-static const timezone_offset timezone_database_europe_kiev[] = 
+static const timezone_offset timezone_database_europe_kiev[] =
 {
 	{0,180},
 	{354920400,240},
@@ -18104,7 +17728,7 @@ static const timezone_offset timezone_database_europe_kiev[] =
 	{2140045200,120}
 };
 
-static const timezone_offset timezone_database_europe_kirov[] = 
+static const timezone_offset timezone_database_europe_kirov[] =
 {
 	{0,240},
 	{354916800,300},
@@ -18168,7 +17792,7 @@ static const timezone_offset timezone_database_europe_kirov[] =
 	{1414274400,180}
 };
 
-static const timezone_offset timezone_database_europe_lisbon[] = 
+static const timezone_offset timezone_database_europe_lisbon[] =
 {
 	{0,60},
 	{212544000,0},
@@ -18294,122 +17918,7 @@ static const timezone_offset timezone_database_europe_lisbon[] =
 	{2140045200,0}
 };
 
-static const timezone_offset timezone_database_europe_ljubljana[] = 
-{
-	{0,60},
-	{417574800,120},
-	{433299600,60},
-	{449024400,120},
-	{465354000,60},
-	{481078800,120},
-	{496803600,60},
-	{512528400,120},
-	{528253200,60},
-	{543978000,120},
-	{559702800,60},
-	{575427600,120},
-	{591152400,60},
-	{606877200,120},
-	{622602000,60},
-	{638326800,120},
-	{654656400,60},
-	{670381200,120},
-	{686106000,60},
-	{701830800,120},
-	{717555600,60},
-	{733280400,120},
-	{749005200,60},
-	{764730000,120},
-	{780454800,60},
-	{796179600,120},
-	{811904400,60},
-	{828234000,120},
-	{846378000,60},
-	{859683600,120},
-	{877827600,60},
-	{891133200,120},
-	{909277200,60},
-	{922582800,120},
-	{941331600,60},
-	{954032400,120},
-	{972781200,60},
-	{985482000,120},
-	{1004230800,60},
-	{1017536400,120},
-	{1035680400,60},
-	{1048986000,120},
-	{1067130000,60},
-	{1080435600,120},
-	{1099184400,60},
-	{1111885200,120},
-	{1130634000,60},
-	{1143334800,120},
-	{1162083600,60},
-	{1174784400,120},
-	{1193533200,60},
-	{1206838800,120},
-	{1224982800,60},
-	{1238288400,120},
-	{1256432400,60},
-	{1269738000,120},
-	{1288486800,60},
-	{1301187600,120},
-	{1319936400,60},
-	{1332637200,120},
-	{1351386000,60},
-	{1364691600,120},
-	{1382835600,60},
-	{1396141200,120},
-	{1414285200,60},
-	{1427590800,120},
-	{1445734800,60},
-	{1459040400,120},
-	{1477789200,60},
-	{1490490000,120},
-	{1509238800,60},
-	{1521939600,120},
-	{1540688400,60},
-	{1553994000,120},
-	{1572138000,60},
-	{1585443600,120},
-	{1603587600,60},
-	{1616893200,120},
-	{1635642000,60},
-	{1648342800,120},
-	{1667091600,60},
-	{1679792400,120},
-	{1698541200,60},
-	{1711846800,120},
-	{1729990800,60},
-	{1743296400,120},
-	{1761440400,60},
-	{1774746000,120},
-	{1792890000,60},
-	{1806195600,120},
-	{1824944400,60},
-	{1837645200,120},
-	{1856394000,60},
-	{1869094800,120},
-	{1887843600,60},
-	{1901149200,120},
-	{1919293200,60},
-	{1932598800,120},
-	{1950742800,60},
-	{1964048400,120},
-	{1982797200,60},
-	{1995498000,120},
-	{2014246800,60},
-	{2026947600,120},
-	{2045696400,60},
-	{2058397200,120},
-	{2077146000,60},
-	{2090451600,120},
-	{2108595600,60},
-	{2121901200,120},
-	{2140045200,60}
-};
-
-static const timezone_offset timezone_database_europe_london[] = 
+static const timezone_offset timezone_database_europe_london[] =
 {
 	{0,60},
 	{57722400,0},
@@ -18547,7 +18056,7 @@ static const timezone_offset timezone_database_europe_london[] =
 	{2140045200,0}
 };
 
-static const timezone_offset timezone_database_europe_luxembourg[] = 
+static const timezone_offset timezone_database_europe_luxembourg[] =
 {
 	{0,60},
 	{228877200,120},
@@ -18674,7 +18183,7 @@ static const timezone_offset timezone_database_europe_luxembourg[] =
 	{2140045200,60}
 };
 
-static const timezone_offset timezone_database_europe_madrid[] = 
+static const timezone_offset timezone_database_europe_madrid[] =
 {
 	{0,60},
 	{135122400,120},
@@ -18807,7 +18316,7 @@ static const timezone_offset timezone_database_europe_madrid[] =
 	{2140045200,60}
 };
 
-static const timezone_offset timezone_database_europe_malta[] = 
+static const timezone_offset timezone_database_europe_malta[] =
 {
 	{0,60},
 	{12956400,120},
@@ -18948,126 +18457,7 @@ static const timezone_offset timezone_database_europe_malta[] =
 	{2140045200,60}
 };
 
-static const timezone_offset timezone_database_europe_mariehamn[] = 
-{
-	{0,120},
-	{354672000,180},
-	{370396800,120},
-	{386121600,180},
-	{401846400,120},
-	{417574800,180},
-	{433299600,120},
-	{449024400,180},
-	{465354000,120},
-	{481078800,180},
-	{496803600,120},
-	{512528400,180},
-	{528253200,120},
-	{543978000,180},
-	{559702800,120},
-	{575427600,180},
-	{591152400,120},
-	{606877200,180},
-	{622602000,120},
-	{638326800,180},
-	{654656400,120},
-	{670381200,180},
-	{686106000,120},
-	{701830800,180},
-	{717555600,120},
-	{733280400,180},
-	{749005200,120},
-	{764730000,180},
-	{780454800,120},
-	{796179600,180},
-	{811904400,120},
-	{828234000,180},
-	{846378000,120},
-	{859683600,180},
-	{877827600,120},
-	{891133200,180},
-	{909277200,120},
-	{922582800,180},
-	{941331600,120},
-	{954032400,180},
-	{972781200,120},
-	{985482000,180},
-	{1004230800,120},
-	{1017536400,180},
-	{1035680400,120},
-	{1048986000,180},
-	{1067130000,120},
-	{1080435600,180},
-	{1099184400,120},
-	{1111885200,180},
-	{1130634000,120},
-	{1143334800,180},
-	{1162083600,120},
-	{1174784400,180},
-	{1193533200,120},
-	{1206838800,180},
-	{1224982800,120},
-	{1238288400,180},
-	{1256432400,120},
-	{1269738000,180},
-	{1288486800,120},
-	{1301187600,180},
-	{1319936400,120},
-	{1332637200,180},
-	{1351386000,120},
-	{1364691600,180},
-	{1382835600,120},
-	{1396141200,180},
-	{1414285200,120},
-	{1427590800,180},
-	{1445734800,120},
-	{1459040400,180},
-	{1477789200,120},
-	{1490490000,180},
-	{1509238800,120},
-	{1521939600,180},
-	{1540688400,120},
-	{1553994000,180},
-	{1572138000,120},
-	{1585443600,180},
-	{1603587600,120},
-	{1616893200,180},
-	{1635642000,120},
-	{1648342800,180},
-	{1667091600,120},
-	{1679792400,180},
-	{1698541200,120},
-	{1711846800,180},
-	{1729990800,120},
-	{1743296400,180},
-	{1761440400,120},
-	{1774746000,180},
-	{1792890000,120},
-	{1806195600,180},
-	{1824944400,120},
-	{1837645200,180},
-	{1856394000,120},
-	{1869094800,180},
-	{1887843600,120},
-	{1901149200,180},
-	{1919293200,120},
-	{1932598800,180},
-	{1950742800,120},
-	{1964048400,180},
-	{1982797200,120},
-	{1995498000,180},
-	{2014246800,120},
-	{2026947600,180},
-	{2045696400,120},
-	{2058397200,180},
-	{2077146000,120},
-	{2090451600,180},
-	{2108595600,120},
-	{2121901200,180},
-	{2140045200,120}
-};
-
-static const timezone_offset timezone_database_europe_minsk[] = 
+static const timezone_offset timezone_database_europe_minsk[] =
 {
 	{0,180},
 	{354920400,240},
@@ -19130,7 +18520,7 @@ static const timezone_offset timezone_database_europe_minsk[] =
 	{1301184000,180}
 };
 
-static const timezone_offset timezone_database_europe_monaco[] = 
+static const timezone_offset timezone_database_europe_monaco[] =
 {
 	{0,60},
 	{196819200,120},
@@ -19259,7 +18649,7 @@ static const timezone_offset timezone_database_europe_monaco[] =
 	{2140045200,60}
 };
 
-static const timezone_offset timezone_database_europe_moscow[] = 
+static const timezone_offset timezone_database_europe_moscow[] =
 {
 	{0,180},
 	{354920400,240},
@@ -19326,7 +18716,7 @@ static const timezone_offset timezone_database_europe_moscow[] =
 	{1414274400,180}
 };
 
-static const timezone_offset timezone_database_europe_oslo[] = 
+static const timezone_offset timezone_database_europe_oslo[] =
 {
 	{0,60},
 	{323830800,120},
@@ -19447,7 +18837,7 @@ static const timezone_offset timezone_database_europe_oslo[] =
 	{2140045200,60}
 };
 
-static const timezone_offset timezone_database_europe_paris[] = 
+static const timezone_offset timezone_database_europe_paris[] =
 {
 	{0,60},
 	{196819200,120},
@@ -19576,122 +18966,7 @@ static const timezone_offset timezone_database_europe_paris[] =
 	{2140045200,60}
 };
 
-static const timezone_offset timezone_database_europe_podgorica[] = 
-{
-	{0,60},
-	{417574800,120},
-	{433299600,60},
-	{449024400,120},
-	{465354000,60},
-	{481078800,120},
-	{496803600,60},
-	{512528400,120},
-	{528253200,60},
-	{543978000,120},
-	{559702800,60},
-	{575427600,120},
-	{591152400,60},
-	{606877200,120},
-	{622602000,60},
-	{638326800,120},
-	{654656400,60},
-	{670381200,120},
-	{686106000,60},
-	{701830800,120},
-	{717555600,60},
-	{733280400,120},
-	{749005200,60},
-	{764730000,120},
-	{780454800,60},
-	{796179600,120},
-	{811904400,60},
-	{828234000,120},
-	{846378000,60},
-	{859683600,120},
-	{877827600,60},
-	{891133200,120},
-	{909277200,60},
-	{922582800,120},
-	{941331600,60},
-	{954032400,120},
-	{972781200,60},
-	{985482000,120},
-	{1004230800,60},
-	{1017536400,120},
-	{1035680400,60},
-	{1048986000,120},
-	{1067130000,60},
-	{1080435600,120},
-	{1099184400,60},
-	{1111885200,120},
-	{1130634000,60},
-	{1143334800,120},
-	{1162083600,60},
-	{1174784400,120},
-	{1193533200,60},
-	{1206838800,120},
-	{1224982800,60},
-	{1238288400,120},
-	{1256432400,60},
-	{1269738000,120},
-	{1288486800,60},
-	{1301187600,120},
-	{1319936400,60},
-	{1332637200,120},
-	{1351386000,60},
-	{1364691600,120},
-	{1382835600,60},
-	{1396141200,120},
-	{1414285200,60},
-	{1427590800,120},
-	{1445734800,60},
-	{1459040400,120},
-	{1477789200,60},
-	{1490490000,120},
-	{1509238800,60},
-	{1521939600,120},
-	{1540688400,60},
-	{1553994000,120},
-	{1572138000,60},
-	{1585443600,120},
-	{1603587600,60},
-	{1616893200,120},
-	{1635642000,60},
-	{1648342800,120},
-	{1667091600,60},
-	{1679792400,120},
-	{1698541200,60},
-	{1711846800,120},
-	{1729990800,60},
-	{1743296400,120},
-	{1761440400,60},
-	{1774746000,120},
-	{1792890000,60},
-	{1806195600,120},
-	{1824944400,60},
-	{1837645200,120},
-	{1856394000,60},
-	{1869094800,120},
-	{1887843600,60},
-	{1901149200,120},
-	{1919293200,60},
-	{1932598800,120},
-	{1950742800,60},
-	{1964048400,120},
-	{1982797200,60},
-	{1995498000,120},
-	{2014246800,60},
-	{2026947600,120},
-	{2045696400,60},
-	{2058397200,120},
-	{2077146000,60},
-	{2090451600,120},
-	{2108595600,60},
-	{2121901200,120},
-	{2140045200,60}
-};
-
-static const timezone_offset timezone_database_europe_prague[] = 
+static const timezone_offset timezone_database_europe_prague[] =
 {
 	{0,60},
 	{291776400,120},
@@ -19814,7 +19089,7 @@ static const timezone_offset timezone_database_europe_prague[] =
 	{2140045200,60}
 };
 
-static const timezone_offset timezone_database_europe_riga[] = 
+static const timezone_offset timezone_database_europe_riga[] =
 {
 	{0,180},
 	{354920400,240},
@@ -19930,7 +19205,7 @@ static const timezone_offset timezone_database_europe_riga[] =
 	{2140045200,120}
 };
 
-static const timezone_offset timezone_database_europe_rome[] = 
+static const timezone_offset timezone_database_europe_rome[] =
 {
 	{0,60},
 	{12956400,120},
@@ -20071,7 +19346,7 @@ static const timezone_offset timezone_database_europe_rome[] =
 	{2140045200,60}
 };
 
-static const timezone_offset timezone_database_europe_samara[] = 
+static const timezone_offset timezone_database_europe_samara[] =
 {
 	{0,240},
 	{354916800,300},
@@ -20134,263 +19409,7 @@ static const timezone_offset timezone_database_europe_samara[] =
 	{1301180400,240}
 };
 
-static const timezone_offset timezone_database_europe_san_marino[] = 
-{
-	{0,60},
-	{12956400,120},
-	{23238000,60},
-	{43801200,120},
-	{54687600,60},
-	{75855600,120},
-	{86742000,60},
-	{107910000,120},
-	{118191600,60},
-	{138754800,120},
-	{149641200,60},
-	{170809200,120},
-	{181090800,60},
-	{202258800,120},
-	{212540400,60},
-	{233103600,120},
-	{243990000,60},
-	{265158000,120},
-	{276044400,60},
-	{296607600,120},
-	{307494000,60},
-	{323830800,120},
-	{338950800,60},
-	{354675600,120},
-	{370400400,60},
-	{386125200,120},
-	{401850000,60},
-	{417574800,120},
-	{433299600,60},
-	{449024400,120},
-	{465354000,60},
-	{481078800,120},
-	{496803600,60},
-	{512528400,120},
-	{528253200,60},
-	{543978000,120},
-	{559702800,60},
-	{575427600,120},
-	{591152400,60},
-	{606877200,120},
-	{622602000,60},
-	{638326800,120},
-	{654656400,60},
-	{670381200,120},
-	{686106000,60},
-	{701830800,120},
-	{717555600,60},
-	{733280400,120},
-	{749005200,60},
-	{764730000,120},
-	{780454800,60},
-	{796179600,120},
-	{811904400,60},
-	{828234000,120},
-	{846378000,60},
-	{859683600,120},
-	{877827600,60},
-	{891133200,120},
-	{909277200,60},
-	{922582800,120},
-	{941331600,60},
-	{954032400,120},
-	{972781200,60},
-	{985482000,120},
-	{1004230800,60},
-	{1017536400,120},
-	{1035680400,60},
-	{1048986000,120},
-	{1067130000,60},
-	{1080435600,120},
-	{1099184400,60},
-	{1111885200,120},
-	{1130634000,60},
-	{1143334800,120},
-	{1162083600,60},
-	{1174784400,120},
-	{1193533200,60},
-	{1206838800,120},
-	{1224982800,60},
-	{1238288400,120},
-	{1256432400,60},
-	{1269738000,120},
-	{1288486800,60},
-	{1301187600,120},
-	{1319936400,60},
-	{1332637200,120},
-	{1351386000,60},
-	{1364691600,120},
-	{1382835600,60},
-	{1396141200,120},
-	{1414285200,60},
-	{1427590800,120},
-	{1445734800,60},
-	{1459040400,120},
-	{1477789200,60},
-	{1490490000,120},
-	{1509238800,60},
-	{1521939600,120},
-	{1540688400,60},
-	{1553994000,120},
-	{1572138000,60},
-	{1585443600,120},
-	{1603587600,60},
-	{1616893200,120},
-	{1635642000,60},
-	{1648342800,120},
-	{1667091600,60},
-	{1679792400,120},
-	{1698541200,60},
-	{1711846800,120},
-	{1729990800,60},
-	{1743296400,120},
-	{1761440400,60},
-	{1774746000,120},
-	{1792890000,60},
-	{1806195600,120},
-	{1824944400,60},
-	{1837645200,120},
-	{1856394000,60},
-	{1869094800,120},
-	{1887843600,60},
-	{1901149200,120},
-	{1919293200,60},
-	{1932598800,120},
-	{1950742800,60},
-	{1964048400,120},
-	{1982797200,60},
-	{1995498000,120},
-	{2014246800,60},
-	{2026947600,120},
-	{2045696400,60},
-	{2058397200,120},
-	{2077146000,60},
-	{2090451600,120},
-	{2108595600,60},
-	{2121901200,120},
-	{2140045200,60}
-};
-
-static const timezone_offset timezone_database_europe_sarajevo[] = 
-{
-	{0,60},
-	{417574800,120},
-	{433299600,60},
-	{449024400,120},
-	{465354000,60},
-	{481078800,120},
-	{496803600,60},
-	{512528400,120},
-	{528253200,60},
-	{543978000,120},
-	{559702800,60},
-	{575427600,120},
-	{591152400,60},
-	{606877200,120},
-	{622602000,60},
-	{638326800,120},
-	{654656400,60},
-	{670381200,120},
-	{686106000,60},
-	{701830800,120},
-	{717555600,60},
-	{733280400,120},
-	{749005200,60},
-	{764730000,120},
-	{780454800,60},
-	{796179600,120},
-	{811904400,60},
-	{828234000,120},
-	{846378000,60},
-	{859683600,120},
-	{877827600,60},
-	{891133200,120},
-	{909277200,60},
-	{922582800,120},
-	{941331600,60},
-	{954032400,120},
-	{972781200,60},
-	{985482000,120},
-	{1004230800,60},
-	{1017536400,120},
-	{1035680400,60},
-	{1048986000,120},
-	{1067130000,60},
-	{1080435600,120},
-	{1099184400,60},
-	{1111885200,120},
-	{1130634000,60},
-	{1143334800,120},
-	{1162083600,60},
-	{1174784400,120},
-	{1193533200,60},
-	{1206838800,120},
-	{1224982800,60},
-	{1238288400,120},
-	{1256432400,60},
-	{1269738000,120},
-	{1288486800,60},
-	{1301187600,120},
-	{1319936400,60},
-	{1332637200,120},
-	{1351386000,60},
-	{1364691600,120},
-	{1382835600,60},
-	{1396141200,120},
-	{1414285200,60},
-	{1427590800,120},
-	{1445734800,60},
-	{1459040400,120},
-	{1477789200,60},
-	{1490490000,120},
-	{1509238800,60},
-	{1521939600,120},
-	{1540688400,60},
-	{1553994000,120},
-	{1572138000,60},
-	{1585443600,120},
-	{1603587600,60},
-	{1616893200,120},
-	{1635642000,60},
-	{1648342800,120},
-	{1667091600,60},
-	{1679792400,120},
-	{1698541200,60},
-	{1711846800,120},
-	{1729990800,60},
-	{1743296400,120},
-	{1761440400,60},
-	{1774746000,120},
-	{1792890000,60},
-	{1806195600,120},
-	{1824944400,60},
-	{1837645200,120},
-	{1856394000,60},
-	{1869094800,120},
-	{1887843600,60},
-	{1901149200,120},
-	{1919293200,60},
-	{1932598800,120},
-	{1950742800,60},
-	{1964048400,120},
-	{1982797200,60},
-	{1995498000,120},
-	{2014246800,60},
-	{2026947600,120},
-	{2045696400,60},
-	{2058397200,120},
-	{2077146000,60},
-	{2090451600,120},
-	{2108595600,60},
-	{2121901200,120},
-	{2140045200,60}
-};
-
-static const timezone_offset timezone_database_europe_saratov[] = 
+static const timezone_offset timezone_database_europe_saratov[] =
 {
 	{0,240},
 	{354916800,300},
@@ -20455,7 +19474,7 @@ static const timezone_offset timezone_database_europe_saratov[] =
 	{1480806000,240}
 };
 
-static const timezone_offset timezone_database_europe_simferopol[] = 
+static const timezone_offset timezone_database_europe_simferopol[] =
 {
 	{0,180},
 	{354920400,240},
@@ -20525,122 +19544,7 @@ static const timezone_offset timezone_database_europe_simferopol[] =
 	{1414274400,180}
 };
 
-static const timezone_offset timezone_database_europe_skopje[] = 
-{
-	{0,60},
-	{417574800,120},
-	{433299600,60},
-	{449024400,120},
-	{465354000,60},
-	{481078800,120},
-	{496803600,60},
-	{512528400,120},
-	{528253200,60},
-	{543978000,120},
-	{559702800,60},
-	{575427600,120},
-	{591152400,60},
-	{606877200,120},
-	{622602000,60},
-	{638326800,120},
-	{654656400,60},
-	{670381200,120},
-	{686106000,60},
-	{701830800,120},
-	{717555600,60},
-	{733280400,120},
-	{749005200,60},
-	{764730000,120},
-	{780454800,60},
-	{796179600,120},
-	{811904400,60},
-	{828234000,120},
-	{846378000,60},
-	{859683600,120},
-	{877827600,60},
-	{891133200,120},
-	{909277200,60},
-	{922582800,120},
-	{941331600,60},
-	{954032400,120},
-	{972781200,60},
-	{985482000,120},
-	{1004230800,60},
-	{1017536400,120},
-	{1035680400,60},
-	{1048986000,120},
-	{1067130000,60},
-	{1080435600,120},
-	{1099184400,60},
-	{1111885200,120},
-	{1130634000,60},
-	{1143334800,120},
-	{1162083600,60},
-	{1174784400,120},
-	{1193533200,60},
-	{1206838800,120},
-	{1224982800,60},
-	{1238288400,120},
-	{1256432400,60},
-	{1269738000,120},
-	{1288486800,60},
-	{1301187600,120},
-	{1319936400,60},
-	{1332637200,120},
-	{1351386000,60},
-	{1364691600,120},
-	{1382835600,60},
-	{1396141200,120},
-	{1414285200,60},
-	{1427590800,120},
-	{1445734800,60},
-	{1459040400,120},
-	{1477789200,60},
-	{1490490000,120},
-	{1509238800,60},
-	{1521939600,120},
-	{1540688400,60},
-	{1553994000,120},
-	{1572138000,60},
-	{1585443600,120},
-	{1603587600,60},
-	{1616893200,120},
-	{1635642000,60},
-	{1648342800,120},
-	{1667091600,60},
-	{1679792400,120},
-	{1698541200,60},
-	{1711846800,120},
-	{1729990800,60},
-	{1743296400,120},
-	{1761440400,60},
-	{1774746000,120},
-	{1792890000,60},
-	{1806195600,120},
-	{1824944400,60},
-	{1837645200,120},
-	{1856394000,60},
-	{1869094800,120},
-	{1887843600,60},
-	{1901149200,120},
-	{1919293200,60},
-	{1932598800,120},
-	{1950742800,60},
-	{1964048400,120},
-	{1982797200,60},
-	{1995498000,120},
-	{2014246800,60},
-	{2026947600,120},
-	{2045696400,60},
-	{2058397200,120},
-	{2077146000,60},
-	{2090451600,120},
-	{2108595600,60},
-	{2121901200,120},
-	{2140045200,60}
-};
-
-static const timezone_offset timezone_database_europe_sofia[] = 
+static const timezone_offset timezone_database_europe_sofia[] =
 {
 	{0,120},
 	{291762000,180},
@@ -20763,7 +19667,7 @@ static const timezone_offset timezone_database_europe_sofia[] =
 	{2140045200,120}
 };
 
-static const timezone_offset timezone_database_europe_stockholm[] = 
+static const timezone_offset timezone_database_europe_stockholm[] =
 {
 	{0,60},
 	{323830800,120},
@@ -20884,7 +19788,7 @@ static const timezone_offset timezone_database_europe_stockholm[] =
 	{2140045200,60}
 };
 
-static const timezone_offset timezone_database_europe_tallinn[] = 
+static const timezone_offset timezone_database_europe_tallinn[] =
 {
 	{0,180},
 	{354920400,240},
@@ -20998,7 +19902,7 @@ static const timezone_offset timezone_database_europe_tallinn[] =
 	{2140045200,120}
 };
 
-static const timezone_offset timezone_database_europe_tirane[] = 
+static const timezone_offset timezone_database_europe_tirane[] =
 {
 	{0,60},
 	{136854000,120},
@@ -21131,7 +20035,7 @@ static const timezone_offset timezone_database_europe_tirane[] =
 	{2140045200,60}
 };
 
-static const timezone_offset timezone_database_europe_ulyanovsk[] = 
+static const timezone_offset timezone_database_europe_ulyanovsk[] =
 {
 	{0,240},
 	{354916800,300},
@@ -21198,7 +20102,7 @@ static const timezone_offset timezone_database_europe_ulyanovsk[] =
 	{1459033200,240}
 };
 
-static const timezone_offset timezone_database_europe_uzhgorod[] = 
+static const timezone_offset timezone_database_europe_uzhgorod[] =
 {
 	{0,180},
 	{354920400,240},
@@ -21315,267 +20219,7 @@ static const timezone_offset timezone_database_europe_uzhgorod[] =
 	{2140045200,120}
 };
 
-static const timezone_offset timezone_database_europe_vaduz[] = 
-{
-	{0,60},
-	{354675600,120},
-	{370400400,60},
-	{386125200,120},
-	{401850000,60},
-	{417574800,120},
-	{433299600,60},
-	{449024400,120},
-	{465354000,60},
-	{481078800,120},
-	{496803600,60},
-	{512528400,120},
-	{528253200,60},
-	{543978000,120},
-	{559702800,60},
-	{575427600,120},
-	{591152400,60},
-	{606877200,120},
-	{622602000,60},
-	{638326800,120},
-	{654656400,60},
-	{670381200,120},
-	{686106000,60},
-	{701830800,120},
-	{717555600,60},
-	{733280400,120},
-	{749005200,60},
-	{764730000,120},
-	{780454800,60},
-	{796179600,120},
-	{811904400,60},
-	{828234000,120},
-	{846378000,60},
-	{859683600,120},
-	{877827600,60},
-	{891133200,120},
-	{909277200,60},
-	{922582800,120},
-	{941331600,60},
-	{954032400,120},
-	{972781200,60},
-	{985482000,120},
-	{1004230800,60},
-	{1017536400,120},
-	{1035680400,60},
-	{1048986000,120},
-	{1067130000,60},
-	{1080435600,120},
-	{1099184400,60},
-	{1111885200,120},
-	{1130634000,60},
-	{1143334800,120},
-	{1162083600,60},
-	{1174784400,120},
-	{1193533200,60},
-	{1206838800,120},
-	{1224982800,60},
-	{1238288400,120},
-	{1256432400,60},
-	{1269738000,120},
-	{1288486800,60},
-	{1301187600,120},
-	{1319936400,60},
-	{1332637200,120},
-	{1351386000,60},
-	{1364691600,120},
-	{1382835600,60},
-	{1396141200,120},
-	{1414285200,60},
-	{1427590800,120},
-	{1445734800,60},
-	{1459040400,120},
-	{1477789200,60},
-	{1490490000,120},
-	{1509238800,60},
-	{1521939600,120},
-	{1540688400,60},
-	{1553994000,120},
-	{1572138000,60},
-	{1585443600,120},
-	{1603587600,60},
-	{1616893200,120},
-	{1635642000,60},
-	{1648342800,120},
-	{1667091600,60},
-	{1679792400,120},
-	{1698541200,60},
-	{1711846800,120},
-	{1729990800,60},
-	{1743296400,120},
-	{1761440400,60},
-	{1774746000,120},
-	{1792890000,60},
-	{1806195600,120},
-	{1824944400,60},
-	{1837645200,120},
-	{1856394000,60},
-	{1869094800,120},
-	{1887843600,60},
-	{1901149200,120},
-	{1919293200,60},
-	{1932598800,120},
-	{1950742800,60},
-	{1964048400,120},
-	{1982797200,60},
-	{1995498000,120},
-	{2014246800,60},
-	{2026947600,120},
-	{2045696400,60},
-	{2058397200,120},
-	{2077146000,60},
-	{2090451600,120},
-	{2108595600,60},
-	{2121901200,120},
-	{2140045200,60}
-};
-
-static const timezone_offset timezone_database_europe_vatican[] = 
-{
-	{0,60},
-	{12956400,120},
-	{23238000,60},
-	{43801200,120},
-	{54687600,60},
-	{75855600,120},
-	{86742000,60},
-	{107910000,120},
-	{118191600,60},
-	{138754800,120},
-	{149641200,60},
-	{170809200,120},
-	{181090800,60},
-	{202258800,120},
-	{212540400,60},
-	{233103600,120},
-	{243990000,60},
-	{265158000,120},
-	{276044400,60},
-	{296607600,120},
-	{307494000,60},
-	{323830800,120},
-	{338950800,60},
-	{354675600,120},
-	{370400400,60},
-	{386125200,120},
-	{401850000,60},
-	{417574800,120},
-	{433299600,60},
-	{449024400,120},
-	{465354000,60},
-	{481078800,120},
-	{496803600,60},
-	{512528400,120},
-	{528253200,60},
-	{543978000,120},
-	{559702800,60},
-	{575427600,120},
-	{591152400,60},
-	{606877200,120},
-	{622602000,60},
-	{638326800,120},
-	{654656400,60},
-	{670381200,120},
-	{686106000,60},
-	{701830800,120},
-	{717555600,60},
-	{733280400,120},
-	{749005200,60},
-	{764730000,120},
-	{780454800,60},
-	{796179600,120},
-	{811904400,60},
-	{828234000,120},
-	{846378000,60},
-	{859683600,120},
-	{877827600,60},
-	{891133200,120},
-	{909277200,60},
-	{922582800,120},
-	{941331600,60},
-	{954032400,120},
-	{972781200,60},
-	{985482000,120},
-	{1004230800,60},
-	{1017536400,120},
-	{1035680400,60},
-	{1048986000,120},
-	{1067130000,60},
-	{1080435600,120},
-	{1099184400,60},
-	{1111885200,120},
-	{1130634000,60},
-	{1143334800,120},
-	{1162083600,60},
-	{1174784400,120},
-	{1193533200,60},
-	{1206838800,120},
-	{1224982800,60},
-	{1238288400,120},
-	{1256432400,60},
-	{1269738000,120},
-	{1288486800,60},
-	{1301187600,120},
-	{1319936400,60},
-	{1332637200,120},
-	{1351386000,60},
-	{1364691600,120},
-	{1382835600,60},
-	{1396141200,120},
-	{1414285200,60},
-	{1427590800,120},
-	{1445734800,60},
-	{1459040400,120},
-	{1477789200,60},
-	{1490490000,120},
-	{1509238800,60},
-	{1521939600,120},
-	{1540688400,60},
-	{1553994000,120},
-	{1572138000,60},
-	{1585443600,120},
-	{1603587600,60},
-	{1616893200,120},
-	{1635642000,60},
-	{1648342800,120},
-	{1667091600,60},
-	{1679792400,120},
-	{1698541200,60},
-	{1711846800,120},
-	{1729990800,60},
-	{1743296400,120},
-	{1761440400,60},
-	{1774746000,120},
-	{1792890000,60},
-	{1806195600,120},
-	{1824944400,60},
-	{1837645200,120},
-	{1856394000,60},
-	{1869094800,120},
-	{1887843600,60},
-	{1901149200,120},
-	{1919293200,60},
-	{1932598800,120},
-	{1950742800,60},
-	{1964048400,120},
-	{1982797200,60},
-	{1995498000,120},
-	{2014246800,60},
-	{2026947600,120},
-	{2045696400,60},
-	{2058397200,120},
-	{2077146000,60},
-	{2090451600,120},
-	{2108595600,60},
-	{2121901200,120},
-	{2140045200,60}
-};
-
-static const timezone_offset timezone_database_europe_vienna[] = 
+static const timezone_offset timezone_database_europe_vienna[] =
 {
 	{0,60},
 	{323823600,120},
@@ -21696,7 +20340,7 @@ static const timezone_offset timezone_database_europe_vienna[] =
 	{2140045200,60}
 };
 
-static const timezone_offset timezone_database_europe_vilnius[] = 
+static const timezone_offset timezone_database_europe_vilnius[] =
 {
 	{0,180},
 	{354920400,240},
@@ -21806,7 +20450,7 @@ static const timezone_offset timezone_database_europe_vilnius[] =
 	{2140045200,120}
 };
 
-static const timezone_offset timezone_database_europe_volgograd[] = 
+static const timezone_offset timezone_database_europe_volgograd[] =
 {
 	{0,240},
 	{354916800,300},
@@ -21871,7 +20515,7 @@ static const timezone_offset timezone_database_europe_volgograd[] =
 	{1540681200,240}
 };
 
-static const timezone_offset timezone_database_europe_warsaw[] = 
+static const timezone_offset timezone_database_europe_warsaw[] =
 {
 	{0,60},
 	{228873600,120},
@@ -21998,122 +20642,7 @@ static const timezone_offset timezone_database_europe_warsaw[] =
 	{2140045200,60}
 };
 
-static const timezone_offset timezone_database_europe_zagreb[] = 
-{
-	{0,60},
-	{417574800,120},
-	{433299600,60},
-	{449024400,120},
-	{465354000,60},
-	{481078800,120},
-	{496803600,60},
-	{512528400,120},
-	{528253200,60},
-	{543978000,120},
-	{559702800,60},
-	{575427600,120},
-	{591152400,60},
-	{606877200,120},
-	{622602000,60},
-	{638326800,120},
-	{654656400,60},
-	{670381200,120},
-	{686106000,60},
-	{701830800,120},
-	{717555600,60},
-	{733280400,120},
-	{749005200,60},
-	{764730000,120},
-	{780454800,60},
-	{796179600,120},
-	{811904400,60},
-	{828234000,120},
-	{846378000,60},
-	{859683600,120},
-	{877827600,60},
-	{891133200,120},
-	{909277200,60},
-	{922582800,120},
-	{941331600,60},
-	{954032400,120},
-	{972781200,60},
-	{985482000,120},
-	{1004230800,60},
-	{1017536400,120},
-	{1035680400,60},
-	{1048986000,120},
-	{1067130000,60},
-	{1080435600,120},
-	{1099184400,60},
-	{1111885200,120},
-	{1130634000,60},
-	{1143334800,120},
-	{1162083600,60},
-	{1174784400,120},
-	{1193533200,60},
-	{1206838800,120},
-	{1224982800,60},
-	{1238288400,120},
-	{1256432400,60},
-	{1269738000,120},
-	{1288486800,60},
-	{1301187600,120},
-	{1319936400,60},
-	{1332637200,120},
-	{1351386000,60},
-	{1364691600,120},
-	{1382835600,60},
-	{1396141200,120},
-	{1414285200,60},
-	{1427590800,120},
-	{1445734800,60},
-	{1459040400,120},
-	{1477789200,60},
-	{1490490000,120},
-	{1509238800,60},
-	{1521939600,120},
-	{1540688400,60},
-	{1553994000,120},
-	{1572138000,60},
-	{1585443600,120},
-	{1603587600,60},
-	{1616893200,120},
-	{1635642000,60},
-	{1648342800,120},
-	{1667091600,60},
-	{1679792400,120},
-	{1698541200,60},
-	{1711846800,120},
-	{1729990800,60},
-	{1743296400,120},
-	{1761440400,60},
-	{1774746000,120},
-	{1792890000,60},
-	{1806195600,120},
-	{1824944400,60},
-	{1837645200,120},
-	{1856394000,60},
-	{1869094800,120},
-	{1887843600,60},
-	{1901149200,120},
-	{1919293200,60},
-	{1932598800,120},
-	{1950742800,60},
-	{1964048400,120},
-	{1982797200,60},
-	{1995498000,120},
-	{2014246800,60},
-	{2026947600,120},
-	{2045696400,60},
-	{2058397200,120},
-	{2077146000,60},
-	{2090451600,120},
-	{2108595600,60},
-	{2121901200,120},
-	{2140045200,60}
-};
-
-static const timezone_offset timezone_database_europe_zaporozhye[] = 
+static const timezone_offset timezone_database_europe_zaporozhye[] =
 {
 	{0,180},
 	{354920400,240},
@@ -22231,7 +20760,7 @@ static const timezone_offset timezone_database_europe_zaporozhye[] =
 	{2140045200,120}
 };
 
-static const timezone_offset timezone_database_europe_zurich[] = 
+static const timezone_offset timezone_database_europe_zurich[] =
 {
 	{0,60},
 	{354675600,120},
@@ -22350,13 +20879,13 @@ static const timezone_offset timezone_database_europe_zurich[] =
 	{2140045200,60}
 };
 
-static const timezone_offset timezone_database_indian_chagos[] = 
+static const timezone_offset timezone_database_indian_chagos[] =
 {
 	{0,300},
 	{820436400,360}
 };
 
-static const timezone_offset timezone_database_indian_mauritius[] = 
+static const timezone_offset timezone_database_indian_mauritius[] =
 {
 	{0,240},
 	{403041600,300},
@@ -22365,7 +20894,275 @@ static const timezone_offset timezone_database_indian_mauritius[] =
 	{1238274000,240}
 };
 
-static const timezone_offset timezone_database_pacific_apia[] = 
+static const timezone_offset timezone_database_met[] =
+{
+	{0,60},
+	{228877200,120},
+	{243997200,60},
+	{260326800,120},
+	{276051600,60},
+	{291776400,120},
+	{307501200,60},
+	{323830800,120},
+	{338950800,60},
+	{354675600,120},
+	{370400400,60},
+	{386125200,120},
+	{401850000,60},
+	{417574800,120},
+	{433299600,60},
+	{449024400,120},
+	{465354000,60},
+	{481078800,120},
+	{496803600,60},
+	{512528400,120},
+	{528253200,60},
+	{543978000,120},
+	{559702800,60},
+	{575427600,120},
+	{591152400,60},
+	{606877200,120},
+	{622602000,60},
+	{638326800,120},
+	{654656400,60},
+	{670381200,120},
+	{686106000,60},
+	{701830800,120},
+	{717555600,60},
+	{733280400,120},
+	{749005200,60},
+	{764730000,120},
+	{780454800,60},
+	{796179600,120},
+	{811904400,60},
+	{828234000,120},
+	{846378000,60},
+	{859683600,120},
+	{877827600,60},
+	{891133200,120},
+	{909277200,60},
+	{922582800,120},
+	{941331600,60},
+	{954032400,120},
+	{972781200,60},
+	{985482000,120},
+	{1004230800,60},
+	{1017536400,120},
+	{1035680400,60},
+	{1048986000,120},
+	{1067130000,60},
+	{1080435600,120},
+	{1099184400,60},
+	{1111885200,120},
+	{1130634000,60},
+	{1143334800,120},
+	{1162083600,60},
+	{1174784400,120},
+	{1193533200,60},
+	{1206838800,120},
+	{1224982800,60},
+	{1238288400,120},
+	{1256432400,60},
+	{1269738000,120},
+	{1288486800,60},
+	{1301187600,120},
+	{1319936400,60},
+	{1332637200,120},
+	{1351386000,60},
+	{1364691600,120},
+	{1382835600,60},
+	{1396141200,120},
+	{1414285200,60},
+	{1427590800,120},
+	{1445734800,60},
+	{1459040400,120},
+	{1477789200,60},
+	{1490490000,120},
+	{1509238800,60},
+	{1521939600,120},
+	{1540688400,60},
+	{1553994000,120},
+	{1572138000,60},
+	{1585443600,120},
+	{1603587600,60},
+	{1616893200,120},
+	{1635642000,60},
+	{1648342800,120},
+	{1667091600,60},
+	{1679792400,120},
+	{1698541200,60},
+	{1711846800,120},
+	{1729990800,60},
+	{1743296400,120},
+	{1761440400,60},
+	{1774746000,120},
+	{1792890000,60},
+	{1806195600,120},
+	{1824944400,60},
+	{1837645200,120},
+	{1856394000,60},
+	{1869094800,120},
+	{1887843600,60},
+	{1901149200,120},
+	{1919293200,60},
+	{1932598800,120},
+	{1950742800,60},
+	{1964048400,120},
+	{1982797200,60},
+	{1995498000,120},
+	{2014246800,60},
+	{2026947600,120},
+	{2045696400,60},
+	{2058397200,120},
+	{2077146000,60},
+	{2090451600,120},
+	{2108595600,60},
+	{2121901200,120},
+	{2140045200,60}
+};
+
+static const timezone_offset timezone_database_mst7mdt[] =
+{
+	{0,-420},
+	{9968400,-360},
+	{25689600,-420},
+	{41418000,-360},
+	{57744000,-420},
+	{73472400,-360},
+	{89193600,-420},
+	{104922000,-360},
+	{120643200,-420},
+	{126694800,-360},
+	{152092800,-420},
+	{162378000,-360},
+	{183542400,-420},
+	{199270800,-360},
+	{215596800,-420},
+	{230720400,-360},
+	{247046400,-420},
+	{262774800,-360},
+	{278496000,-420},
+	{294224400,-360},
+	{309945600,-420},
+	{325674000,-360},
+	{341395200,-420},
+	{357123600,-360},
+	{372844800,-420},
+	{388573200,-360},
+	{404899200,-420},
+	{420022800,-360},
+	{436348800,-420},
+	{452077200,-360},
+	{467798400,-420},
+	{483526800,-360},
+	{499248000,-420},
+	{514976400,-360},
+	{530697600,-420},
+	{544611600,-360},
+	{562147200,-420},
+	{576061200,-360},
+	{594201600,-420},
+	{607510800,-360},
+	{625651200,-420},
+	{638960400,-360},
+	{657100800,-420},
+	{671014800,-360},
+	{688550400,-420},
+	{702464400,-360},
+	{720000000,-420},
+	{733914000,-360},
+	{752054400,-420},
+	{765363600,-360},
+	{783504000,-420},
+	{796813200,-360},
+	{814953600,-420},
+	{828867600,-360},
+	{846403200,-420},
+	{860317200,-360},
+	{877852800,-420},
+	{891766800,-360},
+	{909302400,-420},
+	{923216400,-360},
+	{941356800,-420},
+	{954666000,-360},
+	{972806400,-420},
+	{986115600,-360},
+	{1004256000,-420},
+	{1018170000,-360},
+	{1035705600,-420},
+	{1049619600,-360},
+	{1067155200,-420},
+	{1081069200,-360},
+	{1099209600,-420},
+	{1112518800,-360},
+	{1130659200,-420},
+	{1143968400,-360},
+	{1162108800,-420},
+	{1173603600,-360},
+	{1194163200,-420},
+	{1205053200,-360},
+	{1225612800,-420},
+	{1236502800,-360},
+	{1257062400,-420},
+	{1268557200,-360},
+	{1289116800,-420},
+	{1300006800,-360},
+	{1320566400,-420},
+	{1331456400,-360},
+	{1352016000,-420},
+	{1362906000,-360},
+	{1383465600,-420},
+	{1394355600,-360},
+	{1414915200,-420},
+	{1425805200,-360},
+	{1446364800,-420},
+	{1457859600,-360},
+	{1478419200,-420},
+	{1489309200,-360},
+	{1509868800,-420},
+	{1520758800,-360},
+	{1541318400,-420},
+	{1552208400,-360},
+	{1572768000,-420},
+	{1583658000,-360},
+	{1604217600,-420},
+	{1615712400,-360},
+	{1636272000,-420},
+	{1647162000,-360},
+	{1667721600,-420},
+	{1678611600,-360},
+	{1699171200,-420},
+	{1710061200,-360},
+	{1730620800,-420},
+	{1741510800,-360},
+	{1762070400,-420},
+	{1772960400,-360},
+	{1793520000,-420},
+	{1805014800,-360},
+	{1825574400,-420},
+	{1836464400,-360},
+	{1857024000,-420},
+	{1867914000,-360},
+	{1888473600,-420},
+	{1899363600,-360},
+	{1919923200,-420},
+	{1930813200,-360},
+	{1951372800,-420},
+	{1962867600,-360},
+	{1983427200,-420},
+	{1994317200,-360},
+	{2014876800,-420},
+	{2025766800,-360},
+	{2046326400,-420},
+	{2057216400,-360},
+	{2077776000,-420},
+	{2088666000,-360},
+	{2109225600,-420},
+	{2120115600,-360},
+	{2140675200,-420}
+};
+
+static const timezone_offset timezone_database_pacific_apia[] =
 {
 	{0,-660},
 	{1285498800,-600},
@@ -22426,7 +21223,7 @@ static const timezone_offset timezone_database_pacific_apia[] =
 	{2137586400,840}
 };
 
-static const timezone_offset timezone_database_pacific_auckland[] = 
+static const timezone_offset timezone_database_pacific_auckland[] =
 {
 	{0,720},
 	{152632800,780},
@@ -22558,13 +21355,13 @@ static const timezone_offset timezone_database_pacific_auckland[] =
 	{2137586400,780}
 };
 
-static const timezone_offset timezone_database_pacific_bougainville[] = 
+static const timezone_offset timezone_database_pacific_bougainville[] =
 {
 	{0,600},
 	{1419696000,660}
 };
 
-static const timezone_offset timezone_database_pacific_chatham[] = 
+static const timezone_offset timezone_database_pacific_chatham[] =
 {
 	{0,765},
 	{152632800,825},
@@ -22696,7 +21493,7 @@ static const timezone_offset timezone_database_pacific_chatham[] =
 	{2137586400,825}
 };
 
-static const timezone_offset timezone_database_pacific_easter[] = 
+static const timezone_offset timezone_database_pacific_easter[] =
 {
 	{0,-360},
 	{7527600,-420},
@@ -22834,7 +21631,7 @@ static const timezone_offset timezone_database_pacific_easter[] =
 	{2135822400,-300}
 };
 
-static const timezone_offset timezone_database_pacific_efate[] = 
+static const timezone_offset timezone_database_pacific_efate[] =
 {
 	{0,660},
 	{433256400,720},
@@ -22859,20 +21656,20 @@ static const timezone_offset timezone_database_pacific_efate[] =
 	{727790400,660}
 };
 
-static const timezone_offset timezone_database_pacific_enderbury[] = 
+static const timezone_offset timezone_database_pacific_enderbury[] =
 {
 	{0,-720},
 	{307627200,-660},
 	{788871600,780}
 };
 
-static const timezone_offset timezone_database_pacific_fakaofo[] = 
+static const timezone_offset timezone_database_pacific_fakaofo[] =
 {
 	{0,-660},
 	{1325242800,780}
 };
 
-static const timezone_offset timezone_database_pacific_fiji[] = 
+static const timezone_offset timezone_database_pacific_fiji[] =
 {
 	{0,720},
 	{909842400,780},
@@ -22939,7 +21736,7 @@ static const timezone_offset timezone_database_pacific_fiji[] =
 	{2147263200,720}
 };
 
-static const timezone_offset timezone_database_pacific_galapagos[] = 
+static const timezone_offset timezone_database_pacific_galapagos[] =
 {
 	{0,-300},
 	{504939600,-360},
@@ -22947,38 +21744,38 @@ static const timezone_offset timezone_database_pacific_galapagos[] =
 	{728888400,-360}
 };
 
-static const timezone_offset timezone_database_pacific_kiritimati[] = 
+static const timezone_offset timezone_database_pacific_kiritimati[] =
 {
 	{0,-640},
 	{307622400,-600},
 	{788868000,840}
 };
 
-static const timezone_offset timezone_database_pacific_kosrae[] = 
+static const timezone_offset timezone_database_pacific_kosrae[] =
 {
 	{0,720},
 	{915105600,660}
 };
 
-static const timezone_offset timezone_database_pacific_kwajalein[] = 
+static const timezone_offset timezone_database_pacific_kwajalein[] =
 {
 	{0,-720},
 	{745848000,720}
 };
 
-static const timezone_offset timezone_database_pacific_nauru[] = 
+static const timezone_offset timezone_database_pacific_nauru[] =
 {
 	{0,690},
 	{294323400,720}
 };
 
-static const timezone_offset timezone_database_pacific_niue[] = 
+static const timezone_offset timezone_database_pacific_niue[] =
 {
 	{0,-690},
 	{276089400,-660}
 };
 
-static const timezone_offset timezone_database_pacific_norfolk[] = 
+static const timezone_offset timezone_database_pacific_norfolk[] =
 {
 	{0,690},
 	{152029800,750},
@@ -22986,7 +21783,7 @@ static const timezone_offset timezone_database_pacific_norfolk[] =
 	{1443882600,660}
 };
 
-static const timezone_offset timezone_database_pacific_noumea[] = 
+static const timezone_offset timezone_database_pacific_noumea[] =
 {
 	{0,660},
 	{250002000,720},
@@ -22997,13 +21794,13 @@ static const timezone_offset timezone_database_pacific_noumea[] =
 	{857228400,660}
 };
 
-static const timezone_offset timezone_database_pacific_pitcairn[] = 
+static const timezone_offset timezone_database_pacific_pitcairn[] =
 {
 	{0,-510},
 	{893665800,-480}
 };
 
-static const timezone_offset timezone_database_pacific_rarotonga[] = 
+static const timezone_offset timezone_database_pacific_rarotonga[] =
 {
 	{0,-630},
 	{279714600,-570},
@@ -23034,7 +21831,7 @@ static const timezone_offset timezone_database_pacific_rarotonga[] =
 	{667992600,-600}
 };
 
-static const timezone_offset timezone_database_pacific_tongatapu[] = 
+static const timezone_offset timezone_database_pacific_tongatapu[] =
 {
 	{0,780},
 	{939214800,840},
@@ -23047,67 +21844,339 @@ static const timezone_offset timezone_database_pacific_tongatapu[] =
 	{1484398800,780}
 };
 
-static const tzdb_timezone timezone_array[TIMEZONE_DATABASE_COUNT] = 
+static const timezone_offset timezone_database_pst8pdt[] =
 {
-	{"Africa/Abidjan", &timezone_database_no_change[10], 1},
-	{"Africa/Accra", &timezone_database_no_change[10], 1},
-	{"Africa/Addis_Ababa", &timezone_database_no_change[13], 1},
+	{0,-480},
+	{9972000,-420},
+	{25693200,-480},
+	{41421600,-420},
+	{57747600,-480},
+	{73476000,-420},
+	{89197200,-480},
+	{104925600,-420},
+	{120646800,-480},
+	{126698400,-420},
+	{152096400,-480},
+	{162381600,-420},
+	{183546000,-480},
+	{199274400,-420},
+	{215600400,-480},
+	{230724000,-420},
+	{247050000,-480},
+	{262778400,-420},
+	{278499600,-480},
+	{294228000,-420},
+	{309949200,-480},
+	{325677600,-420},
+	{341398800,-480},
+	{357127200,-420},
+	{372848400,-480},
+	{388576800,-420},
+	{404902800,-480},
+	{420026400,-420},
+	{436352400,-480},
+	{452080800,-420},
+	{467802000,-480},
+	{483530400,-420},
+	{499251600,-480},
+	{514980000,-420},
+	{530701200,-480},
+	{544615200,-420},
+	{562150800,-480},
+	{576064800,-420},
+	{594205200,-480},
+	{607514400,-420},
+	{625654800,-480},
+	{638964000,-420},
+	{657104400,-480},
+	{671018400,-420},
+	{688554000,-480},
+	{702468000,-420},
+	{720003600,-480},
+	{733917600,-420},
+	{752058000,-480},
+	{765367200,-420},
+	{783507600,-480},
+	{796816800,-420},
+	{814957200,-480},
+	{828871200,-420},
+	{846406800,-480},
+	{860320800,-420},
+	{877856400,-480},
+	{891770400,-420},
+	{909306000,-480},
+	{923220000,-420},
+	{941360400,-480},
+	{954669600,-420},
+	{972810000,-480},
+	{986119200,-420},
+	{1004259600,-480},
+	{1018173600,-420},
+	{1035709200,-480},
+	{1049623200,-420},
+	{1067158800,-480},
+	{1081072800,-420},
+	{1099213200,-480},
+	{1112522400,-420},
+	{1130662800,-480},
+	{1143972000,-420},
+	{1162112400,-480},
+	{1173607200,-420},
+	{1194166800,-480},
+	{1205056800,-420},
+	{1225616400,-480},
+	{1236506400,-420},
+	{1257066000,-480},
+	{1268560800,-420},
+	{1289120400,-480},
+	{1300010400,-420},
+	{1320570000,-480},
+	{1331460000,-420},
+	{1352019600,-480},
+	{1362909600,-420},
+	{1383469200,-480},
+	{1394359200,-420},
+	{1414918800,-480},
+	{1425808800,-420},
+	{1446368400,-480},
+	{1457863200,-420},
+	{1478422800,-480},
+	{1489312800,-420},
+	{1509872400,-480},
+	{1520762400,-420},
+	{1541322000,-480},
+	{1552212000,-420},
+	{1572771600,-480},
+	{1583661600,-420},
+	{1604221200,-480},
+	{1615716000,-420},
+	{1636275600,-480},
+	{1647165600,-420},
+	{1667725200,-480},
+	{1678615200,-420},
+	{1699174800,-480},
+	{1710064800,-420},
+	{1730624400,-480},
+	{1741514400,-420},
+	{1762074000,-480},
+	{1772964000,-420},
+	{1793523600,-480},
+	{1805018400,-420},
+	{1825578000,-480},
+	{1836468000,-420},
+	{1857027600,-480},
+	{1867917600,-420},
+	{1888477200,-480},
+	{1899367200,-420},
+	{1919926800,-480},
+	{1930816800,-420},
+	{1951376400,-480},
+	{1962871200,-420},
+	{1983430800,-480},
+	{1994320800,-420},
+	{2014880400,-480},
+	{2025770400,-420},
+	{2046330000,-480},
+	{2057220000,-420},
+	{2077779600,-480},
+	{2088669600,-420},
+	{2109229200,-480},
+	{2120119200,-420},
+	{2140678800,-480}
+};
+
+static const timezone_offset timezone_database_wet[] =
+{
+	{0,0},
+	{228877200,60},
+	{243997200,0},
+	{260326800,60},
+	{276051600,0},
+	{291776400,60},
+	{307501200,0},
+	{323830800,60},
+	{338950800,0},
+	{354675600,60},
+	{370400400,0},
+	{386125200,60},
+	{401850000,0},
+	{417574800,60},
+	{433299600,0},
+	{449024400,60},
+	{465354000,0},
+	{481078800,60},
+	{496803600,0},
+	{512528400,60},
+	{528253200,0},
+	{543978000,60},
+	{559702800,0},
+	{575427600,60},
+	{591152400,0},
+	{606877200,60},
+	{622602000,0},
+	{638326800,60},
+	{654656400,0},
+	{670381200,60},
+	{686106000,0},
+	{701830800,60},
+	{717555600,0},
+	{733280400,60},
+	{749005200,0},
+	{764730000,60},
+	{780454800,0},
+	{796179600,60},
+	{811904400,0},
+	{828234000,60},
+	{846378000,0},
+	{859683600,60},
+	{877827600,0},
+	{891133200,60},
+	{909277200,0},
+	{922582800,60},
+	{941331600,0},
+	{954032400,60},
+	{972781200,0},
+	{985482000,60},
+	{1004230800,0},
+	{1017536400,60},
+	{1035680400,0},
+	{1048986000,60},
+	{1067130000,0},
+	{1080435600,60},
+	{1099184400,0},
+	{1111885200,60},
+	{1130634000,0},
+	{1143334800,60},
+	{1162083600,0},
+	{1174784400,60},
+	{1193533200,0},
+	{1206838800,60},
+	{1224982800,0},
+	{1238288400,60},
+	{1256432400,0},
+	{1269738000,60},
+	{1288486800,0},
+	{1301187600,60},
+	{1319936400,0},
+	{1332637200,60},
+	{1351386000,0},
+	{1364691600,60},
+	{1382835600,0},
+	{1396141200,60},
+	{1414285200,0},
+	{1427590800,60},
+	{1445734800,0},
+	{1459040400,60},
+	{1477789200,0},
+	{1490490000,60},
+	{1509238800,0},
+	{1521939600,60},
+	{1540688400,0},
+	{1553994000,60},
+	{1572138000,0},
+	{1585443600,60},
+	{1603587600,0},
+	{1616893200,60},
+	{1635642000,0},
+	{1648342800,60},
+	{1667091600,0},
+	{1679792400,60},
+	{1698541200,0},
+	{1711846800,60},
+	{1729990800,0},
+	{1743296400,60},
+	{1761440400,0},
+	{1774746000,60},
+	{1792890000,0},
+	{1806195600,60},
+	{1824944400,0},
+	{1837645200,60},
+	{1856394000,0},
+	{1869094800,60},
+	{1887843600,0},
+	{1901149200,60},
+	{1919293200,0},
+	{1932598800,60},
+	{1950742800,0},
+	{1964048400,60},
+	{1982797200,0},
+	{1995498000,60},
+	{2014246800,0},
+	{2026947600,60},
+	{2045696400,0},
+	{2058397200,60},
+	{2077146000,0},
+	{2090451600,60},
+	{2108595600,0},
+	{2121901200,60},
+	{2140045200,0}
+};
+
+#define TIMEZONE_DATABASE_COUNT 592
+static const tzdb_timezone timezone_array[] =
+{
+	{"Africa/Abidjan", &timezone_database_no_change[13], 1},
+	{"Africa/Accra", &timezone_database_no_change[13], 1},
+	{"Africa/Addis_Ababa", &timezone_database_no_change[16], 1},
 	{"Africa/Algiers", timezone_database_africa_algiers, 10},
-	{"Africa/Asmara", &timezone_database_no_change[13], 1},
-	{"Africa/Bamako", &timezone_database_no_change[10], 1},
-	{"Africa/Bangui", &timezone_database_no_change[11], 1},
-	{"Africa/Banjul", &timezone_database_no_change[10], 1},
+	{"Africa/Asmara", &timezone_database_no_change[16], 1},
+	{"Africa/Asmera", &timezone_database_no_change[16], 1},
+	{"Africa/Bamako", &timezone_database_no_change[13], 1},
+	{"Africa/Bangui", &timezone_database_no_change[14], 1},
+	{"Africa/Banjul", &timezone_database_no_change[13], 1},
 	{"Africa/Bissau", timezone_database_africa_bissau, 2},
-	{"Africa/Blantyre", &timezone_database_no_change[12], 1},
-	{"Africa/Brazzaville", &timezone_database_no_change[11], 1},
-	{"Africa/Bujumbura", &timezone_database_no_change[12], 1},
+	{"Africa/Blantyre", &timezone_database_no_change[15], 1},
+	{"Africa/Brazzaville", &timezone_database_no_change[14], 1},
+	{"Africa/Bujumbura", &timezone_database_no_change[15], 1},
 	{"Africa/Cairo", timezone_database_africa_cairo, 89},
 	{"Africa/Casablanca", timezone_database_africa_casablanca, 46},
 	{"Africa/Ceuta", timezone_database_africa_ceuta, 114},
-	{"Africa/Conakry", &timezone_database_no_change[10], 1},
-	{"Africa/Dakar", &timezone_database_no_change[10], 1},
-	{"Africa/Dar_es_Salaam", &timezone_database_no_change[13], 1},
-	{"Africa/Djibouti", &timezone_database_no_change[13], 1},
-	{"Africa/Douala", &timezone_database_no_change[11], 1},
+	{"Africa/Conakry", &timezone_database_no_change[13], 1},
+	{"Africa/Dakar", &timezone_database_no_change[13], 1},
+	{"Africa/Dar_es_Salaam", &timezone_database_no_change[16], 1},
+	{"Africa/Djibouti", &timezone_database_no_change[16], 1},
+	{"Africa/Douala", &timezone_database_no_change[14], 1},
 	{"Africa/El_Aaiun", timezone_database_africa_el_aaiun, 43},
-	{"Africa/Freetown", &timezone_database_no_change[10], 1},
-	{"Africa/Gaborone", &timezone_database_no_change[12], 1},
-	{"Africa/Harare", &timezone_database_no_change[12], 1},
-	{"Africa/Johannesburg", &timezone_database_no_change[12], 1},
+	{"Africa/Freetown", &timezone_database_no_change[13], 1},
+	{"Africa/Gaborone", &timezone_database_no_change[15], 1},
+	{"Africa/Harare", &timezone_database_no_change[15], 1},
+	{"Africa/Johannesburg", &timezone_database_no_change[15], 1},
 	{"Africa/Juba", timezone_database_africa_juba, 34},
-	{"Africa/Kampala", &timezone_database_no_change[13], 1},
+	{"Africa/Kampala", &timezone_database_no_change[16], 1},
 	{"Africa/Khartoum", timezone_database_africa_khartoum, 35},
-	{"Africa/Kigali", &timezone_database_no_change[12], 1},
-	{"Africa/Kinshasa", &timezone_database_no_change[11], 1},
-	{"Africa/Lagos", &timezone_database_no_change[11], 1},
-	{"Africa/Libreville", &timezone_database_no_change[11], 1},
-	{"Africa/Lome", &timezone_database_no_change[10], 1},
-	{"Africa/Luanda", &timezone_database_no_change[11], 1},
-	{"Africa/Lubumbashi", &timezone_database_no_change[12], 1},
-	{"Africa/Lusaka", &timezone_database_no_change[12], 1},
-	{"Africa/Malabo", &timezone_database_no_change[11], 1},
-	{"Africa/Maputo", &timezone_database_no_change[12], 1},
-	{"Africa/Maseru", &timezone_database_no_change[12], 1},
-	{"Africa/Mbabane", &timezone_database_no_change[12], 1},
-	{"Africa/Mogadishu", &timezone_database_no_change[13], 1},
+	{"Africa/Kigali", &timezone_database_no_change[15], 1},
+	{"Africa/Kinshasa", &timezone_database_no_change[14], 1},
+	{"Africa/Lagos", &timezone_database_no_change[14], 1},
+	{"Africa/Libreville", &timezone_database_no_change[14], 1},
+	{"Africa/Lome", &timezone_database_no_change[13], 1},
+	{"Africa/Luanda", &timezone_database_no_change[14], 1},
+	{"Africa/Lubumbashi", &timezone_database_no_change[15], 1},
+	{"Africa/Lusaka", &timezone_database_no_change[15], 1},
+	{"Africa/Malabo", &timezone_database_no_change[14], 1},
+	{"Africa/Maputo", &timezone_database_no_change[15], 1},
+	{"Africa/Maseru", &timezone_database_no_change[15], 1},
+	{"Africa/Mbabane", &timezone_database_no_change[15], 1},
+	{"Africa/Mogadishu", &timezone_database_no_change[16], 1},
 	{"Africa/Monrovia", timezone_database_africa_monrovia, 2},
-	{"Africa/Nairobi", &timezone_database_no_change[13], 1},
+	{"Africa/Nairobi", &timezone_database_no_change[16], 1},
 	{"Africa/Ndjamena", timezone_database_africa_ndjamena, 3},
-	{"Africa/Niamey", &timezone_database_no_change[11], 1},
-	{"Africa/Nouakchott", &timezone_database_no_change[10], 1},
-	{"Africa/Ouagadougou", &timezone_database_no_change[10], 1},
-	{"Africa/Porto-Novo", &timezone_database_no_change[11], 1},
+	{"Africa/Niamey", &timezone_database_no_change[14], 1},
+	{"Africa/Nouakchott", &timezone_database_no_change[13], 1},
+	{"Africa/Ouagadougou", &timezone_database_no_change[13], 1},
+	{"Africa/Porto-Novo", &timezone_database_no_change[14], 1},
 	{"Africa/Sao_Tome", timezone_database_africa_sao_tome, 2},
+	{"Africa/Timbuktu", &timezone_database_no_change[13], 1},
 	{"Africa/Tripoli", timezone_database_africa_tripoli, 23},
 	{"Africa/Tunis", timezone_database_africa_tunis, 19},
 	{"Africa/Windhoek", timezone_database_africa_windhoek, 49},
 	{"America/Adak", timezone_database_america_adak, 136},
 	{"America/Anchorage", timezone_database_america_anchorage, 136},
-	{"America/Anguilla", &timezone_database_no_change[7], 1},
-	{"America/Antigua", &timezone_database_no_change[7], 1},
+	{"America/Anguilla", &timezone_database_no_change[9], 1},
+	{"America/Antigua", &timezone_database_no_change[9], 1},
 	{"America/Araguaina", timezone_database_america_araguaina, 29},
 	{"America/Argentina/Buenos_Aires", timezone_database_america_argentina_buenos_aires, 17},
 	{"America/Argentina/Catamarca", timezone_database_america_argentina_catamarca, 17},
+	{"America/Argentina/ComodRivadavia", timezone_database_america_argentina_catamarca, 17},
 	{"America/Argentina/Cordoba", timezone_database_america_argentina_cordoba, 17},
 	{"America/Argentina/Jujuy", timezone_database_america_argentina_jujuy, 15},
 	{"America/Argentina/La_Rioja", timezone_database_america_argentina_la_rioja, 18},
@@ -23118,47 +22187,54 @@ static const tzdb_timezone timezone_array[TIMEZONE_DATABASE_COUNT] =
 	{"America/Argentina/San_Luis", timezone_database_america_argentina_san_luis, 18},
 	{"America/Argentina/Tucuman", timezone_database_america_argentina_tucuman, 19},
 	{"America/Argentina/Ushuaia", timezone_database_america_argentina_ushuaia, 17},
-	{"America/Aruba", &timezone_database_no_change[7], 1},
+	{"America/Aruba", &timezone_database_no_change[9], 1},
 	{"America/Asuncion", timezone_database_america_asuncion, 128},
-	{"America/Atikokan", &timezone_database_no_change[6], 1},
+	{"America/Atikokan", &timezone_database_no_change[8], 1},
+	{"America/Atka", timezone_database_america_adak, 136},
 	{"America/Bahia", timezone_database_america_bahia, 39},
 	{"America/Bahia_Banderas", timezone_database_america_bahia_banderas, 86},
 	{"America/Barbados", timezone_database_america_barbados, 9},
 	{"America/Belem", timezone_database_america_belem, 7},
 	{"America/Belize", timezone_database_america_belize, 5},
-	{"America/Blanc-Sablon", &timezone_database_no_change[7], 1},
+	{"America/Blanc-Sablon", &timezone_database_no_change[9], 1},
 	{"America/Boa_Vista", timezone_database_america_boa_vista, 11},
 	{"America/Bogota", timezone_database_america_bogota, 3},
 	{"America/Boise", timezone_database_america_boise, 137},
+	{"America/Buenos_Aires", timezone_database_america_argentina_buenos_aires, 17},
 	{"America/Cambridge_Bay", timezone_database_america_cambridge_bay, 115},
 	{"America/Campo_Grande", timezone_database_america_campo_grande, 106},
 	{"America/Cancun", timezone_database_america_cancun, 42},
 	{"America/Caracas", timezone_database_america_caracas, 3},
-	{"America/Cayenne", &timezone_database_no_change[8], 1},
-	{"America/Cayman", &timezone_database_no_change[6], 1},
+	{"America/Catamarca", timezone_database_america_argentina_catamarca, 17},
+	{"America/Cayenne", &timezone_database_no_change[10], 1},
+	{"America/Cayman", &timezone_database_no_change[8], 1},
 	{"America/Chicago", timezone_database_america_chicago, 137},
 	{"America/Chihuahua", timezone_database_america_chihuahua, 84},
+	{"America/Coral_Harbour", &timezone_database_no_change[8], 1},
+	{"America/Cordoba", timezone_database_america_argentina_cordoba, 17},
 	{"America/Costa_Rica", timezone_database_america_costa_rica, 9},
-	{"America/Creston", &timezone_database_no_change[4], 1},
+	{"America/Creston", &timezone_database_no_change[6], 1},
 	{"America/Cuiaba", timezone_database_america_cuiaba, 104},
-	{"America/Curacao", &timezone_database_no_change[7], 1},
+	{"America/Curacao", &timezone_database_no_change[9], 1},
 	{"America/Danmarkshavn", timezone_database_america_danmarkshavn, 34},
 	{"America/Dawson", timezone_database_america_dawson, 118},
 	{"America/Dawson_Creek", timezone_database_america_dawson_creek, 6},
 	{"America/Denver", timezone_database_america_denver, 137},
 	{"America/Detroit", timezone_database_america_detroit, 131},
-	{"America/Dominica", &timezone_database_no_change[7], 1},
+	{"America/Dominica", &timezone_database_no_change[9], 1},
 	{"America/Edmonton", timezone_database_america_edmonton, 133},
 	{"America/Eirunepe", timezone_database_america_eirunepe, 11},
 	{"America/El_Salvador", timezone_database_america_el_salvador, 5},
+	{"America/Ensenada", timezone_database_america_tijuana, 125},
 	{"America/Fort_Nelson", timezone_database_america_fort_nelson, 92},
+	{"America/Fort_Wayne", timezone_database_america_indiana_indianapolis, 67},
 	{"America/Fortaleza", timezone_database_america_fortaleza, 17},
 	{"America/Glace_Bay", timezone_database_america_glace_bay, 133},
 	{"America/Godthab", timezone_database_america_godthab, 117},
 	{"America/Goose_Bay", timezone_database_america_goose_bay, 137},
 	{"America/Grand_Turk", timezone_database_america_grand_turk, 113},
-	{"America/Grenada", &timezone_database_no_change[7], 1},
-	{"America/Guadeloupe", &timezone_database_no_change[7], 1},
+	{"America/Grenada", &timezone_database_no_change[9], 1},
+	{"America/Guadeloupe", &timezone_database_no_change[9], 1},
 	{"America/Guatemala", timezone_database_america_guatemala, 9},
 	{"America/Guayaquil", timezone_database_america_guayaquil, 3},
 	{"America/Guyana", timezone_database_america_guyana, 3},
@@ -23173,24 +22249,29 @@ static const tzdb_timezone timezone_array[TIMEZONE_DATABASE_COUNT] =
 	{"America/Indiana/Vevay", timezone_database_america_indiana_vevay, 71},
 	{"America/Indiana/Vincennes", timezone_database_america_indiana_vincennes, 65},
 	{"America/Indiana/Winamac", timezone_database_america_indiana_winamac, 66},
+	{"America/Indianapolis", timezone_database_america_indiana_indianapolis, 67},
 	{"America/Inuvik", timezone_database_america_inuvik, 118},
 	{"America/Iqaluit", timezone_database_america_iqaluit, 116},
 	{"America/Jamaica", timezone_database_america_jamaica, 21},
+	{"America/Jujuy", timezone_database_america_argentina_jujuy, 15},
 	{"America/Juneau", timezone_database_america_juneau, 135},
 	{"America/Kentucky/Louisville", timezone_database_america_kentucky_louisville, 135},
 	{"America/Kentucky/Monticello", timezone_database_america_kentucky_monticello, 136},
-	{"America/Kralendijk", &timezone_database_no_change[7], 1},
-	{"America/La_Paz", &timezone_database_no_change[7], 1},
+	{"America/Knox_IN", timezone_database_america_indiana_knox, 107},
+	{"America/Kralendijk", &timezone_database_no_change[9], 1},
+	{"America/La_Paz", &timezone_database_no_change[9], 1},
 	{"America/Lima", timezone_database_america_lima, 9},
 	{"America/Los_Angeles", timezone_database_america_los_angeles, 137},
-	{"America/Lower_Princes", &timezone_database_no_change[7], 1},
+	{"America/Louisville", timezone_database_america_kentucky_louisville, 135},
+	{"America/Lower_Princes", &timezone_database_no_change[9], 1},
 	{"America/Maceio", timezone_database_america_maceio, 19},
 	{"America/Managua", timezone_database_america_managua, 15},
 	{"America/Manaus", timezone_database_america_manaus, 9},
-	{"America/Marigot", &timezone_database_no_change[7], 1},
+	{"America/Marigot", &timezone_database_no_change[9], 1},
 	{"America/Martinique", timezone_database_america_martinique, 3},
 	{"America/Matamoros", timezone_database_america_matamoros, 87},
 	{"America/Mazatlan", timezone_database_america_mazatlan, 86},
+	{"America/Mendoza", timezone_database_america_argentina_mendoza, 17},
 	{"America/Menominee", timezone_database_america_menominee, 130},
 	{"America/Merida", timezone_database_america_merida, 87},
 	{"America/Metlakatla", timezone_database_america_metlakatla, 74},
@@ -23199,7 +22280,8 @@ static const tzdb_timezone timezone_array[TIMEZONE_DATABASE_COUNT] =
 	{"America/Moncton", timezone_database_america_moncton, 135},
 	{"America/Monterrey", timezone_database_america_monterrey, 87},
 	{"America/Montevideo", timezone_database_america_montevideo, 52},
-	{"America/Montserrat", &timezone_database_no_change[7], 1},
+	{"America/Montreal", timezone_database_america_toronto, 137},
+	{"America/Montserrat", &timezone_database_no_change[9], 1},
 	{"America/Nassau", timezone_database_america_nassau, 137},
 	{"America/New_York", timezone_database_america_new_york, 137},
 	{"America/Nipigon", timezone_database_america_nipigon, 129},
@@ -23209,117 +22291,135 @@ static const tzdb_timezone timezone_array[TIMEZONE_DATABASE_COUNT] =
 	{"America/North_Dakota/Center", timezone_database_america_north_dakota_center, 136},
 	{"America/North_Dakota/New_Salem", timezone_database_america_north_dakota_new_salem, 136},
 	{"America/Ojinaga", timezone_database_america_ojinaga, 84},
-	{"America/Panama", &timezone_database_no_change[6], 1},
+	{"America/Panama", &timezone_database_no_change[8], 1},
 	{"America/Pangnirtung", timezone_database_america_pangnirtung, 115},
 	{"America/Paramaribo", timezone_database_america_paramaribo, 2},
-	{"America/Phoenix", &timezone_database_no_change[4], 1},
+	{"America/Phoenix", &timezone_database_no_change[6], 1},
 	{"America/Port-au-Prince", timezone_database_america_port_au_prince, 85},
-	{"America/Port_of_Spain", &timezone_database_no_change[7], 1},
+	{"America/Port_of_Spain", &timezone_database_no_change[9], 1},
+	{"America/Porto_Acre", timezone_database_america_rio_branco, 9},
 	{"America/Porto_Velho", timezone_database_america_porto_velho, 7},
-	{"America/Puerto_Rico", &timezone_database_no_change[7], 1},
+	{"America/Puerto_Rico", &timezone_database_no_change[9], 1},
 	{"America/Punta_Arenas", timezone_database_america_punta_arenas, 93},
 	{"America/Rainy_River", timezone_database_america_rainy_river, 129},
 	{"America/Rankin_Inlet", timezone_database_america_rankin_inlet, 115},
 	{"America/Recife", timezone_database_america_recife, 17},
-	{"America/Regina", &timezone_database_no_change[5], 1},
+	{"America/Regina", &timezone_database_no_change[7], 1},
 	{"America/Resolute", timezone_database_america_resolute, 113},
 	{"America/Rio_Branco", timezone_database_america_rio_branco, 9},
+	{"America/Rosario", timezone_database_america_argentina_cordoba, 17},
+	{"America/Santa_Isabel", timezone_database_america_tijuana, 125},
 	{"America/Santarem", timezone_database_america_santarem, 8},
 	{"America/Santiago", timezone_database_america_santiago, 135},
 	{"America/Santo_Domingo", timezone_database_america_santo_domingo, 13},
 	{"America/Sao_Paulo", timezone_database_america_sao_paulo, 106},
 	{"America/Scoresbysund", timezone_database_america_scoresbysund, 117},
+	{"America/Shiprock", timezone_database_america_denver, 137},
 	{"America/Sitka", timezone_database_america_sitka, 137},
-	{"America/St_Barthelemy", &timezone_database_no_change[7], 1},
+	{"America/St_Barthelemy", &timezone_database_no_change[9], 1},
 	{"America/St_Johns", timezone_database_america_st_johns, 137},
-	{"America/St_Kitts", &timezone_database_no_change[7], 1},
-	{"America/St_Lucia", &timezone_database_no_change[7], 1},
-	{"America/St_Thomas", &timezone_database_no_change[7], 1},
-	{"America/St_Vincent", &timezone_database_no_change[7], 1},
+	{"America/St_Kitts", &timezone_database_no_change[9], 1},
+	{"America/St_Lucia", &timezone_database_no_change[9], 1},
+	{"America/St_Thomas", &timezone_database_no_change[9], 1},
+	{"America/St_Vincent", &timezone_database_no_change[9], 1},
 	{"America/Swift_Current", timezone_database_america_swift_current, 2},
 	{"America/Tegucigalpa", timezone_database_america_tegucigalpa, 7},
 	{"America/Thule", timezone_database_america_thule, 95},
 	{"America/Thunder_Bay", timezone_database_america_thunder_bay, 135},
 	{"America/Tijuana", timezone_database_america_tijuana, 125},
 	{"America/Toronto", timezone_database_america_toronto, 137},
-	{"America/Tortola", &timezone_database_no_change[7], 1},
+	{"America/Tortola", &timezone_database_no_change[9], 1},
 	{"America/Vancouver", timezone_database_america_vancouver, 137},
+	{"America/Virgin", &timezone_database_no_change[9], 1},
 	{"America/Whitehorse", timezone_database_america_whitehorse, 117},
 	{"America/Winnipeg", timezone_database_america_winnipeg, 137},
 	{"America/Yakutat", timezone_database_america_yakutat, 137},
 	{"America/Yellowknife", timezone_database_america_yellowknife, 117},
 	{"Antarctica/Casey", timezone_database_antarctica_casey, 7},
 	{"Antarctica/Davis", timezone_database_antarctica_davis, 5},
-	{"Antarctica/DumontDUrville", &timezone_database_no_change[24], 1},
+	{"Antarctica/DumontDUrville", &timezone_database_no_change[27], 1},
 	{"Antarctica/Macquarie", timezone_database_antarctica_macquarie, 81},
 	{"Antarctica/Mawson", timezone_database_antarctica_mawson, 2},
-	{"Antarctica/McMurdo", timezone_database_antarctica_mcmurdo, 128},
+	{"Antarctica/McMurdo", timezone_database_pacific_auckland, 128},
 	{"Antarctica/Palmer", timezone_database_antarctica_palmer, 71},
 	{"Antarctica/Rothera", timezone_database_antarctica_rothera, 2},
-	{"Antarctica/Syowa", &timezone_database_no_change[13], 1},
+	{"Antarctica/South_Pole", timezone_database_pacific_auckland, 128},
+	{"Antarctica/Syowa", &timezone_database_no_change[16], 1},
 	{"Antarctica/Troll", timezone_database_antarctica_troll, 67},
-	{"Antarctica/Vostok", &timezone_database_no_change[18], 1},
-	{"Arctic/Longyearbyen", timezone_database_arctic_longyearbyen, 117},
-	{"Asia/Aden", &timezone_database_no_change[13], 1},
+	{"Antarctica/Vostok", &timezone_database_no_change[21], 1},
+	{"Arctic/Longyearbyen", timezone_database_europe_oslo, 117},
+	{"Asia/Aden", &timezone_database_no_change[16], 1},
 	{"Asia/Almaty", timezone_database_asia_almaty, 49},
 	{"Asia/Amman", timezone_database_asia_amman, 117},
 	{"Asia/Anadyr", timezone_database_asia_anadyr, 60},
 	{"Asia/Aqtau", timezone_database_asia_aqtau, 46},
 	{"Asia/Aqtobe", timezone_database_asia_aqtobe, 47},
 	{"Asia/Ashgabat", timezone_database_asia_ashgabat, 23},
+	{"Asia/Ashkhabad", timezone_database_asia_ashgabat, 23},
 	{"Asia/Atyrau", timezone_database_asia_atyrau, 45},
 	{"Asia/Baghdad", timezone_database_asia_baghdad, 53},
-	{"Asia/Bahrain", timezone_database_asia_bahrain, 2},
+	{"Asia/Bahrain", timezone_database_asia_qatar, 2},
 	{"Asia/Baku", timezone_database_asia_baku, 63},
-	{"Asia/Bangkok", &timezone_database_no_change[20], 1},
+	{"Asia/Bangkok", &timezone_database_no_change[23], 1},
 	{"Asia/Barnaul", timezone_database_asia_barnaul, 65},
 	{"Asia/Beirut", timezone_database_asia_beirut, 123},
 	{"Asia/Bishkek", timezone_database_asia_bishkek, 49},
-	{"Asia/Brunei", &timezone_database_no_change[21], 1},
+	{"Asia/Brunei", &timezone_database_no_change[24], 1},
+	{"Asia/Calcutta", &timezone_database_no_change[20], 1},
 	{"Asia/Chita", timezone_database_asia_chita, 64},
 	{"Asia/Choibalsan", timezone_database_asia_choibalsan, 51},
+	{"Asia/Chongqing", timezone_database_asia_shanghai, 13},
+	{"Asia/Chungking", timezone_database_asia_shanghai, 13},
 	{"Asia/Colombo", timezone_database_asia_colombo, 4},
+	{"Asia/Dacca", timezone_database_asia_dhaka, 3},
 	{"Asia/Damascus", timezone_database_asia_damascus, 127},
 	{"Asia/Dhaka", timezone_database_asia_dhaka, 3},
 	{"Asia/Dili", timezone_database_asia_dili, 3},
-	{"Asia/Dubai", &timezone_database_no_change[14], 1},
+	{"Asia/Dubai", &timezone_database_no_change[17], 1},
 	{"Asia/Dushanbe", timezone_database_asia_dushanbe, 22},
 	{"Asia/Famagusta", timezone_database_asia_famagusta, 125},
 	{"Asia/Gaza", timezone_database_asia_gaza, 111},
+	{"Asia/Harbin", timezone_database_asia_shanghai, 13},
 	{"Asia/Hebron", timezone_database_asia_hebron, 113},
 	{"Asia/Ho_Chi_Minh", timezone_database_asia_ho_chi_minh, 2},
 	{"Asia/Hong_Kong", timezone_database_asia_hong_kong, 17},
 	{"Asia/Hovd", timezone_database_asia_hovd, 50},
 	{"Asia/Irkutsk", timezone_database_asia_irkutsk, 63},
-	{"Asia/Jakarta", &timezone_database_no_change[20], 1},
-	{"Asia/Jayapura", &timezone_database_no_change[22], 1},
+	{"Asia/Istanbul", timezone_database_europe_istanbul, 90},
+	{"Asia/Jakarta", &timezone_database_no_change[23], 1},
+	{"Asia/Jayapura", &timezone_database_no_change[25], 1},
 	{"Asia/Jerusalem", timezone_database_asia_jerusalem, 111},
-	{"Asia/Kabul", &timezone_database_no_change[15], 1},
+	{"Asia/Kabul", &timezone_database_no_change[18], 1},
 	{"Asia/Kamchatka", timezone_database_asia_kamchatka, 61},
 	{"Asia/Karachi", timezone_database_asia_karachi, 7},
+	{"Asia/Kashgar", &timezone_database_no_change[21], 1},
 	{"Asia/Kathmandu", timezone_database_asia_kathmandu, 2},
+	{"Asia/Katmandu", timezone_database_asia_kathmandu, 2},
 	{"Asia/Khandyga", timezone_database_asia_khandyga, 65},
-	{"Asia/Kolkata", &timezone_database_no_change[17], 1},
+	{"Asia/Kolkata", &timezone_database_no_change[20], 1},
 	{"Asia/Krasnoyarsk", timezone_database_asia_krasnoyarsk, 63},
 	{"Asia/Kuala_Lumpur", timezone_database_asia_kuala_lumpur, 2},
-	{"Asia/Kuching", &timezone_database_no_change[21], 1},
-	{"Asia/Kuwait", &timezone_database_no_change[13], 1},
+	{"Asia/Kuching", &timezone_database_no_change[24], 1},
+	{"Asia/Kuwait", &timezone_database_no_change[16], 1},
+	{"Asia/Macao", timezone_database_asia_macau, 17},
 	{"Asia/Macau", timezone_database_asia_macau, 17},
 	{"Asia/Magadan", timezone_database_asia_magadan, 64},
-	{"Asia/Makassar", &timezone_database_no_change[21], 1},
+	{"Asia/Makassar", &timezone_database_no_change[24], 1},
 	{"Asia/Manila", timezone_database_asia_manila, 3},
-	{"Asia/Muscat", &timezone_database_no_change[14], 1},
+	{"Asia/Muscat", &timezone_database_no_change[17], 1},
 	{"Asia/Nicosia", timezone_database_asia_nicosia, 127},
 	{"Asia/Novokuznetsk", timezone_database_asia_novokuznetsk, 61},
 	{"Asia/Novosibirsk", timezone_database_asia_novosibirsk, 65},
 	{"Asia/Omsk", timezone_database_asia_omsk, 63},
 	{"Asia/Oral", timezone_database_asia_oral, 45},
-	{"Asia/Phnom_Penh", &timezone_database_no_change[20], 1},
+	{"Asia/Phnom_Penh", &timezone_database_no_change[23], 1},
 	{"Asia/Pontianak", timezone_database_asia_pontianak, 2},
 	{"Asia/Pyongyang", timezone_database_asia_pyongyang, 3},
 	{"Asia/Qatar", timezone_database_asia_qatar, 2},
 	{"Asia/Qyzylorda", timezone_database_asia_qyzylorda, 44},
-	{"Asia/Riyadh", &timezone_database_no_change[13], 1},
+	{"Asia/Rangoon", &timezone_database_no_change[22], 1},
+	{"Asia/Riyadh", &timezone_database_no_change[16], 1},
+	{"Asia/Saigon", timezone_database_asia_ho_chi_minh, 2},
 	{"Asia/Sakhalin", timezone_database_asia_sakhalin, 63},
 	{"Asia/Samarkand", timezone_database_asia_samarkand, 21},
 	{"Asia/Seoul", timezone_database_asia_seoul, 5},
@@ -23330,149 +22430,283 @@ static const tzdb_timezone timezone_array[TIMEZONE_DATABASE_COUNT] =
 	{"Asia/Tashkent", timezone_database_asia_tashkent, 22},
 	{"Asia/Tbilisi", timezone_database_asia_tbilisi, 47},
 	{"Asia/Tehran", timezone_database_asia_tehran, 99},
+	{"Asia/Tel_Aviv", timezone_database_asia_jerusalem, 111},
+	{"Asia/Thimbu", timezone_database_asia_thimphu, 2},
 	{"Asia/Thimphu", timezone_database_asia_thimphu, 2},
-	{"Asia/Tokyo", &timezone_database_no_change[22], 1},
+	{"Asia/Tokyo", &timezone_database_no_change[25], 1},
 	{"Asia/Tomsk", timezone_database_asia_tomsk, 65},
+	{"Asia/Ujung_Pandang", &timezone_database_no_change[24], 1},
 	{"Asia/Ulaanbaatar", timezone_database_asia_ulaanbaatar, 50},
-	{"Asia/Urumqi", &timezone_database_no_change[18], 1},
+	{"Asia/Ulan_Bator", timezone_database_asia_ulaanbaatar, 50},
+	{"Asia/Urumqi", &timezone_database_no_change[21], 1},
 	{"Asia/Ust-Nera", timezone_database_asia_ust_nera, 64},
-	{"Asia/Vientiane", &timezone_database_no_change[20], 1},
+	{"Asia/Vientiane", &timezone_database_no_change[23], 1},
 	{"Asia/Vladivostok", timezone_database_asia_vladivostok, 63},
 	{"Asia/Yakutsk", timezone_database_asia_yakutsk, 63},
-	{"Asia/Yangon", &timezone_database_no_change[19], 1},
+	{"Asia/Yangon", &timezone_database_no_change[22], 1},
 	{"Asia/Yekaterinburg", timezone_database_asia_yekaterinburg, 63},
 	{"Asia/Yerevan", timezone_database_asia_yerevan, 59},
 	{"Atlantic/Azores", timezone_database_atlantic_azores, 121},
 	{"Atlantic/Bermuda", timezone_database_atlantic_bermuda, 129},
 	{"Atlantic/Canary", timezone_database_atlantic_canary, 117},
 	{"Atlantic/Cape_Verde", timezone_database_atlantic_cape_verde, 2},
+	{"Atlantic/Faeroe", timezone_database_atlantic_faroe, 115},
 	{"Atlantic/Faroe", timezone_database_atlantic_faroe, 115},
+	{"Atlantic/Jan_Mayen", timezone_database_europe_oslo, 117},
 	{"Atlantic/Madeira", timezone_database_atlantic_madeira, 123},
-	{"Atlantic/Reykjavik", &timezone_database_no_change[10], 1},
-	{"Atlantic/South_Georgia", &timezone_database_no_change[9], 1},
-	{"Atlantic/St_Helena", &timezone_database_no_change[10], 1},
+	{"Atlantic/Reykjavik", &timezone_database_no_change[13], 1},
+	{"Atlantic/South_Georgia", &timezone_database_no_change[11], 1},
+	{"Atlantic/St_Helena", &timezone_database_no_change[13], 1},
 	{"Atlantic/Stanley", timezone_database_atlantic_stanley, 56},
+	{"Australia/ACT", timezone_database_australia_sydney, 134},
 	{"Australia/Adelaide", timezone_database_australia_adelaide, 134},
 	{"Australia/Brisbane", timezone_database_australia_brisbane, 9},
 	{"Australia/Broken_Hill", timezone_database_australia_broken_hill, 134},
+	{"Australia/Canberra", timezone_database_australia_sydney, 134},
 	{"Australia/Currie", timezone_database_australia_currie, 134},
-	{"Australia/Darwin", &timezone_database_no_change[23], 1},
+	{"Australia/Darwin", &timezone_database_no_change[26], 1},
 	{"Australia/Eucla", timezone_database_australia_eucla, 13},
 	{"Australia/Hobart", timezone_database_australia_hobart, 137},
+	{"Australia/LHI", timezone_database_australia_lord_howe, 115},
 	{"Australia/Lindeman", timezone_database_australia_lindeman, 13},
 	{"Australia/Lord_Howe", timezone_database_australia_lord_howe, 115},
 	{"Australia/Melbourne", timezone_database_australia_melbourne, 134},
+	{"Australia/NSW", timezone_database_australia_sydney, 134},
+	{"Australia/North", &timezone_database_no_change[26], 1},
 	{"Australia/Perth", timezone_database_australia_perth, 13},
+	{"Australia/Queensland", timezone_database_australia_brisbane, 9},
+	{"Australia/South", timezone_database_australia_adelaide, 134},
 	{"Australia/Sydney", timezone_database_australia_sydney, 134},
+	{"Australia/Tasmania", timezone_database_australia_hobart, 137},
+	{"Australia/Victoria", timezone_database_australia_melbourne, 134},
+	{"Australia/West", timezone_database_australia_perth, 13},
+	{"Australia/Yancowinna", timezone_database_australia_broken_hill, 134},
+	{"Brazil/Acre", timezone_database_america_rio_branco, 9},
+	{"Brazil/DeNoronha", timezone_database_america_noronha, 17},
+	{"Brazil/East", timezone_database_america_sao_paulo, 106},
+	{"Brazil/West", timezone_database_america_manaus, 9},
+	{"CET", timezone_database_cet, 123},
+	{"CST6CDT", timezone_database_cst6cdt, 137},
+	{"Canada/Atlantic", timezone_database_america_halifax, 137},
+	{"Canada/Central", timezone_database_america_winnipeg, 137},
+	{"Canada/Eastern", timezone_database_america_toronto, 137},
+	{"Canada/Mountain", timezone_database_america_edmonton, 133},
+	{"Canada/Newfoundland", timezone_database_america_st_johns, 137},
+	{"Canada/Pacific", timezone_database_america_vancouver, 137},
+	{"Canada/Saskatchewan", &timezone_database_no_change[7], 1},
+	{"Canada/Yukon", timezone_database_america_whitehorse, 117},
+	{"Chile/Continental", timezone_database_america_santiago, 135},
+	{"Chile/EasterIsland", timezone_database_pacific_easter, 134},
+	{"Cuba", timezone_database_america_havana, 133},
+	{"EET", timezone_database_eet, 123},
+	{"EST", &timezone_database_no_change[8], 1},
+	{"EST5EDT", timezone_database_est5edt, 137},
+	{"Egypt", timezone_database_africa_cairo, 89},
+	{"Eire", timezone_database_europe_dublin, 134},
+	{"Etc/GMT", &timezone_database_no_change[13], 1},
+	{"Etc/GMT+0", &timezone_database_no_change[13], 1},
+	{"Etc/GMT+1", &timezone_database_no_change[12], 1},
+	{"Etc/GMT+10", &timezone_database_no_change[2], 1},
+	{"Etc/GMT+11", &timezone_database_no_change[1], 1},
+	{"Etc/GMT+12", &timezone_database_no_change[0], 1},
+	{"Etc/GMT+2", &timezone_database_no_change[11], 1},
+	{"Etc/GMT+3", &timezone_database_no_change[10], 1},
+	{"Etc/GMT+4", &timezone_database_no_change[9], 1},
+	{"Etc/GMT+5", &timezone_database_no_change[8], 1},
+	{"Etc/GMT+6", &timezone_database_no_change[7], 1},
+	{"Etc/GMT+7", &timezone_database_no_change[6], 1},
+	{"Etc/GMT+8", &timezone_database_no_change[5], 1},
+	{"Etc/GMT+9", &timezone_database_no_change[4], 1},
+	{"Etc/GMT-0", &timezone_database_no_change[13], 1},
+	{"Etc/GMT-1", &timezone_database_no_change[14], 1},
+	{"Etc/GMT-10", &timezone_database_no_change[27], 1},
+	{"Etc/GMT-11", &timezone_database_no_change[28], 1},
+	{"Etc/GMT-12", &timezone_database_no_change[29], 1},
+	{"Etc/GMT-13", &timezone_database_no_change[30], 1},
+	{"Etc/GMT-14", &timezone_database_no_change[31], 1},
+	{"Etc/GMT-2", &timezone_database_no_change[15], 1},
+	{"Etc/GMT-3", &timezone_database_no_change[16], 1},
+	{"Etc/GMT-4", &timezone_database_no_change[17], 1},
+	{"Etc/GMT-5", &timezone_database_no_change[19], 1},
+	{"Etc/GMT-6", &timezone_database_no_change[21], 1},
+	{"Etc/GMT-7", &timezone_database_no_change[23], 1},
+	{"Etc/GMT-8", &timezone_database_no_change[24], 1},
+	{"Etc/GMT-9", &timezone_database_no_change[25], 1},
+	{"Etc/GMT0", &timezone_database_no_change[13], 1},
+	{"Etc/Greenwich", &timezone_database_no_change[13], 1},
+	{"Etc/UCT", &timezone_database_no_change[13], 1},
+	{"Etc/UTC", &timezone_database_no_change[13], 1},
+	{"Etc/Universal", &timezone_database_no_change[13], 1},
+	{"Etc/Zulu", &timezone_database_no_change[13], 1},
 	{"Europe/Amsterdam", timezone_database_europe_amsterdam, 123},
 	{"Europe/Andorra", timezone_database_europe_andorra, 107},
 	{"Europe/Astrakhan", timezone_database_europe_astrakhan, 61},
 	{"Europe/Athens", timezone_database_europe_athens, 127},
+	{"Europe/Belfast", timezone_database_europe_london, 134},
 	{"Europe/Belgrade", timezone_database_europe_belgrade, 111},
 	{"Europe/Berlin", timezone_database_europe_berlin, 117},
-	{"Europe/Bratislava", timezone_database_europe_bratislava, 119},
+	{"Europe/Bratislava", timezone_database_europe_prague, 119},
 	{"Europe/Brussels", timezone_database_europe_brussels, 123},
 	{"Europe/Bucharest", timezone_database_europe_bucharest, 119},
 	{"Europe/Budapest", timezone_database_europe_budapest, 117},
-	{"Europe/Busingen", timezone_database_europe_busingen, 115},
+	{"Europe/Busingen", timezone_database_europe_zurich, 115},
 	{"Europe/Chisinau", timezone_database_europe_chisinau, 116},
 	{"Europe/Copenhagen", timezone_database_europe_copenhagen, 117},
 	{"Europe/Dublin", timezone_database_europe_dublin, 134},
 	{"Europe/Gibraltar", timezone_database_europe_gibraltar, 113},
-	{"Europe/Guernsey", timezone_database_europe_guernsey, 134},
+	{"Europe/Guernsey", timezone_database_europe_london, 134},
 	{"Europe/Helsinki", timezone_database_europe_helsinki, 115},
-	{"Europe/Isle_of_Man", timezone_database_europe_isle_of_man, 134},
+	{"Europe/Isle_of_Man", timezone_database_europe_london, 134},
 	{"Europe/Istanbul", timezone_database_europe_istanbul, 90},
-	{"Europe/Jersey", timezone_database_europe_jersey, 134},
+	{"Europe/Jersey", timezone_database_europe_london, 134},
 	{"Europe/Kaliningrad", timezone_database_europe_kaliningrad, 62},
 	{"Europe/Kiev", timezone_database_europe_kiev, 114},
 	{"Europe/Kirov", timezone_database_europe_kirov, 60},
 	{"Europe/Lisbon", timezone_database_europe_lisbon, 122},
-	{"Europe/Ljubljana", timezone_database_europe_ljubljana, 111},
+	{"Europe/Ljubljana", timezone_database_europe_belgrade, 111},
 	{"Europe/London", timezone_database_europe_london, 134},
 	{"Europe/Luxembourg", timezone_database_europe_luxembourg, 123},
 	{"Europe/Madrid", timezone_database_europe_madrid, 129},
 	{"Europe/Malta", timezone_database_europe_malta, 137},
-	{"Europe/Mariehamn", timezone_database_europe_mariehamn, 115},
+	{"Europe/Mariehamn", timezone_database_europe_helsinki, 115},
 	{"Europe/Minsk", timezone_database_europe_minsk, 59},
 	{"Europe/Monaco", timezone_database_europe_monaco, 125},
 	{"Europe/Moscow", timezone_database_europe_moscow, 63},
+	{"Europe/Nicosia", timezone_database_asia_nicosia, 127},
 	{"Europe/Oslo", timezone_database_europe_oslo, 117},
 	{"Europe/Paris", timezone_database_europe_paris, 125},
-	{"Europe/Podgorica", timezone_database_europe_podgorica, 111},
+	{"Europe/Podgorica", timezone_database_europe_belgrade, 111},
 	{"Europe/Prague", timezone_database_europe_prague, 119},
 	{"Europe/Riga", timezone_database_europe_riga, 112},
 	{"Europe/Rome", timezone_database_europe_rome, 137},
 	{"Europe/Samara", timezone_database_europe_samara, 59},
-	{"Europe/San_Marino", timezone_database_europe_san_marino, 137},
-	{"Europe/Sarajevo", timezone_database_europe_sarajevo, 111},
+	{"Europe/San_Marino", timezone_database_europe_rome, 137},
+	{"Europe/Sarajevo", timezone_database_europe_belgrade, 111},
 	{"Europe/Saratov", timezone_database_europe_saratov, 61},
 	{"Europe/Simferopol", timezone_database_europe_simferopol, 66},
-	{"Europe/Skopje", timezone_database_europe_skopje, 111},
+	{"Europe/Skopje", timezone_database_europe_belgrade, 111},
 	{"Europe/Sofia", timezone_database_europe_sofia, 119},
 	{"Europe/Stockholm", timezone_database_europe_stockholm, 117},
 	{"Europe/Tallinn", timezone_database_europe_tallinn, 110},
 	{"Europe/Tirane", timezone_database_europe_tirane, 129},
+	{"Europe/Tiraspol", timezone_database_europe_chisinau, 116},
 	{"Europe/Ulyanovsk", timezone_database_europe_ulyanovsk, 63},
 	{"Europe/Uzhgorod", timezone_database_europe_uzhgorod, 113},
-	{"Europe/Vaduz", timezone_database_europe_vaduz, 115},
-	{"Europe/Vatican", timezone_database_europe_vatican, 137},
+	{"Europe/Vaduz", timezone_database_europe_zurich, 115},
+	{"Europe/Vatican", timezone_database_europe_rome, 137},
 	{"Europe/Vienna", timezone_database_europe_vienna, 117},
 	{"Europe/Vilnius", timezone_database_europe_vilnius, 106},
 	{"Europe/Volgograd", timezone_database_europe_volgograd, 61},
 	{"Europe/Warsaw", timezone_database_europe_warsaw, 123},
-	{"Europe/Zagreb", timezone_database_europe_zagreb, 111},
+	{"Europe/Zagreb", timezone_database_europe_belgrade, 111},
 	{"Europe/Zaporozhye", timezone_database_europe_zaporozhye, 114},
 	{"Europe/Zurich", timezone_database_europe_zurich, 115},
-	{"Indian/Antananarivo", &timezone_database_no_change[13], 1},
+	{"GB", timezone_database_europe_london, 134},
+	{"GB-Eire", timezone_database_europe_london, 134},
+	{"GMT", &timezone_database_no_change[13], 1},
+	{"GMT+0", &timezone_database_no_change[13], 1},
+	{"GMT-0", &timezone_database_no_change[13], 1},
+	{"GMT0", &timezone_database_no_change[13], 1},
+	{"Greenwich", &timezone_database_no_change[13], 1},
+	{"HST", &timezone_database_no_change[2], 1},
+	{"Hongkong", timezone_database_asia_hong_kong, 17},
+	{"Iceland", &timezone_database_no_change[13], 1},
+	{"Indian/Antananarivo", &timezone_database_no_change[16], 1},
 	{"Indian/Chagos", timezone_database_indian_chagos, 2},
-	{"Indian/Christmas", &timezone_database_no_change[20], 1},
-	{"Indian/Cocos", &timezone_database_no_change[19], 1},
-	{"Indian/Comoro", &timezone_database_no_change[13], 1},
-	{"Indian/Kerguelen", &timezone_database_no_change[16], 1},
-	{"Indian/Mahe", &timezone_database_no_change[14], 1},
-	{"Indian/Maldives", &timezone_database_no_change[16], 1},
+	{"Indian/Christmas", &timezone_database_no_change[23], 1},
+	{"Indian/Cocos", &timezone_database_no_change[22], 1},
+	{"Indian/Comoro", &timezone_database_no_change[16], 1},
+	{"Indian/Kerguelen", &timezone_database_no_change[19], 1},
+	{"Indian/Mahe", &timezone_database_no_change[17], 1},
+	{"Indian/Maldives", &timezone_database_no_change[19], 1},
 	{"Indian/Mauritius", timezone_database_indian_mauritius, 5},
-	{"Indian/Mayotte", &timezone_database_no_change[13], 1},
-	{"Indian/Reunion", &timezone_database_no_change[14], 1},
+	{"Indian/Mayotte", &timezone_database_no_change[16], 1},
+	{"Indian/Reunion", &timezone_database_no_change[17], 1},
+	{"Iran", timezone_database_asia_tehran, 99},
+	{"Israel", timezone_database_asia_jerusalem, 111},
+	{"Jamaica", timezone_database_america_jamaica, 21},
+	{"Japan", &timezone_database_no_change[25], 1},
+	{"Kwajalein", timezone_database_pacific_kwajalein, 2},
+	{"Libya", timezone_database_africa_tripoli, 23},
+	{"MET", timezone_database_met, 123},
+	{"MST", &timezone_database_no_change[6], 1},
+	{"MST7MDT", timezone_database_mst7mdt, 137},
+	{"Mexico/BajaNorte", timezone_database_america_tijuana, 125},
+	{"Mexico/BajaSur", timezone_database_america_mazatlan, 86},
+	{"Mexico/General", timezone_database_america_mexico_city, 85},
+	{"NZ", timezone_database_pacific_auckland, 128},
+	{"NZ-CHAT", timezone_database_pacific_chatham, 128},
+	{"Navajo", timezone_database_america_denver, 137},
+	{"PRC", timezone_database_asia_shanghai, 13},
+	{"PST8PDT", timezone_database_pst8pdt, 137},
 	{"Pacific/Apia", timezone_database_pacific_apia, 57},
 	{"Pacific/Auckland", timezone_database_pacific_auckland, 128},
 	{"Pacific/Bougainville", timezone_database_pacific_bougainville, 2},
 	{"Pacific/Chatham", timezone_database_pacific_chatham, 128},
-	{"Pacific/Chuuk", &timezone_database_no_change[24], 1},
+	{"Pacific/Chuuk", &timezone_database_no_change[27], 1},
 	{"Pacific/Easter", timezone_database_pacific_easter, 134},
 	{"Pacific/Efate", timezone_database_pacific_efate, 21},
 	{"Pacific/Enderbury", timezone_database_pacific_enderbury, 3},
 	{"Pacific/Fakaofo", timezone_database_pacific_fakaofo, 2},
 	{"Pacific/Fiji", timezone_database_pacific_fiji, 63},
-	{"Pacific/Funafuti", &timezone_database_no_change[26], 1},
+	{"Pacific/Funafuti", &timezone_database_no_change[29], 1},
 	{"Pacific/Galapagos", timezone_database_pacific_galapagos, 4},
-	{"Pacific/Gambier", &timezone_database_no_change[3], 1},
-	{"Pacific/Guadalcanal", &timezone_database_no_change[25], 1},
-	{"Pacific/Guam", &timezone_database_no_change[24], 1},
-	{"Pacific/Honolulu", &timezone_database_no_change[1], 1},
+	{"Pacific/Gambier", &timezone_database_no_change[4], 1},
+	{"Pacific/Guadalcanal", &timezone_database_no_change[28], 1},
+	{"Pacific/Guam", &timezone_database_no_change[27], 1},
+	{"Pacific/Honolulu", &timezone_database_no_change[2], 1},
+	{"Pacific/Johnston", &timezone_database_no_change[2], 1},
 	{"Pacific/Kiritimati", timezone_database_pacific_kiritimati, 3},
 	{"Pacific/Kosrae", timezone_database_pacific_kosrae, 2},
 	{"Pacific/Kwajalein", timezone_database_pacific_kwajalein, 2},
-	{"Pacific/Majuro", &timezone_database_no_change[26], 1},
-	{"Pacific/Marquesas", &timezone_database_no_change[2], 1},
-	{"Pacific/Midway", &timezone_database_no_change[0], 1},
+	{"Pacific/Majuro", &timezone_database_no_change[29], 1},
+	{"Pacific/Marquesas", &timezone_database_no_change[3], 1},
+	{"Pacific/Midway", &timezone_database_no_change[1], 1},
 	{"Pacific/Nauru", timezone_database_pacific_nauru, 2},
 	{"Pacific/Niue", timezone_database_pacific_niue, 2},
 	{"Pacific/Norfolk", timezone_database_pacific_norfolk, 4},
 	{"Pacific/Noumea", timezone_database_pacific_noumea, 7},
-	{"Pacific/Pago_Pago", &timezone_database_no_change[0], 1},
-	{"Pacific/Palau", &timezone_database_no_change[22], 1},
+	{"Pacific/Pago_Pago", &timezone_database_no_change[1], 1},
+	{"Pacific/Palau", &timezone_database_no_change[25], 1},
 	{"Pacific/Pitcairn", timezone_database_pacific_pitcairn, 2},
-	{"Pacific/Pohnpei", &timezone_database_no_change[25], 1},
-	{"Pacific/Port_Moresby", &timezone_database_no_change[24], 1},
+	{"Pacific/Pohnpei", &timezone_database_no_change[28], 1},
+	{"Pacific/Ponape", &timezone_database_no_change[28], 1},
+	{"Pacific/Port_Moresby", &timezone_database_no_change[27], 1},
 	{"Pacific/Rarotonga", timezone_database_pacific_rarotonga, 27},
-	{"Pacific/Saipan", &timezone_database_no_change[24], 1},
-	{"Pacific/Tahiti", &timezone_database_no_change[1], 1},
-	{"Pacific/Tarawa", &timezone_database_no_change[26], 1},
+	{"Pacific/Saipan", &timezone_database_no_change[27], 1},
+	{"Pacific/Samoa", &timezone_database_no_change[1], 1},
+	{"Pacific/Tahiti", &timezone_database_no_change[2], 1},
+	{"Pacific/Tarawa", &timezone_database_no_change[29], 1},
 	{"Pacific/Tongatapu", timezone_database_pacific_tongatapu, 9},
-	{"Pacific/Wake", &timezone_database_no_change[26], 1},
-	{"Pacific/Wallis", &timezone_database_no_change[26], 1}
+	{"Pacific/Truk", &timezone_database_no_change[27], 1},
+	{"Pacific/Wake", &timezone_database_no_change[29], 1},
+	{"Pacific/Wallis", &timezone_database_no_change[29], 1},
+	{"Pacific/Yap", &timezone_database_no_change[27], 1},
+	{"Poland", timezone_database_europe_warsaw, 123},
+	{"Portugal", timezone_database_europe_lisbon, 122},
+	{"ROC", timezone_database_asia_taipei, 7},
+	{"ROK", timezone_database_asia_seoul, 5},
+	{"Singapore", timezone_database_asia_singapore, 2},
+	{"Turkey", timezone_database_europe_istanbul, 90},
+	{"UCT", &timezone_database_no_change[13], 1},
+	{"US/Alaska", timezone_database_america_anchorage, 136},
+	{"US/Aleutian", timezone_database_america_adak, 136},
+	{"US/Arizona", &timezone_database_no_change[6], 1},
+	{"US/Central", timezone_database_america_chicago, 137},
+	{"US/East-Indiana", timezone_database_america_indiana_indianapolis, 67},
+	{"US/Eastern", timezone_database_america_new_york, 137},
+	{"US/Hawaii", &timezone_database_no_change[2], 1},
+	{"US/Indiana-Starke", timezone_database_america_indiana_knox, 107},
+	{"US/Michigan", timezone_database_america_detroit, 131},
+	{"US/Mountain", timezone_database_america_denver, 137},
+	{"US/Pacific", timezone_database_america_los_angeles, 137},
+	{"US/Pacific-New", timezone_database_america_los_angeles, 137},
+	{"US/Samoa", &timezone_database_no_change[1], 1},
+	{"UTC", &timezone_database_no_change[13], 1},
+	{"Universal", &timezone_database_no_change[13], 1},
+	{"W-SU", timezone_database_europe_moscow, 63},
+	{"WET", timezone_database_wet, 123},
+	{"Zulu", &timezone_database_no_change[13], 1}
 };
 
 #ifdef __cplusplus

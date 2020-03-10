@@ -58,15 +58,16 @@ namespace brutezone
             // The value is a list of UTC offsets
             var results = new Dictionary<string, List<Entry>>();
 
-            // Loop through all timezones
+            // Loop through all canonical Timezones
             // Run in prallel to make things faster
-            Parallel.ForEach(TzdbDateTimeZoneSource.Default.ZoneLocations, (timezoneLocation) => {
+            Parallel.ForEach(TzdbDateTimeZoneSource.Default.GetIds()
+                             .Where(ZoneId => TzdbDateTimeZoneSource.Default.CanonicalIdMap[ZoneId] == ZoneId),
+                             (ZoneId) =>
+            {
+                var timezone = TzdbDateTimeZoneSource.Default.ForId(ZoneId);
 
                 // Initialize the list of entries
                 var entries = new List<Entry>();
-
-                // Load the timezone
-                var timezone = DateTimeZoneProviders.Tzdb[timezoneLocation.ZoneId];
 
                 // Initialize the current time
                 DateTime currentTime = StartTime;
@@ -113,10 +114,10 @@ namespace brutezone
                 semaphore.Wait();
 
                 // Record the result for the timezone
-                results.Add(timezone.Id, entries);
+                results.Add(ZoneId, entries);
 
                 // Report the results
-                Console.WriteLine($"{timezoneLocation.ZoneId}: {entries.Count} entries");
+                Console.WriteLine($"{ZoneId}: {entries.Count} entries");
 
                 // Release the lock
                 semaphore.Release();
@@ -137,8 +138,6 @@ namespace brutezone
                 file.WriteLine("#include <string.h>");
                 file.WriteLine("#include <time.h>");
                 file.WriteLine("");
-                file.WriteLine($"#define TIMEZONE_DATABASE_COUNT {results.Count}");
-                file.WriteLine("");
                 file.WriteLine("typedef struct { const time_t start; const short offset; } timezone_offset;");
                 file.WriteLine("typedef struct { const char *name; const timezone_offset *entries; size_t n_entries; } tzdb_timezone;");
                 file.WriteLine("");
@@ -155,7 +154,7 @@ namespace brutezone
                     .ToList();
 
                 // Record all of the single UTC offsets
-                file.WriteLine($"static const timezone_offset timezone_database_no_change[{singleTimezones.Count}] = ");
+                file.WriteLine($"static const timezone_offset timezone_database_no_change[{singleTimezones.Count}] =");
                 file.WriteLine("{");
                 int i = 0;
                 var singleStrings = new List<string>();
@@ -183,7 +182,7 @@ namespace brutezone
                         {4,5,6}
                     };
                     */
-                    file.WriteLine($"static const timezone_offset timezone_database_{result.Key.Replace('/', '_').Replace('-', '_').ToLower()}[] = ");
+                    file.WriteLine($"static const timezone_offset timezone_database_{result.Key.Replace('/', '_').Replace('-', '_').ToLower()}[] =");
                     file.WriteLine("{");
                     var strList = new List<string>();
                     foreach(var entry in result.Value.OrderBy(e => e.StartTime))
@@ -199,8 +198,16 @@ namespace brutezone
                         NumEntries = result.Value.Count});
                 }
 
+                foreach (var Alias in TzdbDateTimeZoneSource.Default.Aliases)
+                {
+                    foreach(var AliasedZoneId in Alias) {
+                        pointers.Add(AliasedZoneId, pointers[Alias.Key]);
+                    }
+                }
+
                 // Write out the list of timezones and the associated memory locations
-                file.WriteLine("static const tzdb_timezone timezone_array[TIMEZONE_DATABASE_COUNT] = ");
+                file.WriteLine($"#define TIMEZONE_DATABASE_COUNT {pointers.Count}");
+                file.WriteLine("static const tzdb_timezone timezone_array[] =");
                 file.WriteLine("{");
                 var tzlist = new List<string>();
                 foreach (var result in pointers.OrderBy(t => t.Key, StringComparer.Ordinal))
