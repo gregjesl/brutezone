@@ -5,7 +5,15 @@
 #include <string.h>
 #include <limits.h>
 
-static const timezone_offset * find_gmt_offset(const tzdb_timezone *tz, time_t local_time)
+static int localtime_in_tz_range(const tzdb_timezone *tz, time_t local_time)
+{
+	return (local_time - tz->entries[0].offset * 60 >= tz->entries[0].start &&
+		local_time - tz->entries[tz->n_entries - 1].offset * 60 < timezone_offset_max_time);
+}
+
+// only valid if localtime_in_tz_range(tz, localtime) == true or behaviour == TIMEZONE_STRICT
+static const timezone_offset * find_gmt_offset(const tzdb_timezone *tz, time_t local_time,
+                                               enum timezone_gmt_time_behaviour behaviour)
 {
 	const timezone_offset *begin = tz->entries;
 	const timezone_offset *end = tz->entries + tz->n_entries;
@@ -26,7 +34,16 @@ static const timezone_offset * find_gmt_offset(const tzdb_timezone *tz, time_t l
 		}
 	} while (begin < end);
 
-	return NULL;
+	switch (behaviour) {
+	case TIMEZONE_FIRST:
+		return begin;
+	case TIMEZONE_ANY:
+	case TIMEZONE_LATTER:
+		return end;
+	case TIMEZONE_STRICT:
+	default:
+		return NULL;
+	}
 }
 
 static const timezone_offset * find_localtime_offset(const tzdb_timezone *tz, time_t gmt)
@@ -58,13 +75,10 @@ int timezone_localtime_isdst(const char *timezone_name, time_t local_time)
 	if (!tz)
 		return TIMEZONE_NOT_FOUND;
 
-	if (local_time - tz->entries[0].offset * 60 < tz->entries[0].start ||
-	    local_time - tz->entries[tz->n_entries - 1].offset * 60 >= timezone_offset_max_time)
-	{
+	if (!localtime_in_tz_range(tz, local_time))
 		return TIMEZONE_OUT_OF_RANGE;
-	}
 
-	const timezone_offset *offset = find_gmt_offset(tz, local_time);
+	const timezone_offset *offset = find_gmt_offset(tz, local_time, TIMEZONE_STRICT);
 	if (!offset)
 		return TIMEZONE_INVALID_TIME;
 
@@ -87,7 +101,7 @@ int timezone_localtime_isdst(const char *timezone_name, time_t local_time)
 	return 0;
 }
 
-time_t timezone_local_time(const char *timezone_name, const time_t gmt)
+time_t timezone_local_time(const char *timezone_name, time_t gmt)
 {
 	const tzdb_timezone *tz = find_timezone(timezone_name);
 	if (!tz)
@@ -100,23 +114,51 @@ time_t timezone_local_time(const char *timezone_name, const time_t gmt)
 	return gmt + offset->offset * 60;
 }
 
-time_t timezone_gmt_time(const char *timezone_name, const time_t local_time)
+time_t timezone_gmt_time_explicit(const char *timezone_name, time_t local_time,
+                                  enum timezone_gmt_time_behaviour behaviour)
 {
 	const tzdb_timezone *tz = find_timezone(timezone_name);
 	if (!tz)
 		return TIMEZONE_NOT_FOUND;
 
-	if (local_time - tz->entries[0].offset * 60 < tz->entries[0].start ||
-	    local_time - tz->entries[tz->n_entries - 1].offset * 60 >= timezone_offset_max_time)
-	{
+	if (!localtime_in_tz_range(tz, local_time))
 		return TIMEZONE_OUT_OF_RANGE;
-	}
 
-	const timezone_offset *offset = find_gmt_offset(tz, local_time);
+	const timezone_offset *offset = find_gmt_offset(tz, local_time, behaviour);
 	if (!offset)
 		return TIMEZONE_OUT_OF_RANGE;
 
-	return local_time - offset->offset * 60;
+	switch (behaviour) {
+	case TIMEZONE_ANY:
+		return local_time - offset->offset * 60;
+
+	case TIMEZONE_FIRST:
+		if (offset > tz->entries && local_time - offset[-1].offset * 60 < offset->start)
+			return local_time - offset[-1].offset * 60;
+		return local_time - offset->offset * 60;
+
+	case TIMEZONE_LATTER:
+		if (offset < tz->entries + tz->n_entries - 1
+		    && local_time - offset[1].offset * 60 >= offset[1].start)
+		{
+			return local_time - offset[1].offset * 60;
+		}
+		return local_time - offset->offset * 60;
+
+	case TIMEZONE_STRICT:
+	default:
+		if ((offset > tz->entries && local_time - offset[-1].offset * 60 < offset->start) ||
+		    (offset < tz->entries + tz->n_entries - 1 && local_time - offset[1].offset * 60 >= offset[1].start))
+		{
+			return TIMEZONE_AMBIGUATIVE_TIME;
+		}
+		return local_time - offset->offset * 60;
+	}
+}
+
+time_t timezone_gmt_time(const char *timezone_name, time_t local_time)
+{
+	return timezone_gmt_time_explicit(timezone_name, local_time, TIMEZONE_ANY);
 }
 
 time_t timezone_current_local_time(const char *timezone)

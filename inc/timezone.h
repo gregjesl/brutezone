@@ -15,6 +15,13 @@ enum timezone_err {
 	TIMEZONE_INVALID_TIME = -4,
 };
 
+enum timezone_gmt_time_behaviour {
+	TIMEZONE_STRICT = 0,
+	TIMEZONE_ANY = 1,
+	TIMEZONE_FIRST = 2,
+	TIMEZONE_LATTER = 3,
+};
+
 /*!
  * \brief determines if the given local time is DST
  *
@@ -33,9 +40,67 @@ enum timezone_err {
  */
 int timezone_localtime_isdst(const char *timezone_name, time_t localtime);
 
-time_t timezone_local_time(const char *timezone, const time_t gmt);
+/*!
+ * \brief converts a unix-timestamp in GMT to the corresponding local
+ *        time in the give IANA-timezone
+ *
+ * \param[in] timezone_name IANA timezone name
+ * \param[in] gmt unix timestamp (seconds since 1970-01-01 00:00:00)
+ *                representing a gmt time
+ *
+ * \return unix timestamp representing the corresponding local time to the given gmt time,
+ *         or TIMEZONE_NOT_FOUND if the timezone_name was not found in the database,
+ *         or TIMEZONE_OUT_OF_RANGE if the given timespamp was outside of the database range
+ */
+time_t timezone_local_time(const char *timezone, time_t gmt);
+
 time_t timezone_current_local_time(const char *timezone);
-time_t timezone_gmt_time(const char *timezone, const time_t local_time);
+
+/*!
+ * \brief converts a unix-timestamp representing a local time in the
+ *        given IANA-timezone to gmt time
+ *
+ * For some input times, there might not be an unambiguative
+ * interpretation. Namely, right after the clocks are turned back
+ * (for DST), there is a window of usually one hour where the same
+ * local time represents two gmt-times. This function might return
+ * either one of them.
+ *
+ * Similarly, when clocks are turned forward there is a period of time
+ * (by how much the clock was turned forward), which is never a valid
+ * localtime.
+ *
+ * \param[in] timezone_name IANA timezone name
+ * \param[in] local_time unix timestamp (seconds since 1970-01-01 00:00:00)
+ *            representing a time in the given timezone
+ * \param[in] behaviour how to deal with ambiguative or invalid local times,
+ *            see return
+ *
+ * \return - if there is no ambiguity, returns the unix timestamp representing
+ *           the corresponding gmt time to the given localtime,
+ *         - if local_time is ambiguitve:
+ *             - returns the earlier one if behaviour is TIMEZONE_FIRST,
+ *             - returns the later one if behaviour is TIMEZONE_LATTER,
+ *             - returns either one if behaviour is TIMEZONE_ANY (fastest),
+ *             - returns TIMEZONE_AMBIGUATIVE_TIME if behaviour is
+ *               TIMEZONE_STRICT
+ *         - if local_time is an invalid time:
+ *             - returns gmt time as if the earlier offset was still valid if
+ *               behaviour is TIMEZONE_FIRST or TIMEZONE_ANY
+ *             - returns gmt time as if the later offset was valid if
+ *               behaviour is TIMEZONE_LATTER
+ *             - returns TIMEZONE_INVALID_TIME if behaviour is TIMEZONE_STRICT
+ *         - TIMEZONE_NOT_FOUND if the timezone was not found in the database
+ *         - TIMEZONE_OUT_OF_RANGE if the given timestamp is outside of the database range.
+ */
+time_t timezone_gmt_time_explicit(const char *timezone, time_t local_time,
+                                  enum timezone_gmt_time_behaviour behaviour);
+
+/*!
+ * \brief same as timezone_gmt_time(timezone, localtime, TIMEZONE_ANY)
+ */
+time_t timezone_gmt_time(const char *timezone, time_t local_time);
+
 int secs_to_tm(long long t, struct tm *tm);
 long long tm_to_secs(const struct tm *tm);
 void add_day(struct tm *tm);

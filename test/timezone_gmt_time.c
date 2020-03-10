@@ -17,24 +17,29 @@ static void test_gmtime(const char *timezonename)
 		// Get the local time
 		localtime = timezone_local_time(timezonename, gmtime);
 
+		// Verify the time was converted
+		TEST_TRUE(localtime > 0);
+
 		const int isdst = timezone_localtime_isdst(timezonename, localtime);
 
 		TEST_NOT_EQUAL(isdst, TIMEZONE_NOT_FOUND);
 		TEST_NOT_EQUAL(isdst, TIMEZONE_OUT_OF_RANGE);
 		TEST_NOT_EQUAL(isdst, TIMEZONE_INVALID_TIME);
 
-		if (isdst == TIMEZONE_AMBIGUATIVE_TIME) {
-			// No sense in testing ambiguative timestamps right now
-			continue;
-		}
-
-		// Verify the time was converted
-		TEST_TRUE(localtime > 0);
-
 		// Revert back to gmt
-		revert = timezone_gmt_time(timezonename, localtime);
-
-		TEST_EQUAL(gmtime, revert);
+		if (isdst == TIMEZONE_AMBIGUATIVE_TIME) {
+			// could be either of these
+			const time_t revert_a = timezone_gmt_time_explicit(timezonename, localtime, TIMEZONE_FIRST);
+			const time_t revert_b = timezone_gmt_time_explicit(timezonename, localtime, TIMEZONE_LATTER);
+			TEST_TRUE(gmtime == revert_a || gmtime == revert_b);
+			TEST_TRUE(revert_b > revert_a);
+			TEST_EQUAL(timezone_gmt_time_explicit(timezonename, localtime, TIMEZONE_STRICT),
+			           TIMEZONE_AMBIGUATIVE_TIME);
+		}
+		else {
+			const time_t revert = timezone_gmt_time(timezonename, localtime);
+			TEST_EQUAL(gmtime, revert);
+		}
 	}
 }
 
