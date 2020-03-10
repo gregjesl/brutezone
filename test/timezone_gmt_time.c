@@ -4,35 +4,43 @@
 
 static void test_gmtime(const char *timezonename)
 {
-	time_t basetime, gmtime, localtime, revert, day_offset;
+	time_t basetime, gmtime, localtime, revert;
 
 	// Get the gmt time
-	time(&basetime);
+	basetime = 1577836800; // 2020-01-01 00:00:00
 
-	// Repeat the test for an entire year
-	for(day_offset = 0; day_offset < 365 * 86400; day_offset += 86400)
+	// Repeat the test for an entire year in half hour steps
+	for(time_t offset = 0; offset < 365 * 86400; offset += 30 * 60)
 	{
+		gmtime = basetime + offset;
 
-		// Move the time a bit
-		gmtime = basetime + day_offset;
-
-		// Get the time in LA
+		// Get the local time
 		localtime = timezone_local_time(timezonename, gmtime);
 
 		// Verify the time was converted
 		TEST_TRUE(localtime > 0);
 
+		const int isdst = timezone_localtime_isdst(timezonename, localtime);
+
+		TEST_NOT_EQUAL(isdst, TIMEZONE_NOT_FOUND);
+		TEST_NOT_EQUAL(isdst, TIMEZONE_OUT_OF_RANGE);
+		TEST_NOT_EQUAL(isdst, TIMEZONE_INVALID_TIME);
+
 		// Revert back to gmt
-		revert = timezone_gmt_time(timezonename, localtime);
-
-		// Verify the result
-		// TEST_EQUAL(gmtime, revert);
-		if(gmtime != revert) {
-			printf("Timezone %s failed\n", timezonename);
+		if (isdst == TIMEZONE_AMBIGUATIVE_TIME) {
+			// could be either of these
+			const time_t revert_a = timezone_gmt_time_explicit(timezonename, localtime, TIMEZONE_FIRST);
+			const time_t revert_b = timezone_gmt_time_explicit(timezonename, localtime, TIMEZONE_LATTER);
+			TEST_TRUE(gmtime == revert_a || gmtime == revert_b);
+			TEST_TRUE(revert_b > revert_a);
+			TEST_EQUAL(timezone_gmt_time_explicit(timezonename, localtime, TIMEZONE_STRICT),
+			           TIMEZONE_AMBIGUATIVE_TIME);
 		}
-		TEST_EQUAL(gmtime, revert);
+		else {
+			const time_t revert = timezone_gmt_time(timezonename, localtime);
+			TEST_EQUAL(gmtime, revert);
+		}
 	}
-
 }
 
 int main(void)
