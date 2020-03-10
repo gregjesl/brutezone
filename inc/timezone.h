@@ -11,7 +11,7 @@ extern "C" {
 enum timezone_err {
 	TIMEZONE_NOT_FOUND = -1,
 	TIMEZONE_OUT_OF_RANGE = -2,
-	TIMEZONE_AMBIGUATIVE_TIME = -3,
+	TIMEZONE_AMBIGUOUS_TIME = -3,
 	TIMEZONE_INVALID_TIME = -4,
 };
 
@@ -29,7 +29,7 @@ enum timezone_gmt_time_behaviour {
  * \param[in] localtime
  *
  * \return 1 if the given timestamp is DST, 0 if it isn't,
- *         TIMEZONE_AMBIGUATIVE_TIME if it is not defined due to daylight-time -> standard-time transition
+ *         TIMEZONE_AMBIGUOUS_TIME if it is not defined due to daylight-time -> standard-time transition
  *         TIMEZONE_INVALID_TIME if the timestamp is not a valid time due to standard-time -> daylight-time transition
  *         TIMEZONE_NOT_FOUND if the timezone was not found in the database
  *         TIMEZONE_OUT_OF_RANGE if the given timestamp is outside of the database range.
@@ -82,7 +82,7 @@ time_t timezone_current_local_time(const char *timezone);
  *             - returns the earlier one if behaviour is TIMEZONE_FIRST,
  *             - returns the later one if behaviour is TIMEZONE_LATTER,
  *             - returns either one if behaviour is TIMEZONE_ANY (fastest),
- *             - returns TIMEZONE_AMBIGUATIVE_TIME if behaviour is
+ *             - returns TIMEZONE_AMBIGUOUS_TIME if behaviour is
  *               TIMEZONE_STRICT
  *         - if local_time is an invalid time:
  *             - returns gmt time as if the earlier offset was still valid if

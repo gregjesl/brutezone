@@ -86,11 +86,11 @@ int timezone_localtime_isdst(const char *timezone_name, time_t local_time)
 
 	const timezone_offset *next = offset + 1;
 	if (next < end && local_time - next->offset * 60 >= next->start)
-		return TIMEZONE_AMBIGUATIVE_TIME;
+		return TIMEZONE_AMBIGUOUS_TIME;
 
 	const timezone_offset *prev = offset - 1;
 	if (prev >= tz->entries && local_time - next->offset * 60 < offset->start)
-		return TIMEZONE_AMBIGUATIVE_TIME;
+		return TIMEZONE_AMBIGUOUS_TIME;
 
 	if ((prev >= tz->entries && prev->offset < offset->offset) ||
 	    (next < end && next->offset < offset->offset))
@@ -150,7 +150,7 @@ time_t timezone_gmt_time_explicit(const char *timezone_name, time_t local_time,
 		if ((offset > tz->entries && local_time - offset[-1].offset * 60 < offset->start) ||
 		    (offset < tz->entries + tz->n_entries - 1 && local_time - offset[1].offset * 60 >= offset[1].start))
 		{
-			return TIMEZONE_AMBIGUATIVE_TIME;
+			return TIMEZONE_AMBIGUOUS_TIME;
 		}
 		return local_time - offset->offset * 60;
 	}

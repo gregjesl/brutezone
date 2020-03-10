@@ -27,14 +27,14 @@ static void test_gmtime(const char *timezonename)
 		TEST_NOT_EQUAL(isdst, TIMEZONE_INVALID_TIME);
 
 		// Revert back to gmt
-		if (isdst == TIMEZONE_AMBIGUATIVE_TIME) {
+		if (isdst == TIMEZONE_AMBIGUOUS_TIME) {
 			// could be either of these
 			const time_t revert_a = timezone_gmt_time_explicit(timezonename, localtime, TIMEZONE_FIRST);
 			const time_t revert_b = timezone_gmt_time_explicit(timezonename, localtime, TIMEZONE_LATTER);
 			TEST_TRUE(gmtime == revert_a || gmtime == revert_b);
 			TEST_TRUE(revert_b > revert_a);
 			TEST_EQUAL(timezone_gmt_time_explicit(timezonename, localtime, TIMEZONE_STRICT),
-			           TIMEZONE_AMBIGUATIVE_TIME);
+			           TIMEZONE_AMBIGUOUS_TIME);
 		}
 		else {
 			const time_t revert = timezone_gmt_time(timezonename, localtime);
