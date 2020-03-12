@@ -46,7 +46,7 @@ int main(int argc, char **argv)
 	// thus 2020-10-25 02:00:00 to 2020-10-25 02:59:59 could be either daylight saving time or not
 	const time_t local_2020_10_25_02_00_00 = 1603591200;
 	for (time_t i = 0; i < SEC_PER_HOUR; ++i) {
-		TEST_EQUAL(TIMEZONE_AMBIGUATIVE_TIME, timezone_localtime_isdst(timezone, local_2020_10_25_02_00_00 + i));
+		TEST_EQUAL(TIMEZONE_AMBIGUOUS_TIME, timezone_localtime_isdst(timezone, local_2020_10_25_02_00_00 + i));
 	}
 
 	// and 2020-10-25 01:59:59 is daylight saving time
