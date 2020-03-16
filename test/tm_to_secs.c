@@ -3,7 +3,6 @@
 
 int main(void)
 {
-	time_t gmtime;
 	struct tm tm;
 
 	// Fill the structure
