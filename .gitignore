@@ -60,3 +60,4 @@ generator/packages
 
 build
 .vscode
+.clang-format
