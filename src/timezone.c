@@ -1,3 +1,11 @@
+// Use sscanf_s when appropriate
+// Macro must be defined before stdio.h is included
+#if defined(__STDC_LIB_EXT1__) && defined(__STDC_WANT_LIB_EXT1__)
+#define READ(a,b,c) sscanf_s(a,b,c)
+#else
+#define READ(a,b,c) sscanf(a,b,c)
+#endif
+
 #include "timezone.h"
 #include "timezone_database.h"
 #include "timezone_impl.h"
@@ -200,7 +208,7 @@ int secs_to_tm(long long t, struct tm *tm)
 	wday = (3 + days) % 7;
 	if (wday < 0) wday += 7;
 
-	qc_cycles = days / DAYS_PER_400Y;
+	qc_cycles = (int)(days / DAYS_PER_400Y);
 	remdays = days % DAYS_PER_400Y;
 	if (remdays < 0) {
 		remdays += DAYS_PER_400Y;
@@ -427,24 +435,24 @@ time_t from_iso_time(const char* str)
     reader = copy;
 
     int year;
-    sscanf(reader, "%i", &year);
+    READ(reader, "%i", &year);
     result.tm_year = (year - 1900);
     reader += 5;
 
-    sscanf(reader, "%i", &result.tm_mon);
+    READ(reader, "%i", &result.tm_mon);
     result.tm_mon -= 1;
     reader += 3;
 
-    sscanf(reader, "%i", &result.tm_mday);
+    READ(reader, "%i", &result.tm_mday);
     reader += 3;
 
-    sscanf(reader, "%i", &result.tm_hour);
+    READ(reader, "%i", &result.tm_hour);
     reader += 3;
 
-    sscanf(reader, "%i", &result.tm_min);
+    READ(reader, "%i", &result.tm_min);
     reader += 3;
 
-    sscanf(reader, "%i", &result.tm_sec);
+    READ(reader, "%i", &result.tm_sec);
 
     return tm_to_secs(&result);
 }

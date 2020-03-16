@@ -4,7 +4,7 @@
 
 static void test_gmtime(const char *timezonename)
 {
-	time_t basetime, gmtime, localtime, revert;
+	time_t basetime, gmtime, localtime;
 
 	// Get the gmt time
 	basetime = 1577836800; // 2020-01-01 00:00:00

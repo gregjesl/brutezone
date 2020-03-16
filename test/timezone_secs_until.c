@@ -25,7 +25,7 @@ int main(void)
 	add_day(&tm);
 
 	// Get the result
-	result = timezone_secs_until(timezonename, hour, minute, second);
+	result = (int)timezone_secs_until(timezonename, hour, minute, second);
 
 	// Result should be within 5 seconds
 	TEST_TRUE(abs(result - 86400) < 5);

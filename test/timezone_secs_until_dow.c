@@ -28,7 +28,7 @@ int main(void)
 		dow = tm.tm_wday + i % 7;
 		
 		// Get the result
-		result = timezone_secs_until_dow(timezonename, hour, minute, second, dow);
+		result = (int)timezone_secs_until_dow(timezonename, hour, minute, second, dow);
 
 		// Result should be within 5 seconds
 		TEST_TRUE(abs(result - (86400 * i) - 60) < 5);
