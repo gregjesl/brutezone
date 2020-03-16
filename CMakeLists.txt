@@ -22,7 +22,11 @@ else()
 
     # Support testing
     enable_testing()
-    add_subdirectory(benchmark)
     add_subdirectory(test)
+
+    # Run benchmarks for Unix systems
+    if(UNIX)
+        add_subdirectory(benchmark)
+    endif()
 
 endif()
