@@ -28,7 +28,7 @@
 long long year_to_secs(long long year, int *is_leap)
 {
 	if (year-2ULL <= 136) {
-		int y = year;
+		int y = (int)year;
 		int leaps = (y-68)>>2;
 		if (!((y-68)&3)) {
 			leaps--;
@@ -40,7 +40,7 @@ long long year_to_secs(long long year, int *is_leap)
 	int cycles, centuries, leaps, rem;
 
 	if (!is_leap) is_leap = &(int){0};
-	cycles = (year-100) / 400;
+	cycles = (int)((year-100) / 400);
 	rem = (year-100) % 400;
 	if (rem < 0) {
 		cycles--;
