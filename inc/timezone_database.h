@@ -454,7 +454,7 @@ static const timezone_offset timezone_database_africa_khartoum[] =
 static const timezone_offset timezone_database_africa_monrovia[] =
 {
 	{0,-44},
-	{63593100,0}
+	{63593070,0}
 };
 
 static const timezone_offset timezone_database_africa_ndjamena[] =
