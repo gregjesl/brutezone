@@ -27,8 +27,8 @@ for:
 
 before_build:
   - cmake -H. -B_builds -DCMAKE_BUILD_TYPE=%config%
-  - cmake --build . --target generator
-  - cmake --build . --target database
+  - make generator
+  - make database
 
 build_script:
   - cmake --build _builds --config %config%
