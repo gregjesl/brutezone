@@ -16,7 +16,9 @@ else()
     include_directories ("${PROJECT_SOURCE_DIR}/inc")
 
     add_custom_target(generator
-        COMMAND msbuild "${PROJECT_SOURCE_DIR}/generator/brutezone.sln" -p:Configuration=Release -p:Platform=\"Any CPU\"
+        COMMAND nuget restore brutezone.sln
+        COMMAND msbuild brutezone.sln -p:Configuration=Release -p:Platform=\"Any CPU\"
+        WORKING_DIRECTORY "${PROJECT_SOURCE_DIR}/generator"
     )
 
     if(WIN32)
