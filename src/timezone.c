@@ -13,10 +13,12 @@
 #include <stdio.h>
 #include <string.h>
 
+#define UNPACK(a) ((time_t)((a)->offset)) * 60
+
 static int localtime_in_tz_range(const tzdb_timezone *tz, time_t local_time)
 {
-    return (local_time - tz->entries[0].offset * 60 >= tz->entries[0].start &&
-            local_time - tz->entries[tz->n_entries - 1].offset * 60 <
+    return (local_time - UNPACK(&tz->entries[0]) >= tz->entries[0].start &&
+            local_time - UNPACK(&tz->entries[tz->n_entries - 1]) <
                 timezone_offset_max_time);
 }
 
@@ -32,7 +34,7 @@ find_gmt_offset(const tzdb_timezone *tz, time_t local_time,
 
     do {
         const timezone_offset *needle = begin + (end - begin) / 2;
-        const time_t result = local_time - needle->offset * 60;
+        const time_t result = local_time - UNPACK(needle);
         if (result < needle->start) {
             end = needle;
         } else {
@@ -100,11 +102,11 @@ int timezone_localtime_isdst(const char *timezone_name, time_t local_time)
     const timezone_offset *end = tz->entries + tz->n_entries;
 
     const timezone_offset *next = offset + 1;
-    if (next < end && local_time - next->offset * 60 >= next->start)
+    if (next < end && local_time - UNPACK(next) >= next->start)
         return TIMEZONE_AMBIGUOUS_TIME;
 
     const timezone_offset *prev = offset - 1;
-    if (prev >= tz->entries && local_time - next->offset * 60 < offset->start)
+    if (prev >= tz->entries && local_time - UNPACK(next) < offset->start)
         return TIMEZONE_AMBIGUOUS_TIME;
 
     if ((prev >= tz->entries && prev->offset < offset->offset) ||
@@ -125,7 +127,7 @@ time_t timezone_local_time(const char *timezone_name, time_t gmt)
     if (!offset)
         return TIMEZONE_OUT_OF_RANGE;
 
-    return gmt + offset->offset * 60;
+    return gmt + UNPACK(offset);
 }
 
 time_t timezone_gmt_time_explicit(const char *timezone_name, time_t local_time,
@@ -144,30 +146,30 @@ time_t timezone_gmt_time_explicit(const char *timezone_name, time_t local_time,
 
     switch (behaviour) {
         case TIMEZONE_ANY:
-            return local_time - offset->offset * 60;
+            return local_time - UNPACK(offset);
 
         case TIMEZONE_FIRST:
             if (offset > tz->entries &&
-                local_time - offset[-1].offset * 60 < offset->start)
-                return local_time - offset[-1].offset * 60;
-            return local_time - offset->offset * 60;
+                local_time - UNPACK(&offset[-1]) < offset->start)
+                return local_time - UNPACK(&offset[-1]);
+            return local_time - UNPACK(offset);
 
         case TIMEZONE_LATTER:
             if (offset < tz->entries + tz->n_entries - 1 &&
-                local_time - offset[1].offset * 60 >= offset[1].start) {
-                return local_time - offset[1].offset * 60;
+                local_time - UNPACK(&offset[1]) >= offset[1].start) {
+                return local_time - UNPACK(&offset[1]);
             }
-            return local_time - offset->offset * 60;
+            return local_time - UNPACK(offset);
 
         case TIMEZONE_STRICT:
         default:
             if ((offset > tz->entries &&
-                 local_time - offset[-1].offset * 60 < offset->start) ||
+                 local_time - UNPACK(&offset[-1]) < offset->start) ||
                 (offset < tz->entries + tz->n_entries - 1 &&
-                 local_time - offset[1].offset * 60 >= offset[1].start)) {
+                 local_time - UNPACK(&offset[1]) >= offset[1].start)) {
                 return TIMEZONE_AMBIGUOUS_TIME;
             }
-            return local_time - offset->offset * 60;
+            return local_time - UNPACK(offset);
     }
 }
 
