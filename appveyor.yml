@@ -25,6 +25,15 @@ for:
     environment:
       config: Release
 
+  -
+    matrix:
+      only:
+        - image: Ubuntu
+    install:
+    - apt-get install monodevelop
+    before_build:
+    - mdtool build generator/brutezone.csproj
+
 build_script:
   - cmake -H. -B_builds -DCMAKE_BUILD_TYPE=%config%
   - cmake --build _builds --config %config%
