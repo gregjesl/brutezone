@@ -15,6 +15,22 @@ else()
 
     include_directories ("${PROJECT_SOURCE_DIR}/inc")
 
+    add_custom_target(generator
+        COMMAND msbuild ../generator/brutezone.csproj -p:Configuration=Release
+    )
+
+    if(WIN32)
+        add_custom_target(database
+            COMMAND mono brutezone.exe
+            WORKING_DIRECTORY ../generator/bin/Release
+        )
+    else()
+        add_custom_target(database
+            COMMAND brutezone.exe
+            WORKING_DIRECTORY ../generator/bin/Release
+        )
+    endif()
+
     add_library(${PROJECT_NAME}
         src/timezone.c
         src/timezone_impl.c
