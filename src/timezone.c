@@ -13,7 +13,7 @@
 #include <stdio.h>
 #include <string.h>
 
-#define UNPACK(a) ((time_t)((a)->offset)) * 60
+#define UNPACK(a) ((time_t)((a)->offset)) * 10
 
 static int localtime_in_tz_range(const tzdb_timezone *tz, time_t local_time)
 {

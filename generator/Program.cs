@@ -137,7 +137,7 @@ namespace brutezone
                 var singleStrings = new List<string>();
                 foreach(var singleZone in singleTimezones.OrderBy(g => g.First().Value.First().Offset))
                 {
-                    singleStrings.Add($"\t{{{(singleZone.First().Value.First().StartTime - Epoch).Ticks / TimeSpan.TicksPerSecond},{singleZone.First().Value.First().Offset / 60}}}");
+                    singleStrings.Add($"\t{{{(singleZone.First().Value.First().StartTime - Epoch).Ticks / TimeSpan.TicksPerSecond},{singleZone.First().Value.First().Offset / 10}}}");
                     foreach(var zone in singleZone)
                     {
                         pointers.Add(zone.Key, new PointerEntry(){Name = $"&timezone_database_no_change[{i}]", NumEntries = 1});
@@ -164,7 +164,7 @@ namespace brutezone
                     var strList = new List<string>();
                     foreach(var entry in result.Value.OrderBy(e => e.StartTime))
                     {
-                        strList.Add($"\t{{{(entry.StartTime - Epoch).Ticks / TimeSpan.TicksPerSecond},{entry.Offset / 60}}}");
+                        strList.Add($"\t{{{(entry.StartTime - Epoch).Ticks / TimeSpan.TicksPerSecond},{entry.Offset / 10}}}");
                     }
                     file.WriteLine(string.Join(",\n", strList.ToArray()));
                     file.WriteLine("};");
