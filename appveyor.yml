@@ -25,8 +25,12 @@ for:
     environment:
       config: Release
 
-build_script:
+before_build:
   - cmake -H. -B_builds -DCMAKE_BUILD_TYPE=%config%
+  - cmake --build _builds --target generator
+  - cmake --build _builds --target database
+
+build_script:
   - cmake --build _builds --config %config%
 
 test_script:
