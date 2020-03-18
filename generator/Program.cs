@@ -116,7 +116,7 @@ namespace brutezone
                 file.WriteLine("#include <time.h>");
                 file.WriteLine("");
                 file.WriteLine("typedef struct { const time_t start; const short offset; } timezone_offset;");
-                file.WriteLine("typedef struct { const char *name; const timezone_offset *entries; size_t n_entries; } tzdb_timezone;");
+                file.WriteLine("typedef struct { const char *name; const timezone_offset *entries; const unsigned char n_entries; } tzdb_timezone;");
                 file.WriteLine("");
                 file.WriteLine($"static const time_t timezone_offset_min_time = {(StartTime - Epoch).Ticks / TimeSpan.TicksPerSecond};");
                 file.WriteLine($"static const time_t timezone_offset_max_time = {(StopTime - Epoch).Ticks / TimeSpan.TicksPerSecond};");
@@ -165,6 +165,10 @@ namespace brutezone
                     foreach(var entry in result.Value.OrderBy(e => e.StartTime))
                     {
                         strList.Add($"\t{{{(entry.StartTime - Epoch).Ticks / TimeSpan.TicksPerSecond},{entry.Offset / 10}}}");
+                    }
+                    if(strList.Count() > 255)
+                    {
+                        throw new IndexOutOfRangeException("Current implementation uses an unsigned char");
                     }
                     file.WriteLine(string.Join(",\n", strList.ToArray()));
                     file.WriteLine("};");
