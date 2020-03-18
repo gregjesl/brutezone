@@ -118,6 +118,7 @@ namespace brutezone
                 file.WriteLine("#ifdef _MSC_VER");
                 file.WriteLine("#pragma pack(push,1)");
                 file.WriteLine("typedef struct { const time_t start; const short offset; } timezone_offset;");
+                file.WriteLine("#pragma pack(pop)");
                 file.WriteLine("#else");
                 file.WriteLine("typedef struct { const time_t start; const short offset; } __attribute__((packed)) timezone_offset;");
                 file.WriteLine("#endif");
