@@ -40,6 +40,11 @@ namespace brutezone
 
             // The UTC start time of the lookup table
             DateTime StartTime = DateTime.SpecifyKind(new DateTime(1970, 1, 1, 0, 0, 0), DateTimeKind.Utc);
+            if (args.Length > 1 && args[1].ToLower() == "--future")
+			{
+                Console.WriteLine("Generating current and future times only");
+                StartTime = DateTime.UtcNow;
+			}   
 
             // The UTC stop time of the lookup table
             DateTime StopTime = DateTime.SpecifyKind(new DateTime(2038, 1, 19, 0, 0, 0), DateTimeKind.Utc);

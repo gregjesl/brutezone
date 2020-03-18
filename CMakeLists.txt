@@ -22,16 +22,23 @@ else()
     )
 
     if(WIN32)
-        add_custom_target(database
-            COMMAND brutezone.exe
-            WORKING_DIRECTORY "${PROJECT_SOURCE_DIR}/generator/bin/Release"
-        )
+        set(GENERATOR_COMMAND brutezone.exe)
     else()
-        add_custom_target(database
-            COMMAND mono brutezone.exe
-            WORKING_DIRECTORY "${PROJECT_SOURCE_DIR}/generator/bin/Release"
-        )
+        set(GENERATOR_COMMAND mono brutezone.exe)
     endif()
+
+    add_custom_target(database
+        COMMAND ${GENERATOR_COMMAND}
+        WORKING_DIRECTORY "${PROJECT_SOURCE_DIR}/generator/bin/Release"
+    )
+
+    add_custom_target(future
+        COMMAND ${GENERATOR_COMMAND} ARGS --future
+        WORKING_DIRECTORY "${PROJECT_SOURCE_DIR}/generator/bin/Release"
+    )
+
+    add_dependencies(database generator)
+    add_dependencies(future generator)
 
     add_library(${PROJECT_NAME}
         src/timezone.c
