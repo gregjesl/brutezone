@@ -4,7 +4,7 @@
 #include <string.h>
 #include <time.h>
 
-typedef struct { const time_t start; const short offset; } timezone_offset;
+typedef struct { const time_t start; const short offset; } __attribute__((packed)) timezone_offset;
 typedef struct { const char *name; const timezone_offset *entries; size_t n_entries; } tzdb_timezone;
 
 static const time_t timezone_offset_min_time = 0;
