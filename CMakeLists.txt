@@ -16,7 +16,7 @@ else()
     include_directories ("${PROJECT_SOURCE_DIR}/inc")
 
     add_custom_target(generator
-        COMMAND msbuild "${PROJECT_SOURCE_DIR}/generator/brutezone.csproj" -p:Configuration=Release
+        COMMAND msbuild "${PROJECT_SOURCE_DIR}/generator/brutezone.sln" -p:Configuration=Release
     )
 
     if(WIN32)
