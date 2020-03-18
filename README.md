@@ -53,6 +53,16 @@ Once the library is built, you can test it by running
 make test
 ```
 
+If you have Visual Studio and/or MonoDevelop installed, you can build the generator by running
+```
+make generator
+```
+
+Once you have build the generator, you can rebuild the timezone table by running
+```
+make database
+```
+
 ## Motivation
 We needed a simple-to-use, compact library for an alarm clock on an embedded system. Brutezone was the result. It's called Brutezone because the UTC offsets are calculated for each timezone using brute force (and [NodaTime](https://nodatime.org/))
 

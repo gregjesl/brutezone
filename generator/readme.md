@@ -1,6 +1,17 @@
 ﻿# How to use the generator
 
-The entire generator code is contained in [program.cs](program.cs). Simply running the generator from the /bin/(debug or release) folder (or running straight from Visual Studio) will overwrite the [timezone database header file](../inc/timezone_database.h). 
+The entire generator code is contained in [Program.cs](Program.cs). CMake creates targets for building and running the generator. After [running CMake](../#setup), run
+```
+make generator
+```
+and
+```
+make database
+```
+to compile the generator and (re)build the [timezone database header file](../inc/timezone_database.h), respectively.  
+
+## Requirements
+Building the generator requires Visual Studio and/or MonoDevelop.  Visual Studio is available for [Windows](https://visualstudio.microsoft.com/) and [Mac](https://visualstudio.microsoft.com/vs/mac/); MonoDevelop is availabile for [Linux](https://www.monodevelop.com/download/). 
 
 ## Reducing file size
 To reduce the file size of the database, change `StartTime` and `StopTime` in `Program.cs`.  The smaller the window, the smaller the file size. 
