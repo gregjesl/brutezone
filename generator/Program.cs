@@ -20,11 +20,6 @@ namespace brutezone
         public DateTimeOffset StartTime;
 
         /// <summary>
-        /// The time the UTC offset ends in the timezone
-        /// </summary>
-        public DateTimeOffset EndTime;
-
-        /// <summary>
         /// The UTC offset (in minutes)
         /// </summary>
         public int Offset;
@@ -72,43 +67,25 @@ namespace brutezone
                 // Initialize the current time
                 DateTime currentTime = StartTime;
 
-                // Create the first entry
-                Entry entry = new Entry()
-                {
-                    StartTime = currentTime,
-                    Offset = timezone.GetUtcOffset(Instant.FromDateTimeUtc(currentTime)).Seconds
-                };
-
-                // Loop until the stop time
                 do
                 {
-                    // Move the current time forward a minute
-                    currentTime = currentTime.AddTicks(TimeSpan.TicksPerMinute);
+                    var interval = timezone.GetZoneInterval(Instant.FromDateTimeUtc(currentTime));
 
-                    // Check for a change in the UTC offset
-                    if (timezone.GetUtcOffset(Instant.FromDateTimeUtc(currentTime)).Seconds != entry.Offset)
-                    {
-                        // Record the stop time of the UTC offset
-                        entry.EndTime = currentTime;
-
-                        // Record the UTC offset entry
-                        entries.Add(entry);
-
-                        // Create the new entry
-                        entry = new Entry()
+                    if (entries.Count == 0 || interval.WallOffset.Seconds != entries.Last().Offset) {
+                        Entry entry = new Entry()
                         {
                             StartTime = currentTime,
-                            Offset = timezone.GetUtcOffset(Instant.FromDateTimeUtc(currentTime)).Seconds
+                            Offset = interval.WallOffset.Seconds
                         };
+                        entries.Add(entry);
                     }
+
+                    if (!interval.HasEnd) {
+                        break;
+                    }
+                    currentTime = interval.End.ToDateTimeUtc();
                 }
                 while (currentTime < StopTime);
-
-                // Close the last remaining entry
-                entry.EndTime = currentTime;
-
-                // Store the last remaining entry
-                entries.Add(entry);
 
                 // Wait for access to the results structure
                 semaphore.Wait();
