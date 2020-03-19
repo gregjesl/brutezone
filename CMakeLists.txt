@@ -38,6 +38,15 @@ else()
         src/timezone_impl.c
     )
 
+    if(BRUTEZONE_MIN_TIME)
+        target_compile_definitions(${PROJECT_NAME}
+		    PUBLIC BRUTEZONE_MIN_TIME=${BRUTEZONE_MIN_TIME})
+    endif()
+    if(BRUTEZONE_MAX_TIME)
+        target_compile_definitions(${PROJECT_NAME}
+		    PUBLIC BRUTEZONE_MAX_TIME=${BRUTEZONE_MAX_TIME})
+    endif()
+
     # Support testing
     enable_testing()
     add_subdirectory(test)

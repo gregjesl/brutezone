@@ -20,7 +20,7 @@ static int localtime_in_tz_range(const tzdb_timezone *tz, time_t local_time)
 {
     return (local_time - UNPACK(tz->entries[0]) >= tz->entries[0].start &&
             local_time - UNPACK(tz->entries[tz->n_entries - 1]) <
-                timezone_offset_max_time);
+                BRUTEZONE_MAX_TIME);
 }
 
 // only valid if localtime_in_tz_range(tz, localtime) == true or behaviour ==
@@ -40,7 +40,7 @@ find_gmt_offset(const tzdb_timezone *tz, time_t local_time,
             end = needle;
         } else {
             const timezone_offset *next = needle + 1;
-            if ((next == last && result < timezone_offset_max_time) ||
+            if ((next == last && result < BRUTEZONE_MAX_TIME) ||
                 result < next->start) {
                 return needle;
             } else {
@@ -74,7 +74,7 @@ static const timezone_offset *find_localtime_offset(const tzdb_timezone *tz,
             end = needle;
         } else {
             const timezone_offset *next = needle + 1;
-            if ((next == last && gmt < timezone_offset_max_time) ||
+            if ((next == last && gmt < BRUTEZONE_MAX_TIME) ||
                 gmt < next->start) {
                 return needle;
             } else {
