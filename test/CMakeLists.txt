@@ -21,9 +21,11 @@ add_library("${PROJECT_NAME}_slim"
 
 target_compile_definitions("${PROJECT_NAME}_slim"
     PUBLIC BRUTEZONE_MIN_TIME=1546304400)
+    # 2019-01-01T01:00:00Z
 
 target_compile_definitions("${PROJECT_NAME}_slim"
     PUBLIC BRUTEZONE_MAX_TIME=1640998800)
+    # 2022-01-01T01:00:00Z
 
 add_executable(min_max_time_test timezone_gmt_time.c)
 target_link_libraries(min_max_time_test "${PROJECT_NAME}_slim")
