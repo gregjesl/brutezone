@@ -1,34 +1,34 @@
-#include "timezone.h"
 #include "test.h"
+#include "timezone.h"
 #include <stdlib.h>
 
 int main(void)
 {
-	const char timezonename[] = "America/Los_Angeles";
-	time_t latime;
-	int result;
-	struct tm tm;
-	unsigned char hour, minute, second;
+    const char timezonename[] = "America/Los_Angeles";
+    time_t latime;
+    int result;
+    struct tm tm;
+    unsigned char hour, minute, second;
 
-	// Get the time in LA
-	latime = timezone_current_local_time(timezonename);
+    // Get the time in LA
+    latime = timezone_current_local_time(timezonename);
 
-	// Convert to a tm struct
-	secs_to_tm(latime, &tm);
+    // Convert to a tm struct
+    secs_to_tm(latime, &tm);
 
-	// Record the hour and minute
-	hour = tm.tm_hour;
-	minute = tm.tm_min;
-	second = tm.tm_sec;
+    // Record the hour and minute
+    hour = tm.tm_hour;
+    minute = tm.tm_min;
+    second = tm.tm_sec;
 
-	// Add a day
-	add_day(&tm);
+    // Add a day
+    add_day(&tm);
 
-	// Get the result
-	result = (int)timezone_secs_until(timezonename, hour, minute, second);
+    // Get the result
+    result = (int)timezone_secs_until(timezonename, hour, minute, second);
 
-	// Result should be within 5 seconds
-	TEST_TRUE(abs(result - 86400) < 5);
+    // Result should be within 5 seconds
+    TEST_TRUE(abs(result - 86400) < 5);
 
-	return 0;
+    return 0;
 }
