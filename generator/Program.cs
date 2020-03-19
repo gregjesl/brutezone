@@ -109,25 +109,68 @@ namespace brutezone
             using (System.IO.StreamWriter file =
                     new System.IO.StreamWriter(path + "timezone_database.h"))
             {
-                file.WriteLine("#ifndef TIMEZONE_DATABASE_H");
-                file.WriteLine("#define TIMEZONE_DATABASE_H");
-                file.WriteLine("");
-                file.WriteLine("#include <string.h>");
-                file.WriteLine("#include <time.h>");
-                file.WriteLine("");
-                file.WriteLine("#ifdef _MSC_VER");
-                file.WriteLine("#pragma pack(push,1)");
-                file.WriteLine("typedef struct { const time_t start; const short offset; } timezone_offset;");
-                file.WriteLine("#pragma pack(pop)");
-                file.WriteLine("#else");
-                file.WriteLine("typedef struct { const time_t start; const short offset; } __attribute__((packed)) timezone_offset;");
-                file.WriteLine("#endif");
-                file.WriteLine("");
-                file.WriteLine("typedef struct { const char *name; const timezone_offset *entries; const unsigned char n_entries; } tzdb_timezone;");
-                file.WriteLine("");
-                file.WriteLine($"static const time_t timezone_offset_min_time = {(StartTime - Epoch).Ticks / TimeSpan.TicksPerSecond};");
-                file.WriteLine($"static const time_t timezone_offset_max_time = {(StopTime - Epoch).Ticks / TimeSpan.TicksPerSecond};");
-                file.WriteLine("");
+                file.WriteLine(
+@"#ifndef TIMEZONE_DATABASE_H
+#define TIMEZONE_DATABASE_H
+
+#include <string.h>
+#include <time.h>
+
+#ifdef _MSC_VER
+
+#pragma pack(push,1)
+typedef struct {
+    const time_t start;
+    const short offset;
+} timezone_offset;
+
+typedef struct {
+    const char *name;
+    const timezone_offset *entries;
+    const unsigned char n_entries;
+} tzdb_timezone;
+
+#pragma pack(pop)
+
+#else
+
+typedef struct {
+    const time_t start;
+    const short offset;
+} __attribute__((packed)) timezone_offset;
+
+typedef struct {
+    const char *name;
+    const timezone_offset *entries;
+    const unsigned char n_entries;
+} __attribute__((packed)) tzdb_timezone;
+
+#endif
+");
+
+                file.WriteLine($"#define BRUTEZONE_DATABASE_MIN_TIME {(StartTime - Epoch).Ticks / TimeSpan.TicksPerSecond}");
+                file.WriteLine($"#define BRUTEZONE_DATABASE_MAX_TIME {(StopTime - Epoch).Ticks / TimeSpan.TicksPerSecond}");
+                file.WriteLine(@"
+#ifndef BRUTEZONE_MIN_TIME
+#define BRUTEZONE_MIN_TIME BRUTEZONE_DATABASE_MIN_TIME
+#endif
+
+#ifndef BRUTEZONE_MAX_TIME
+#define BRUTEZONE_MAX_TIME BRUTEZONE_DATABASE_MAX_TIME
+#endif
+
+#if BRUTEZONE_MIN_TIME >= BRUTEZONE_MAX_TIME
+#error BRUTEZONE_MIN_TIME cant be larger than BRUTEZONE_MAX_TIME
+#endif
+
+#if BRUTEZONE_MIN_TIME < BRUTEZONE_DATABASE_MIN_TIME || BRUTEZONE_MIN_TIME >= BRUTEZONE_DATABASE_MAX_TIME
+#error BRUTEZONE_MIN_TIME is outside of the database range
+#endif
+
+#if BRUTEZONE_MAX_TIME <= BRUTEZONE_DATABASE_MIN_TIME || BRUTEZONE_MAX_TIME > BRUTEZONE_DATABASE_MAX_TIME
+#error BRUTEZONE_MAX_TIME is outside of the database range
+#endif
+");
 
                 // The pointers dictionary associates a timezone string with a memory location for the array of UTC offset entries
                 var pointers = new Dictionary<string, PointerEntry>();
@@ -166,18 +209,31 @@ namespace brutezone
                         {4,5,6}
                     };
                     */
-                    file.WriteLine($"static const timezone_offset timezone_database_{result.Key.Replace('/', '_').Replace('-', '_').ToLower()}[] =");
-                    file.WriteLine("{");
-                    var strList = new List<string>();
-                    foreach(var entry in result.Value.OrderBy(e => e.StartTime))
-                    {
-                        strList.Add($"\t{{{(entry.StartTime - Epoch).Ticks / TimeSpan.TicksPerSecond},{entry.Offset / 10}}}");
-                    }
-                    if(strList.Count() > 255)
+                    if(result.Value.Count() > 255)
                     {
                         throw new IndexOutOfRangeException("Current implementation uses an unsigned char");
                     }
-                    file.WriteLine(string.Join(",\n", strList.ToArray()));
+
+                    file.WriteLine($"static const timezone_offset timezone_database_{result.Key.Replace('/', '_').Replace('-', '_').ToLower()}[] =");
+                    file.WriteLine("{");
+                    var offsets = result.Value.OrderBy(e => e.StartTime);
+                    for(int j = 0; j < offsets.Count(); ++j)
+                    {
+                        var entry = offsets.ElementAt(j);
+                        if (j < offsets.Count() - 1) {
+                            file.WriteLine($"#if BRUTEZONE_MIN_TIME < {(offsets.ElementAt(j + 1).StartTime - Epoch).Ticks / TimeSpan.TicksPerSecond}");
+                        }
+                        if (j > 0) {
+                            file.WriteLine($"#if BRUTEZONE_MAX_TIME > {(entry.StartTime - Epoch).Ticks / TimeSpan.TicksPerSecond}");
+                        }
+                        file.WriteLine($"\t{{{(entry.StartTime - Epoch).Ticks / TimeSpan.TicksPerSecond},{entry.Offset / 10}}},");
+                        if (j > 0) {
+                            file.WriteLine($"#endif");
+                        }
+                        if (j < offsets.Count() - 1) {
+                            file.WriteLine($"#endif");
+                        }
+                    }
                     file.WriteLine("};");
                     file.WriteLine("");
 
@@ -195,52 +251,21 @@ namespace brutezone
 
                 // Write out the list of timezones and the associated memory locations
                 file.WriteLine($"#define TIMEZONE_DATABASE_COUNT {pointers.Count}");
+                file.WriteLine("#define TIMEZONE_ARRAY_COUNT(a) sizeof(a)/sizeof(*a)");
                 file.WriteLine("static const tzdb_timezone timezone_array[] =");
                 file.WriteLine("{");
                 var tzlist = new List<string>();
                 foreach (var result in pointers.OrderBy(t => t.Key, StringComparer.Ordinal))
                 {
-                    tzlist.Add($"\t{{\"{result.Key}\", {result.Value.Name}, {result.Value.NumEntries}}}");
+                    if (result.Value.NumEntries == 1) {
+                        tzlist.Add($"\t{{\"{result.Key}\", {result.Value.Name}, {result.Value.NumEntries}}}");
+                    }
+                    else {
+                        tzlist.Add($"\t{{\"{result.Key}\", {result.Value.Name}, TIMEZONE_ARRAY_COUNT({result.Value.Name})}}");
+                    }
                 }
                 file.WriteLine(string.Join(",\n", tzlist.ToArray()));
                 file.WriteLine("};");
-                file.WriteLine("");
-
-                // Write the helper function
-                file.WriteLine("#ifdef __cplusplus");
-                file.WriteLine("extern \"C\" {");
-                file.WriteLine(
-@"#endif
-static inline const tzdb_timezone* find_timezone(const char *timezone_name)
-{
-    const tzdb_timezone *begin = timezone_array;
-    const tzdb_timezone *end = timezone_array + TIMEZONE_DATABASE_COUNT;
-
-    // Since the list of timezones above is always generated in sorted order,
-    // we use a binary search to find the timezone
-    do {
-        const tzdb_timezone *needle = begin + (end - begin) / 2;
-        const int cmp = strcmp(timezone_name, needle->name);
-        if (cmp > 0) {
-            begin = needle + 1;
-        }
-        else if (cmp < 0) {
-            end = needle;
-        }
-        else {
-            // Return the timezone if found
-            return needle;
-        }
-    } while (begin < end);
-
-    // If the timezone was not found, return null
-    return NULL;
-}
-#ifdef __cplusplus
-}
-#endif"
-                );
-
                 file.WriteLine("");
                 file.WriteLine("#endif");
             }

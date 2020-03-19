@@ -20,7 +20,7 @@ static int localtime_in_tz_range(const tzdb_timezone *tz, time_t local_time)
 {
     return (local_time - UNPACK(tz->entries[0]) >= tz->entries[0].start &&
             local_time - UNPACK(tz->entries[tz->n_entries - 1]) <
-                timezone_offset_max_time);
+                BRUTEZONE_MAX_TIME);
 }
 
 // only valid if localtime_in_tz_range(tz, localtime) == true or behaviour ==
@@ -40,7 +40,7 @@ find_gmt_offset(const tzdb_timezone *tz, time_t local_time,
             end = needle;
         } else {
             const timezone_offset *next = needle + 1;
-            if ((next == last && result < timezone_offset_max_time) ||
+            if ((next == last && result < BRUTEZONE_MAX_TIME) ||
                 result < next->start) {
                 return needle;
             } else {
@@ -74,7 +74,7 @@ static const timezone_offset *find_localtime_offset(const tzdb_timezone *tz,
             end = needle;
         } else {
             const timezone_offset *next = needle + 1;
-            if ((next == last && gmt < timezone_offset_max_time) ||
+            if ((next == last && gmt < BRUTEZONE_MAX_TIME) ||
                 gmt < next->start) {
                 return needle;
             } else {
@@ -83,6 +83,30 @@ static const timezone_offset *find_localtime_offset(const tzdb_timezone *tz,
         }
     } while (begin < end);
 
+    return NULL;
+}
+
+const tzdb_timezone *find_timezone(const char *timezone_name)
+{
+    const tzdb_timezone *begin = timezone_array;
+    const tzdb_timezone *end = timezone_array + TIMEZONE_DATABASE_COUNT;
+
+    // Since the list of timezones above is always generated in sorted order,
+    // we use a binary search to find the timezone
+    do {
+        const tzdb_timezone *needle = begin + (end - begin) / 2;
+        const int cmp = strcmp(timezone_name, needle->name);
+        if (cmp > 0) {
+            begin = needle + 1;
+        } else if (cmp < 0) {
+            end = needle;
+        } else {
+            // Return the timezone if found
+            return needle;
+        }
+    } while (begin < end);
+
+    // If the timezone was not found, return null
     return NULL;
 }
 
