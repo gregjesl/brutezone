@@ -23,6 +23,17 @@ enum timezone_gmt_time_behaviour {
 };
 
 /*!
+ * \brief lookup a timezone by IANA-Name
+ *
+ * \param[in] timezone_name the IANA-Name of the timezone to look for
+ *                          (e.g. Europe/Berlin)
+ *
+ * \return pointer to the tzdb_timezone struct holding the offset-information,
+ *         or NULL if the timezone was not found in the database
+ */
+const tzdb_timezone *find_timezone(const char *timezone_name);
+
+/*!
  * \brief determines if the given local time is DST
  *
  * \param[in] timezone_name

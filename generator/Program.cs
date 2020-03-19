@@ -205,43 +205,6 @@ namespace brutezone
                 file.WriteLine(string.Join(",\n", tzlist.ToArray()));
                 file.WriteLine("};");
                 file.WriteLine("");
-
-                // Write the helper function
-                file.WriteLine("#ifdef __cplusplus");
-                file.WriteLine("extern \"C\" {");
-                file.WriteLine(
-@"#endif
-static inline const tzdb_timezone* find_timezone(const char *timezone_name)
-{
-    const tzdb_timezone *begin = timezone_array;
-    const tzdb_timezone *end = timezone_array + TIMEZONE_DATABASE_COUNT;
-
-    // Since the list of timezones above is always generated in sorted order,
-    // we use a binary search to find the timezone
-    do {
-        const tzdb_timezone *needle = begin + (end - begin) / 2;
-        const int cmp = strcmp(timezone_name, needle->name);
-        if (cmp > 0) {
-            begin = needle + 1;
-        }
-        else if (cmp < 0) {
-            end = needle;
-        }
-        else {
-            // Return the timezone if found
-            return needle;
-        }
-    } while (begin < end);
-
-    // If the timezone was not found, return null
-    return NULL;
-}
-#ifdef __cplusplus
-}
-#endif"
-                );
-
-                file.WriteLine("");
                 file.WriteLine("#endif");
             }
         }

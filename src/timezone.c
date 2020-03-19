@@ -86,6 +86,30 @@ static const timezone_offset *find_localtime_offset(const tzdb_timezone *tz,
     return NULL;
 }
 
+const tzdb_timezone *find_timezone(const char *timezone_name)
+{
+    const tzdb_timezone *begin = timezone_array;
+    const tzdb_timezone *end = timezone_array + TIMEZONE_DATABASE_COUNT;
+
+    // Since the list of timezones above is always generated in sorted order,
+    // we use a binary search to find the timezone
+    do {
+        const tzdb_timezone *needle = begin + (end - begin) / 2;
+        const int cmp = strcmp(timezone_name, needle->name);
+        if (cmp > 0) {
+            begin = needle + 1;
+        } else if (cmp < 0) {
+            end = needle;
+        } else {
+            // Return the timezone if found
+            return needle;
+        }
+    } while (begin < end);
+
+    // If the timezone was not found, return null
+    return NULL;
+}
+
 int timezone_localtime_isdst(const char *timezone_name, time_t local_time)
 {
     const tzdb_timezone *tz = find_timezone(timezone_name);

@@ -1,5 +1,5 @@
 #include "benchmark.h"
-#include "timezone_database.h"
+#include "timezone.h"
 #include <stdio.h>
 #include <time.h>
 
