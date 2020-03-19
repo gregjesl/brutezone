@@ -3,7 +3,7 @@
 
 #define SEC_PER_HOUR 3600
 
-int main(int argc, char **argv)
+int main(void)
 {
     TEST_EQUAL(TIMEZONE_NOT_FOUND, timezone_localtime_isdst("Foo/Bar", 0));
 

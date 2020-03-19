@@ -7,7 +7,7 @@
 
 #define STEP_WIDTH 100
 
-int main(int argc, char **argv)
+int main(void)
 {
     const char *timezone = "America/Los_Angeles";
     struct timespec bm_start;
@@ -32,8 +32,7 @@ int main(int argc, char **argv)
 
     fprintf(stdout, "avg timezone_gmt_time duration in ns: %lu",
             timespec_diff_ns(&bm_start, &bm_end) /
-                ((BRUTEZONE_MAX_TIME - BRUTEZONE_MIN_TIME) /
-                 STEP_WIDTH));
+                ((BRUTEZONE_MAX_TIME - BRUTEZONE_MIN_TIME) / STEP_WIDTH));
 
     return 0;
 }
