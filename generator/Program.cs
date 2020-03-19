@@ -115,7 +115,14 @@ namespace brutezone
                 file.WriteLine("#include <string.h>");
                 file.WriteLine("#include <time.h>");
                 file.WriteLine("");
+                file.WriteLine("#ifdef _MSC_VER");
+                file.WriteLine("#pragma pack(push,1)");
                 file.WriteLine("typedef struct { const time_t start; const short offset; } timezone_offset;");
+                file.WriteLine("#pragma pack(pop)");
+                file.WriteLine("#else");
+                file.WriteLine("typedef struct { const time_t start; const short offset; } __attribute__((packed)) timezone_offset;");
+                file.WriteLine("#endif");
+                file.WriteLine("");
                 file.WriteLine("typedef struct { const char *name; const timezone_offset *entries; const unsigned char n_entries; } tzdb_timezone;");
                 file.WriteLine("");
                 file.WriteLine($"static const time_t timezone_offset_min_time = {(StartTime - Epoch).Ticks / TimeSpan.TicksPerSecond};");

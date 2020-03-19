@@ -4,8 +4,15 @@
 #include <string.h>
 #include <time.h>
 
+#ifdef _MSC_VER
+#pragma pack(push,1)
 typedef struct { const time_t start; const short offset; } timezone_offset;
 typedef struct { const char *name; const timezone_offset *entries; const unsigned char n_entries; } tzdb_timezone;
+#pragma pack(pop)
+#else
+typedef struct { const time_t start; const short offset; } __attribute__((packed)) timezone_offset;
+typedef struct { const char *name; const timezone_offset *entries; const unsigned char n_entries; } __attribute__((packed)) tzdb_timezone;
+#endif
 
 static const time_t timezone_offset_min_time = 0;
 static const time_t timezone_offset_max_time = 2147472000;
