@@ -1,5 +1,5 @@
-#ifndef WAKE_TIMEZONE_H
-#define WAKE_TIMEZONE_H
+#ifndef BRUTEZONE_TIMEZONE_H
+#define BRUTEZONE_TIMEZONE_H
 
 #include "timezone_database.h"
 #include <time.h>

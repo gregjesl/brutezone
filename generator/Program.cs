@@ -110,8 +110,8 @@ namespace brutezone
                     new System.IO.StreamWriter(path + "timezone_database.h"))
             {
                 file.WriteLine(
-@"#ifndef TIMEZONE_DATABASE_H
-#define TIMEZONE_DATABASE_H
+@"#ifndef BRUTEZONE_TIMEZONE_DATABASE_H
+#define BRUTEZONE_TIMEZONE_DATABASE_H
 
 #include <string.h>
 #include <time.h>

@@ -1,5 +1,5 @@
-#ifndef WAKE_TIMEZONE_IMPL_H
-#define WAKE_TIMEZONE_IMPL_H
+#ifndef BRUTEZONE_TIMEZONE_IMPL_H
+#define BRUTEZONE_TIMEZONE_IMPL_H
 
 /* 2000-03-01 (mod 400 year, immediately after feb29 */
 #define LEAPOCH (946684800LL + 86400 * (31 + 29))
