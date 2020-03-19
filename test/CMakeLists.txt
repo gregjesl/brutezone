@@ -12,3 +12,19 @@ foreach(test ${tests})
     target_link_libraries("${test_name}_test" ${PROJECT_NAME})
     add_test(NAME ${test_name} COMMAND "${test_name}_test")
 endforeach()
+
+# BRUTEZONE_MIN_TIME and BRUTEZONE_MAX_TIME should also be tested
+add_library("${PROJECT_NAME}_slim"
+        ../src/timezone.c
+        ../src/timezone_impl.c
+    )
+
+target_compile_definitions("${PROJECT_NAME}_slim"
+    PUBLIC BRUTEZONE_MIN_TIME=1546304400)
+
+target_compile_definitions("${PROJECT_NAME}_slim"
+    PUBLIC BRUTEZONE_MAX_TIME=1640998800)
+
+add_executable(min_max_time_test timezone_gmt_time.c)
+target_link_libraries(min_max_time_test "${PROJECT_NAME}_slim")
+add_test(NAME "min-max-time" COMMAND min_max_time_test)

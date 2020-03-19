@@ -8,6 +8,8 @@ static void test_gmtime(const char *timezonename)
 
     // Get the gmt time
     basetime = 1577836800; // 2020-01-01 00:00:00
+	TEST_TRUE(basetime > BRUTEZONE_MIN_TIME);
+	TEST_TRUE(basetime < BRUTEZONE_MAX_TIME);
 
     // Repeat the test for an entire year in half hour steps
     for (time_t offset = 0; offset < 365 * 86400; offset += 30 * 60) {
