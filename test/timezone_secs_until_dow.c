@@ -8,7 +8,8 @@ int main(void)
     time_t latime;
     int result;
     struct tm tm;
-    unsigned char hour, minute, second, dow;
+    unsigned char hour, minute, second;
+    int dow;
     int i;
 
     // Get the time in LA
@@ -18,9 +19,9 @@ int main(void)
     secs_to_tm(latime, &tm);
 
     // Record the hour and minute
-    hour = tm.tm_hour;
-    minute = tm.tm_min;
-    second = tm.tm_sec;
+    hour = (unsigned char)tm.tm_hour;
+    minute = (unsigned char)tm.tm_min;
+    second = (unsigned char)tm.tm_sec;
 
     for (i = 1; i < 7; i++) {
         // Get the test day of week
@@ -28,7 +29,7 @@ int main(void)
 
         // Get the result
         result = (int)timezone_secs_until_dow(timezonename, hour, minute,
-                                              second, dow);
+                                              second, (unsigned char)dow);
 
         // Result should be within 5 seconds
         TEST_TRUE(abs(result - (86400 * i) - 60) < 5);
