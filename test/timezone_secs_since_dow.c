@@ -18,9 +18,9 @@ int main(void)
     secs_to_tm(latime, &tm);
 
     // Record the hour and minute
-    hour = tm.tm_hour;
-    minute = tm.tm_min;
-    second = tm.tm_sec;
+    hour = (unsigned char)tm.tm_hour;
+    minute = (unsigned char)tm.tm_min;
+    second = (unsigned char)tm.tm_sec;
 
     for (i = 1; i < 7; i++) {
         // Get the test day of week
@@ -30,7 +30,7 @@ int main(void)
 
         // Get the result
         result = (int)timezone_secs_since_dow(timezonename, hour, minute,
-                                              second, dow);
+                                              second, (unsigned char)dow);
 
         // Result should be within 5 seconds
         TEST_TRUE(abs(result - 86400 * i) < 5);

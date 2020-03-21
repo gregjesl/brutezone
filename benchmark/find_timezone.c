@@ -6,7 +6,7 @@
 #define ROUNDS 1000
 #define N_TIMEZONES sizeof(timezone_array) / sizeof(*timezone_array)
 
-int main(int argc, char **argv)
+int main(void)
 {
     struct timespec bm_start;
     struct timespec bm_end;

@@ -15,28 +15,20 @@ else()
 
     include_directories ("${PROJECT_SOURCE_DIR}/inc")
 
-    add_custom_target(generator
-        COMMAND nuget restore brutezone.sln
-        COMMAND msbuild brutezone.sln -p:Configuration=Release -p:Platform=\"Any CPU\"
-        WORKING_DIRECTORY "${PROJECT_SOURCE_DIR}/generator"
-    )
-
-    if(WIN32)
-        add_custom_target(database
-            COMMAND brutezone.exe
-            WORKING_DIRECTORY "${PROJECT_SOURCE_DIR}/generator/bin/Release"
-        )
+    if(MSVC)
+        # ignore warnings about scanf
+        add_definitions(-D_CRT_SECURE_NO_WARNINGS)
+        add_compile_options(/W4 /WX)
     else()
-        add_custom_target(database
-            COMMAND mono brutezone.exe
-            WORKING_DIRECTORY "${PROJECT_SOURCE_DIR}/generator/bin/Release"
-        )
+        add_compile_options(-Wall -Wextra -Werror)
     endif()
 
     add_library(${PROJECT_NAME}
         src/timezone.c
         src/timezone_impl.c
     )
+
+    add_subdirectory(generator)
 
     # Support testing
     enable_testing()

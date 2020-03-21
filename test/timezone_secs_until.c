@@ -17,9 +17,9 @@ int main(void)
     secs_to_tm(latime, &tm);
 
     // Record the hour and minute
-    hour = tm.tm_hour;
-    minute = tm.tm_min;
-    second = tm.tm_sec;
+    hour = (unsigned char)tm.tm_hour;
+    minute = (unsigned char)tm.tm_min;
+    second = (unsigned char)tm.tm_sec;
 
     // Add a day
     add_day(&tm);

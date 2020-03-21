@@ -7,7 +7,7 @@
 
 #define STEP_WIDTH 100
 
-int main(int argc, char **argv)
+int main(void)
 {
     const char *timezone = "America/Los_Angeles";
     struct timespec bm_start;
@@ -22,7 +22,7 @@ int main(int argc, char **argv)
     for (time_t t = BRUTEZONE_MIN_TIME; t < BRUTEZONE_MAX_TIME;
          t += STEP_WIDTH) {
         const time_t localtime = timezone_local_time(timezone, t);
-        escape(&gmtime);
+        escape(&localtime);
     }
 
     rc = clock_gettime(CLOCK_MONOTONIC, &bm_end);
