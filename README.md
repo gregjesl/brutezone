@@ -5,7 +5,7 @@ Brutezone is a C library for computing the time in [IANA timezones](https://en.w
 ## Important Notes
 The UTC offsets are stored in a [lookup table](/inc/timezone_database.h). **This library is only valid for UTC times between [1 January 1970](https://en.wikipedia.org/wiki/Unix_time) and [19 January 2038](https://en.wikipedia.org/wiki/Year_2038_problem).**
 
-If your application is memory-constrained (like in some embedded systems), **you can limit the time-range of the database by defining the minimum and/or the maximum times you care about as UTC time_t for BRUTEZONE_MIN_TIME or BRUTEZONE_MAX_TIME during compilation. **
+If your application is memory-constrained (like in some embedded systems), **you can limit the time-range of the database by defining the minimum and/or the maximum times you care about as UTC time_t for BRUTEZONE_MIN_TIME or BRUTEZONE_MAX_TIME during compilation.**
 
 If you are running this library on an embedded device, **ensure you have [clock synchronization](https://en.wikipedia.org/wiki/Network_Time_Protocol) implemented.** 
 ## Usage
