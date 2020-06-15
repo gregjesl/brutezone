@@ -13,8 +13,6 @@ else()
 
     project (brutezone)
 
-    include_directories ("${PROJECT_SOURCE_DIR}/inc")
-
     if(MSVC)
         # ignore warnings about scanf
         add_definitions(-D_CRT_SECURE_NO_WARNINGS)
@@ -27,6 +25,8 @@ else()
         src/timezone.c
         src/timezone_impl.c
     )
+
+    target_include_directories(${PROJECT_NAME} PUBLIC "${PROJECT_SOURCE_DIR}/inc")
 
     add_subdirectory(generator)
 
